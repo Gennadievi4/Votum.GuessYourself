@@ -1,0 +1,84 @@
+﻿<Window x:Class="Guess.Yourself.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Guess.Yourself"
+        mc:Ignorable="d"
+        Title="Игра: Отгадай себя" Height="450" Width="800">
+    <Window.Resources>
+        <Style x:Key="CenterDataGridColumnsHeaders" TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+    <Grid ShowGridLines="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="82"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Name="LabelName"
+               Grid.Row="0"
+               Content="Попробуй отгадать себя!" 
+               BorderBrush="Aqua"
+               BorderThickness="1"
+               Foreground="Red"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               FontSize="22" 
+               Height="46" 
+               Width="262"/>
+        <DataGrid Name="TableName" 
+                  AutoGenerateColumns="False" 
+                  HeadersVisibility="Column"
+                  
+                  Grid.Row="1">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Персонаж"
+                                    HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
+                                    
+                                    Binding="{Binding Character}"/>
+                <DataGridTextColumn Header="Вопросы"
+                                    HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
+                                    IsReadOnly="True"
+                                    Binding="{Binding Question}"/>
+                <DataGridTemplateColumn Width="45" 
+                                        Header="Верно"
+                                        HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="btnYes" Content="Да" Click="YesClick"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="63" 
+                                        Header="Не верно"
+                                        CanUserResize="False"
+                                        HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="btnNo" Content="Нет" Click="btnNo_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="*" 
+                                        Header="Не знаю"
+                                        HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="btnDontKnow" Content="Не знаю" Click="btnDontKnow_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Оценка участника"
+                                    Width="*"
+                                    HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"/>
+                <DataGridTextColumn Header="Сумма вопросов"
+                                    Width="*"
+                                    HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"/>
+                <DataGridTextColumn Header="Время"
+                                    Width="*"
+                                    HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
