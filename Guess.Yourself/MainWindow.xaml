@@ -11,6 +11,9 @@
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>
     </Window.Resources>
+    <Window.DataContext>
+        <local:MainWindowViewModel/>
+    </Window.DataContext>
     <Grid ShowGridLines="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="82"/>
@@ -30,8 +33,14 @@
         <DataGrid Name="TableName" 
                   AutoGenerateColumns="False" 
                   HeadersVisibility="Column"
+                  ItemsSource="{Binding Students}"
                   Grid.Row="1">
             <DataGrid.Columns>
+                <DataGridTextColumn Header="№ пульта"
+                                    HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
+                                    Binding="{Binding RemoteId}"
+                                    IsReadOnly="True"
+                                    CanUserResize="False"/>
                 <DataGridTextColumn Header="Персонаж"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
                                     Binding="{Binding Character}"/>

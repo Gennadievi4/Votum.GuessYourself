@@ -6,12 +6,18 @@ using System.Threading.Tasks;
 
 namespace Guess.Yourself
 {
-    class TheObjectOfTheStudent //: INotifyPropertyChanged
+    class StudentModel //: INotifyPropertyChanged
     {
         public string Character { get; set; }
         public string Question { get; set; }
-
-        public TheObjectOfTheStudent()
+        public int ReceiverId { get; set; }
+        public int RemoteId { get; set; }
+        public StudentModel(int remoteId, int receiverId)
+        {
+            RemoteId = remoteId;
+            ReceiverId = receiverId;
+        }
+        public StudentModel()
         {
 
         }
