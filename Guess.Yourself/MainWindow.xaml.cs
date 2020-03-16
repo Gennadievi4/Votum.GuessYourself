@@ -3,9 +3,6 @@ using System.Windows;
 
 namespace Guess.Yourself
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         ObservableCollection<TheObjectOfTheStudent> students = new ObservableCollection<TheObjectOfTheStudent>();
