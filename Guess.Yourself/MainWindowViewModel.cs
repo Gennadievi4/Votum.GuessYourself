@@ -6,11 +6,13 @@ using System.Windows.Threading;
 
 namespace Guess.Yourself
 {
-    class MainWindowViewModel
+    public class MainWindowViewModel
     {
-        ObservableCollection<StudentModel> Students { get; set; } = new ObservableCollection<StudentModel>();
+        public ObservableCollection<StudentModel> Students { get; set; } = new ObservableCollection<StudentModel>();
 
         readonly DeviceManager deviceManager = new DeviceManager(new VotumDevicesManager());
+
+        public StudentModel SelectedStudent { get; set; }
 
         public MainWindowViewModel()
         {
@@ -39,5 +41,19 @@ namespace Guess.Yourself
                 });
             }
         }
+
+        public RelayCommand<StudentModel> yesCmd = null;
+
+        public RelayCommand<StudentModel> YesCmd => yesCmd ?? (yesCmd = new RelayCommand<StudentModel>((param) =>
+       {
+           param.UserAnswer = StudentModel.AnswerType.Correct;
+       }));
+
+        public RelayCommand<StudentModel> questionCmd = null;
+        public RelayCommand<StudentModel> QuestionCmd => questionCmd ?? (questionCmd = new RelayCommand<StudentModel>((param) =>
+        {
+            var view = new QuestionView(param.Questions);
+            view.ShowDialog();
+        }));
     }
 }
