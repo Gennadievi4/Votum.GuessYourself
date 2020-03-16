@@ -30,7 +30,6 @@
         <DataGrid Name="TableName" 
                   AutoGenerateColumns="False" 
                   HeadersVisibility="Column"
-                  
                   Grid.Row="1">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Персонаж"
