@@ -34,7 +34,6 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Персонаж"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
-                                    
                                     Binding="{Binding Character}"/>
                 <DataGridTextColumn Header="Вопросы"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
