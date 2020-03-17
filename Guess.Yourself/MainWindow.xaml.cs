@@ -7,6 +7,7 @@ namespace Guess.Yourself
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainWindowViewModel();
         }
     }
 }

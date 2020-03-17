@@ -35,10 +35,10 @@ namespace Guess.Yourself
         {
             if (!Students.Any(x => x.ReceiverId.Equals(ReceiverId) && x.RemoteId.Equals(RemoteId)))
             {
-                Dispatcher.CurrentDispatcher.Invoke(() =>
+                Dispatcher.CurrentDispatcher.Invoke(new Action(() =>
                 {
                     Students.Add(new StudentModel(ReceiverId, RemoteId));
-                });
+                }));
             }
         }
 
@@ -49,11 +49,22 @@ namespace Guess.Yourself
            param.UserAnswer = StudentModel.AnswerType.Correct;
        }));
 
+        public RelayCommand<StudentModel> noCmd = null;
+        public RelayCommand<StudentModel> NoCmd => noCmd ?? (noCmd = new RelayCommand<StudentModel>((param) =>
+        {
+            param.UserAnswer = StudentModel.AnswerType.NotCorrect;
+        }));
+
+        public RelayCommand<StudentModel> dontKnowCmd = null;
+        public RelayCommand<StudentModel> DontKnowCmd => dontKnowCmd ?? (dontKnowCmd = new RelayCommand<StudentModel>((param) =>
+        {
+            param.UserAnswer = StudentModel.AnswerType.DontKnow;
+        }));
+
         public RelayCommand<StudentModel> questionCmd = null;
         public RelayCommand<StudentModel> QuestionCmd => questionCmd ?? (questionCmd = new RelayCommand<StudentModel>((param) =>
         {
-            var view = new QuestionView(param.Questions);
-            view.ShowDialog();
+            new QuestionView(param.Questions).ShowDialog();
         }));
     }
 }

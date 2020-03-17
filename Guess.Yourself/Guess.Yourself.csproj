@@ -35,7 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RLib">
+    <Reference Include="RLib, Version=1.1.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Documents\Работа\Votum\RLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />

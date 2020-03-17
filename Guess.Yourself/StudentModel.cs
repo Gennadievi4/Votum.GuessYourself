@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace Guess.Yourself
@@ -14,7 +10,7 @@ namespace Guess.Yourself
         public string Question { get; set; }
         public int ReceiverId { get; set; }
         public int RemoteId { get; set; }
-        public List<string> Questions { get; set; } = new List<string> { };
+        public List<string> Questions { get; set; } = new List<string> { "Первый вопрос", "Второй вопрос", "Третий вопрос" };
         public SolidColorBrush AnswerColor { get; set; }
 
         AnswerType userAnswer;

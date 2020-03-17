@@ -11,9 +11,9 @@
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>
     </Window.Resources>
-    <Window.DataContext>
+    <!--<Window.DataContext>
         <local:MainWindowViewModel/>
-    </Window.DataContext>
+    </Window.DataContext>-->
     <Grid ShowGridLines="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="82"/>
@@ -44,16 +44,29 @@
                 <DataGridTextColumn Header="Персонаж"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
                                     Binding="{Binding Character}"/>
-                <DataGridTextColumn Header="Вопросы"
-                                    HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
-                                    IsReadOnly="True"
-                                    Binding="{Binding Question}"/>
-                <DataGridTemplateColumn Width="45" 
-                                        Header="Верно"
+                <DataGridTemplateColumn Header="Вопросы"
                                         HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Name="btnYes" Content="Да" Click="YesClick"/>
+                            <Button Content="{Binding TemplatedParent.Question}"
+                                    Command="{Binding DataContext.QuestionCmd, 
+                                RelativeSource={RelativeSource AncestorType={x:Type Window},
+                                Mode=FindAncestor}}"
+                                    CommandParameter="{Binding ElementName=TableName, Path=SelectedItem}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="45" 
+                                        Header="Верно"
+                                        CanUserResize="False"
+                                        HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="btnYes" Content="Да" 
+                                    Command="{Binding DataContext.YesCmd, 
+                                RelativeSource={RelativeSource AncestorType={x:Type Window},
+                                Mode=FindAncestor}}"
+                                    CommandParameter="{Binding ElementName=TableName, Path=SelectedItem}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -63,20 +76,29 @@
                                         HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Name="btnNo" Content="Нет" Click="btnNo_Click"/>
+                            <Button Name="btnNo" Content="Нет" 
+                                    Command="{Binding DataContext.NoCmd, 
+                                RelativeSource={RelativeSource AncestorType={x:Type Window},
+                                Mode=FindAncestor}}"
+                                    CommandParameter="{Binding ElementName=TableName, Path=SelectedItem}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="*" 
+                <DataGridTemplateColumn Width="65" 
                                         Header="Не знаю"
+                                        CanUserResize="False"
                                         HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Name="btnDontKnow" Content="Не знаю" Click="btnDontKnow_Click"/>
+                            <Button Name="btnDontKnow" Content="Не знаю" 
+                                    Command="{Binding DataContext.DontKnowCmd, 
+                                RelativeSource={RelativeSource AncestorType={x:Type Window},
+                                Mode=FindAncestor}}"
+                                    CommandParameter="{Binding ElementName=TableName, Path=SelectedItem}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Оценка участника"
+                <DataGridTextColumn Header="Рейтинг участника"
                                     Width="*"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"/>
                 <DataGridTextColumn Header="Сумма вопросов"
