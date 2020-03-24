@@ -3,9 +3,9 @@ using System;
 
 namespace Guess.Yourself
 {
-    class DeviceManager
+    public class DeviceManager
     {
-        readonly UsbWatcher usbWatcher = new UsbWatcher();
+        private readonly UsbWatcher usbWatcher = new UsbWatcher();
         public VotumDevicesManager votumManager { get; private set; }
         public DeviceManager(VotumDevicesManager manager)
         {
@@ -22,7 +22,7 @@ namespace Guess.Yourself
             votumManager.Start();
         }
 
-        private void StartStopDeviceManager()
+        private void Restart()
         {
             if (votumManager != null)
             {
@@ -33,7 +33,7 @@ namespace Guess.Yourself
 
         private void Watcher_DeviceInserted(object sender, EventArgs e)
         {
-            StartStopDeviceManager();
+            Restart();
         }
     }
 }

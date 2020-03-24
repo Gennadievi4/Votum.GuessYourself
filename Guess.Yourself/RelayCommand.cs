@@ -12,7 +12,7 @@ namespace Guess.Yourself
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;
         }
-        public override bool CanExecute(object parametr) => _canExecute == null || _canExecute.Invoke((T)parametr);
+        public override bool CanExecute(object parameter) => _canExecute == null || _canExecute.Invoke((T)parameter);
         public override void Execute(object parameter) { _execute.Invoke((T)parameter); }
     }
 }

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Threading;
 
 namespace Guess.Yourself
 {
@@ -10,7 +9,7 @@ namespace Guess.Yourself
     {
         public ObservableCollection<StudentModel> Students { get; set; } = new ObservableCollection<StudentModel>();
 
-        readonly DeviceManager deviceManager = new DeviceManager(new VotumDevicesManager());
+        private readonly DeviceManager deviceManager = new DeviceManager(new VotumDevicesManager());
 
         public StudentModel SelectedStudent { get; set; }
 
@@ -23,21 +22,36 @@ namespace Guess.Yourself
 
             deviceManager.votumManager.ButtonClicked += VotumManager_ButtonClicked;
         }
-
         private void VotumManager_ButtonClicked(object sender, ButtonClickEventArgs e)
         {
-            EnsureRemoteAdded(e.ReceiverId, e.RemoteId);
-            var newStudent = Students.FirstOrDefault(x => x.ReceiverId.Equals(e.ReceiverId) && x.RemoteId.Equals(e.RemoteId));
-            _ = newStudent ?? throw new Exception("Что-то пошло не так!");
+            EnsureRemoteAdded(e.RemoteId, e.ReceiverId);
+            GettingAQuestionsRemotely(e.RemoteId, e);
+            //var t2 = e.Button;
         }
 
-        private void EnsureRemoteAdded(int ReceiverId, int RemoteId)
+        private void EnsureRemoteAdded(int RemoteId, int ReceiverId)
         {
             if (!Students.Any(x => x.ReceiverId.Equals(ReceiverId) && x.RemoteId.Equals(RemoteId)))
             {
-                Dispatcher.CurrentDispatcher.Invoke(new Action(() =>
+                App.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    Students.Add(new StudentModel(ReceiverId, RemoteId));
+                    var std = Students.FirstOrDefault(x => x.RemoteId.Equals(RemoteId) || x.RemoteId == 0);
+                    if (std != null)
+                        std.RemoteId = RemoteId;
+                }));
+            }
+        }
+
+        private void GettingAQuestionsRemotely(int RemoteId, ButtonClickEventArgs e)
+        {
+            if (e.IsT2TextPresent && e.Button.Type == ButtonType.PauseT2)
+            {
+                App.Current.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    Students.FirstOrDefault(x => x.remoteId.Equals(RemoteId))?.QuestionsAdd(e.T2Text);
+                    var std = Students.FirstOrDefault(x => x.remoteId.Equals(RemoteId));
+                    if (std != null)
+                        std.Question = e.T2Text;
                 }));
             }
         }

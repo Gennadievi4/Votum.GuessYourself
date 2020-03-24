@@ -60,6 +60,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CommandBase.cs" />
+    <Compile Include="IEnumerableExtensions.cs" />
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="QuestionView.xaml.cs">
       <DependentUpon>QuestionView.xaml</DependentUpon>

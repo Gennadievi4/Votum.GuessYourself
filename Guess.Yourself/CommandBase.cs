@@ -11,8 +11,8 @@ namespace Guess.Yourself
             remove => CommandManager.RequerySuggested -= value;
         }
 
-        public abstract bool CanExecute(object parametr);
+        public abstract bool CanExecute(object parameter);
 
-        public abstract void Execute(object parametr);
+        public abstract void Execute(object parameter);
     }
 }
