@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:local="clr-namespace:Guess.Yourself"
         mc:Ignorable="d"
         Title="Игра: Отгадай себя" Height="450" Width="800">
@@ -51,11 +52,14 @@
                                         HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="{Binding Question}"
+                            <Button 
                                     Command="{Binding DataContext.QuestionCmd, 
                                 RelativeSource={RelativeSource AncestorType={x:Type Window},
                                 Mode=FindAncestor}}"
-                                    CommandParameter="{Binding ElementName=TableName, Path=SelectedItem}"/>
+                                    CommandParameter="{Binding ElementName=TableName, Path=SelectedItem}">
+                                <TextBlock Text="{Binding Question}"
+                                           Foreground="{Binding AnswerColor}"/>
+                            </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -65,11 +69,13 @@
                                         HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Name="btnYes" Content="Да" 
+                            <Button Name="btnYes"
                                     Command="{Binding DataContext.YesCmd, 
                                 RelativeSource={RelativeSource AncestorType={x:Type Window},
                                 Mode=FindAncestor}}"
-                                    CommandParameter="{Binding ElementName=TableName, Path=SelectedItem}"/>
+                                    CommandParameter="{Binding ElementName=TableName, Path=SelectedItem}">
+                                <fa:ImageAwesome Height="15" Icon="Circle" Foreground="Green"/>
+                            </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -79,11 +85,13 @@
                                         HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Name="btnNo" Content="Нет" 
+                            <Button Name="btnNo"
                                     Command="{Binding DataContext.NoCmd, 
                                 RelativeSource={RelativeSource AncestorType={x:Type Window},
                                 Mode=FindAncestor}}"
-                                    CommandParameter="{Binding ElementName=TableName, Path=SelectedItem}"/>
+                                    CommandParameter="{Binding ElementName=TableName, Path=SelectedItem}">
+                                <fa:ImageAwesome Height="12" Icon="CircleThin" Foreground="Red"/>
+                            </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -93,11 +101,13 @@
                                         HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Name="btnDontKnow" Content="Неизвестно" 
+                            <Button Name="btnDontKnow"
                                     Command="{Binding DataContext.DontKnowCmd, 
                                 RelativeSource={RelativeSource AncestorType={x:Type Window},
                                 Mode=FindAncestor}}"
-                                    CommandParameter="{Binding ElementName=TableName, Path=SelectedItem}"/>
+                                    CommandParameter="{Binding ElementName=TableName, Path=SelectedItem}">
+                                <fa:ImageAwesome Height="12" Icon="TimesCircle" Foreground="Yellow"/>
+                            </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -105,10 +115,12 @@
                                     Width="60"
                                     IsReadOnly="True"
                                     CanUserResize="False"
-                                    HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"/>
+                                    HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
+                                    Binding="{Binding Time,
+                    UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
                 <DataGridTextColumn Header="Рейтинг участника"
                                     Width="120"
-                                    IsReadOnly="True"
+                                    IsReadOnly="False"
                                     CanUserResize="False"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"/>
             </DataGrid.Columns>

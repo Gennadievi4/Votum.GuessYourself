@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Guess.Yourself"
         mc:Ignorable="d"
-        Title="QuestionView" Height="450" Width="800">
+        Title="Архив вопросов" Height="450" Width="800">
     <Grid>
         <ListView x:Name="lv" Width="300" Height="400" Background="Gray">
             <ListView.ItemTemplate>

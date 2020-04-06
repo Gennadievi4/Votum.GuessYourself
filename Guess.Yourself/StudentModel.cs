@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using RLib;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows.Media;
 
 namespace Guess.Yourself
@@ -8,8 +9,14 @@ namespace Guess.Yourself
     public class StudentModel : INotifyPropertyChanged
     {
         public string Character { get; set; }
+        public bool IsAccess { get; private set; } = true;
+        public ButtonClickEventArgs send { get; set; }
+
+        DateTime StopWatch;
+        public string Time => StopWatch.Hour == 0 ? StopWatch.Equals(new DateTime()) ? string.Empty : StopWatch.ToString("mm : ss") : StopWatch.ToString("hh : mm : ss");
+
         private string question;
-        public string Question 
+        public string Question
         {
             get => question;
             set
@@ -21,8 +28,8 @@ namespace Guess.Yourself
         }
         public int ReceiverId { get; set; }
 
-        public int remoteId;
-        public int RemoteId
+        public string remoteId;
+        public string RemoteId
         {
             get => remoteId;
             set
@@ -33,9 +40,11 @@ namespace Guess.Yourself
             }
         }
         public List<string> Questions { get; set; } = new List<string>();
-        public SolidColorBrush AnswerColor { get; set; }
 
-        AnswerType userAnswer;
+        public static SolidColorBrush defaultColor = new SolidColorBrush(Colors.Black);
+        public SolidColorBrush AnswerColor { get; set; } = defaultColor;
+
+        private AnswerType userAnswer;
         public AnswerType UserAnswer
         {
             get => userAnswer;
@@ -43,14 +52,15 @@ namespace Guess.Yourself
             {
                 userAnswer = value;
                 AnswerColor = ChangeColor(value);
-                RaisePropertyChanged(nameof(AnswerType));
+
+                RaisePropertyChanged(nameof(AnswerColor));
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;
 
         public StudentModel(int remoteId, int receiverId)
         {
-            RemoteId = remoteId;
+            RemoteId = remoteId.ToString();
             ReceiverId = receiverId;
         }
         public StudentModel()
@@ -66,6 +76,16 @@ namespace Guess.Yourself
         {
             Questions.Add($"{Questions.Count + 1}. " + $" {text}");
         }
+        public void UpTime()
+        {
+            //TimeSpan time = (DateTime.Now - start).Duration();
+            //Time = time.ToString("mm\\:ss");
+            //long tick = DateTime.Now.Ticks - start.Ticks;
+            //DateTime stopwatch = new DateTime();
+            //stopwatch = stopwatch.AddTicks(tick);
+            StopWatch = StopWatch.AddSeconds(1);
+            RaisePropertyChanged(nameof(Time));
+        }
         SolidColorBrush ChangeColor(AnswerType answer)
         {
             switch (answer)
@@ -76,13 +96,15 @@ namespace Guess.Yourself
                     return new SolidColorBrush(Colors.Red);
                 case AnswerType.DontKnow:
                     return new SolidColorBrush(Colors.Yellow);
+                case AnswerType.NotSet:
+                    return defaultColor;
                 default:
-                    return new SolidColorBrush(Colors.Transparent);
+                    throw new Exception("Не выбран цвет!");
             }
         }
         public enum AnswerType
         {
-            Correct, NotCorrect, DontKnow
+            Correct, NotCorrect, DontKnow, NotSet
         }
     }
 }
