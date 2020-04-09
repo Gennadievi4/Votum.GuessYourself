@@ -100,6 +100,11 @@ namespace Guess.Yourself
         public RelayCommand<StudentModel> NoCmd => noCmd ?? (noCmd = new RelayCommand<StudentModel>((param) =>
         {
             param.UserAnswer = StudentModel.AnswerType.NotCorrect;
+            param.Question = null;
+            if (OnTick != param.UpTime)
+            {
+                OnTick += param.UpTime;
+            }
         },
         (stdParam) =>
         {
@@ -110,10 +115,17 @@ namespace Guess.Yourself
         public RelayCommand<StudentModel> DontKnowCmd => dontKnowCmd ?? (dontKnowCmd = new RelayCommand<StudentModel>((param) =>
         {
             param.UserAnswer = StudentModel.AnswerType.DontKnow;
+            param.Question = null;
+            if (OnTick != param.UpTime)
+            {
+                OnTick += param.UpTime;
+            }
+            if(!param.send.IsSendbackCommandAvailable)
+                param.send.SendbackCommand = SendbackCommand.DisplayStringClear("Неизвестно!");
         },
-        (stdParam) =>
+        (param) =>
         {
-            return (stdParam != null) ? !string.IsNullOrEmpty(stdParam.Question) : false;
+            return (param != null) ? !string.IsNullOrEmpty(param.Question) : false;
         }));
 
         public RelayCommand<StudentModel> questionCmd = null;

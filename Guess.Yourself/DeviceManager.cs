@@ -18,7 +18,7 @@ namespace Guess.Yourself
             votumManager.Settings.InteractiveRemotesSettings.InteractiveMode = true;
             votumManager.Settings.InteractiveRemotesSettings.AutoT2 = true;
             usbWatcher.DeviceInserted += Watcher_DeviceInserted;
-            usbWatcher.DeviceRemoved += Watcher_DeviceInserted;
+            usbWatcher.DeviceRemoved -= Watcher_DeviceInserted;
             votumManager.Start();
         }
 

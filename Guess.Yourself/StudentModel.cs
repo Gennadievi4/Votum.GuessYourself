@@ -11,9 +11,23 @@ namespace Guess.Yourself
         public string Character { get; set; }
         public bool IsAccess { get; private set; } = true;
         public ButtonClickEventArgs send { get; set; }
-
         DateTime StopWatch;
-        public string Time => StopWatch.Hour == 0 ? StopWatch.Equals(new DateTime()) ? string.Empty : StopWatch.ToString("mm : ss") : StopWatch.ToString("hh : mm : ss");
+        public string Time => StopWatch.Hour == 0 ? 
+            StopWatch.Equals(new DateTime()) ? 
+            string.Empty : 
+            StopWatch.ToString("mm : ss") : 
+            StopWatch.ToString("hh : mm : ss");
+        public string rating;
+        public string Rating
+        {
+            get => rating;
+            set
+            {
+                if (rating == value) return;
+                rating = value;
+                RaisePropertyChanged(nameof(Rating));
+            }
+        }
 
         private string question;
         public string Question
@@ -78,11 +92,6 @@ namespace Guess.Yourself
         }
         public void UpTime()
         {
-            //TimeSpan time = (DateTime.Now - start).Duration();
-            //Time = time.ToString("mm\\:ss");
-            //long tick = DateTime.Now.Ticks - start.Ticks;
-            //DateTime stopwatch = new DateTime();
-            //stopwatch = stopwatch.AddTicks(tick);
             StopWatch = StopWatch.AddSeconds(1);
             RaisePropertyChanged(nameof(Time));
         }

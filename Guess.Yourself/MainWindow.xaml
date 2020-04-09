@@ -11,6 +11,59 @@
         <Style x:Key="CenterDataGridColumnsHeaders" TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>
+        <Style TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border"
+                                BorderThickness="1">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0.0, 0" EndPoint="0.0, 1">
+                                    <GradientStopCollection>
+                                        <GradientStop Offset="0" Color="White"/>
+                                        <GradientStop Offset="1" Color="White"/>
+                                    </GradientStopCollection>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition GeneratedDuration="0:0:0.5"/>
+                                        <VisualTransition GeneratedDuration="0" To="Pressed"/>
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="MouseOver"/>
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                            Storyboard.TargetName="Border">
+                                                <EasingColorKeyFrame KeyTime="0" Value="Aqua"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                            Storyboard.TargetName="Border">
+                                                <EasingColorKeyFrame KeyTime="0" Value="Beige"/>
+                                                </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                                          Storyboard.TargetName="Border">
+                                                <EasingColorKeyFrame KeyTime="0" Value="#FF70E5"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <!--<Window.DataContext>
         <local:MainWindowViewModel/>
@@ -56,7 +109,7 @@
                                     Command="{Binding DataContext.QuestionCmd, 
                                 RelativeSource={RelativeSource AncestorType={x:Type Window},
                                 Mode=FindAncestor}}"
-                                    CommandParameter="{Binding ElementName=TableName, Path=SelectedItem}">
+                                    CommandParameter="{Binding}">
                                 <TextBlock Text="{Binding Question}"
                                            Foreground="{Binding AnswerColor}"/>
                             </Button>
@@ -70,10 +123,11 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Name="btnYes"
+                                    
                                     Command="{Binding DataContext.YesCmd, 
                                 RelativeSource={RelativeSource AncestorType={x:Type Window},
                                 Mode=FindAncestor}}"
-                                    CommandParameter="{Binding ElementName=TableName, Path=SelectedItem}">
+                                    CommandParameter="{Binding}">
                                 <fa:ImageAwesome Height="15" Icon="Circle" Foreground="Green"/>
                             </Button>
                         </DataTemplate>
@@ -86,10 +140,11 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Name="btnNo"
+                                    
                                     Command="{Binding DataContext.NoCmd, 
                                 RelativeSource={RelativeSource AncestorType={x:Type Window},
                                 Mode=FindAncestor}}"
-                                    CommandParameter="{Binding ElementName=TableName, Path=SelectedItem}">
+                                    CommandParameter="{Binding}">
                                 <fa:ImageAwesome Height="12" Icon="CircleThin" Foreground="Red"/>
                             </Button>
                         </DataTemplate>
@@ -102,10 +157,11 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Name="btnDontKnow"
+                                    
                                     Command="{Binding DataContext.DontKnowCmd, 
                                 RelativeSource={RelativeSource AncestorType={x:Type Window},
                                 Mode=FindAncestor}}"
-                                    CommandParameter="{Binding ElementName=TableName, Path=SelectedItem}">
+                                    CommandParameter="{Binding}">
                                 <fa:ImageAwesome Height="12" Icon="TimesCircle" Foreground="Yellow"/>
                             </Button>
                         </DataTemplate>
