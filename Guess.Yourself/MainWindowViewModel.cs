@@ -32,6 +32,11 @@ namespace Guess.Yourself
         private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
             OnTick?.Invoke();
+            foreach (var student in Students.Where(x => x.RemoteId != null))
+            {
+                if(Students.Any(x => OnTick == x.UpTime))
+                    InitializeRating(student.RemoteId);
+            }
         }
 
         private void VotumManager_ButtonClicked(object sender, ButtonClickEventArgs e)
@@ -50,30 +55,43 @@ namespace Guess.Yourself
 
         private void EnsureRemoteAdded(int RemoteId, int ReceiverId)
         {
-            if (!Students.Any(x => x.ReceiverId.Equals(ReceiverId) && x.RemoteId.Equals(Convert.ToString(RemoteId))))
+            if (!Students.Any(x => x.ReceiverId.Equals(ReceiverId) && x.RemoteId.Equals(Convert.ToUInt16(RemoteId))))
             {
-                App.Current.Dispatcher.BeginInvoke(new Action(() =>
+                App.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    var std = Students.FirstOrDefault(x => Convert.ToInt32(x.RemoteId).Equals(RemoteId) || Convert.ToInt32(x.RemoteId) == 0);
+                    var std = Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)) || x.RemoteId == default);
                     if (std != null)
-                        std.RemoteId = RemoteId.ToString();
+                    {
+                        std.RemoteId = (ushort)RemoteId;
+                    }
                 }));
             }
+        }
+
+        private void InitializeRating(ushort? RemoteId)
+        {
+            var orderedCollection = Students.OrderBy(x => x.Time);
+            var ratedStudent = orderedCollection.Where(x => x.RemoteId != null).Single(x => x.RemoteId == RemoteId);
+            ratedStudent.Rating = orderedCollection.Where(x => x.RemoteId != null && x.Time != null).ToList().IndexOf(ratedStudent) + 1;
+            //var std = Students.OrderBy(x => x.Time).ToList().FindIndex(x => x.Time != null);
+            //var order = 1;
+            //foreach (var student in Students.OrderBy(x => x.Time).Where(x => x.Time != null))
+            //    student.Rating = order++;
         }
 
         private void GettingAQuestionsRemotely(int RemoteId, ButtonClickEventArgs e)
         {
             if (e.IsT2TextPresent && e.Button.Type == ButtonType.PauseT2)
             {
-                App.Current.Dispatcher.BeginInvoke(new Action(() =>
+                App.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    Students.FirstOrDefault(x => x.remoteId.Equals(Convert.ToString(RemoteId)))?.QuestionsAdd(e.T2Text);
-                    var std = Students.FirstOrDefault(x => x.remoteId.Equals(Convert.ToString(RemoteId)));
+                    Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)))?.QuestionsAdd(e.T2Text);
+                    var std = Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)));
                     if (std != null)
                     {
                         std.Question = e.T2Text;
                         OnTick -= std.UpTime;
-                        std.send = e;
+                        //std.send = e;
                         std.UserAnswer = StudentModel.AnswerType.NotSet;
                     }
                 }));
@@ -86,7 +104,7 @@ namespace Guess.Yourself
        {
            param.UserAnswer = StudentModel.AnswerType.Correct;
            param.Question = null;
-           if (OnTick != param.UpTime) 
+           if (OnTick != param.UpTime)
            {
                OnTick += param.UpTime;
            }
@@ -120,8 +138,6 @@ namespace Guess.Yourself
             {
                 OnTick += param.UpTime;
             }
-            if(!param.send.IsSendbackCommandAvailable)
-                param.send.SendbackCommand = SendbackCommand.DisplayStringClear("Неизвестно!");
         },
         (param) =>
         {
