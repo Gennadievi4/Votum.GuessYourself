@@ -1,16 +1,14 @@
 ﻿using RLib;
-using RLib.Remotes;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Diagnostics;
 using System.Windows.Threading;
 
-namespace Guess.Yourself
+namespace GuessYouSelf.Core
 {
-    public class MainWindowViewModel
+    public class MainWindowViewModelCore
     {
         public ObservableCollection<StudentModel> Students { get; set; } = new ObservableCollection<StudentModel>();
 
@@ -18,12 +16,12 @@ namespace Guess.Yourself
 
         public DispatcherTimer timer = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 1) };
 
-        DataGrid str = (DataGrid)App.Current.MainWindow.FindName("TableName");
+        DataGrid str = (DataGrid)Application.Current.MainWindow.FindName("TableName");
 
         public event Action OnTick;
         public StudentModel SelectedStudent { get; set; }
 
-        public MainWindowViewModel()
+        public MainWindowViewModelCore()
         {
             for (int i = 0; i < 32; i++)
             {
@@ -82,14 +80,13 @@ namespace Guess.Yourself
         {
             if (!Students.Any(x => x.ReceiverId.Equals(ReceiverId) && x.RemoteId.Equals(Convert.ToUInt16(RemoteId))))
             {
-                App.Current.Dispatcher.Invoke(new Action(() =>
+                Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
                     var std = Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)) || x.RemoteId == default);
                     if (std != null)
                     {
                         std.UserAnswer = StudentModel.AnswerType.NotGuessed;
                         std.RemoteId = (ushort)RemoteId;
-                        std.ReceiverId = ReceiverId;
                     }
                 }));
             }
@@ -110,7 +107,7 @@ namespace Guess.Yourself
         {
             if (e.IsT2TextPresent && e.Button.Type == ButtonType.PauseT2)
             {
-                App.Current.Dispatcher.Invoke(new Action(() =>
+                Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
                     Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)))?.QuestionsAdd(e.T2Text);
                     var std = Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)));
@@ -133,10 +130,6 @@ namespace Guess.Yourself
         public RelayCommand<StudentModel> YesCmd => yesCmd ?? (yesCmd = new RelayCommand<StudentModel>((param) =>
         {
             //param.UserAnswer = StudentModel.AnswerType.Correct;
-            //param.remotePacket.RemoteID = (int)param.RemoteId;
-            //param.remotePacket.RemoteCommand = TRemoteCommandID.RF_ACK_DISPLAY_LOGO;
-            //SendbackCommand send = new SendbackCommand((int)param.RemoteId, param.ReceiverId, RemoteCommand.CMD_DISPLAY_STRING);
-            //param.remotePacket.RemoteCommand = (TRemoteCommandID)send.Command;
             param.Question = null;
             if (OnTick != param.UpTime)
             {
@@ -206,12 +199,7 @@ namespace Guess.Yourself
             str.IsEnabled = false;
             timer.Stop();
             deviceManager.votumManager.Stop();
-        },
-            (param) =>
-            {
-                //var x = str.CurrentCell.Item;
-                return str.IsEnabled; //|| x?.Text != default;
-            }));
+        }));
 
         public RelayCommand<StudentModel> resetGame = null;
         public RelayCommand<StudentModel> ResetGame => resetGame ?? (resetGame = new RelayCommand<StudentModel>((param) =>
@@ -224,7 +212,7 @@ namespace Guess.Yourself
         },
             (param) =>
             {
-                
+
                 return (param != null || !str.IsEnabled) ? true : false;
             }
             ));

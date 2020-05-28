@@ -1,13 +1,11 @@
-﻿using System.Windows;
-
-namespace Guess.Yourself
+﻿namespace GuessYouSelf.Core
 {
     public partial class MainWindow
     {
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
+            DataContext = new MainWindowViewModelCore();
         }
     }
 }

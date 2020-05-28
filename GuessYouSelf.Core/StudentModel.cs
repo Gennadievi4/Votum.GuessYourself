@@ -5,16 +5,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Media;
 
-namespace Guess.Yourself
+namespace GuessYouSelf.Core
 {
     public class StudentModel : INotifyPropertyChanged
     {
         public string Character { get; set; }
         public bool IsAccess { get; private set; } = true;
-        public TRemotePacket remotePacket { get; set; } = new TRemotePacket();
-        //THIDMessageID
+        public RemoteEventArgs send;
+        public TRemotePacket remotePacket = new TRemotePacket();
 
-        //SendbackCommand sendback = new SendbackCommand(int RemoteCommand.CMD_DISPLAY_LOGO);
         private DateTime? StopWatch;
         //DateTime start = DateTime.Now;
         //public DateTime? Time => StopWatch;
@@ -72,17 +71,8 @@ namespace Guess.Yourself
                 RaisePropertyChanged(nameof(Question));
             }
         }
+        public int ReceiverId { get; set; }
 
-        private int receiverId;
-        public int ReceiverId
-        {
-            get => receiverId;
-            set
-            {
-                if (receiverId == value) return;
-                receiverId = value;
-            }
-        }
         private ushort? remoteId;
         public ushort? RemoteId
         {
@@ -148,10 +138,16 @@ namespace Guess.Yourself
                 case AnswerType.NotGuessed:
                     return new SolidColorBrush(Colors.Transparent);
                 case AnswerType.Correct:
+                    //if (UserAnswer == AnswerType.Correct)
+                    //    remotePacket.RemoteCommand = (TRemoteCommandID)RemoteCommand.CMD_DISPLAY_LOGO;
                     return new SolidColorBrush(Colors.Green);
                 case AnswerType.NotCorrect:
+                    //if (UserAnswer == AnswerType.NotCorrect)
+                    //    SendbackCommand.DisplayStringClear("Нет!");
                     return new SolidColorBrush(Colors.Red);
                 case AnswerType.DontKnow:
+                    //if (UserAnswer == AnswerType.DontKnow)
+                    //    SendbackCommand.DisplayStringClear("Неизвестно!");
                     return new SolidColorBrush(Colors.Yellow);
                 case AnswerType.NotSet:
                     return defaultColor;

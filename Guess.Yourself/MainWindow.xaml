@@ -4,9 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
-        xmlns:local="clr-namespace:Guess.Yourself"
+        xmlns:l="clr-namespace:Guess.Yourself"
         mc:Ignorable="d"
-        Title="Игра: Отгадай себя" Height="450" Width="800">
+        Title="Игра: Отгадай себя" 
+        WindowStartupLocation="CenterScreen"
+        MinWidth="600"
+        MinHeight="400"
+        WindowState="Maximized"
+        ResizeMode="CanResize"
+        Name="GuessYorselfMainWindow">
     <Window.Resources>
         <Style x:Key="CenterDataGridColumnsHeaders" TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -16,7 +22,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="Border"
-                                BorderThickness="5">
+                                BorderThickness="4.6">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0.0, 0" EndPoint="0.0, 1">
                                     <GradientStopCollection>
@@ -64,121 +70,251 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="EndGame" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="Border"
+                            BorderThickness="1"
+                                Padding="2, 10" Width="155" Height="50">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0.0, 0" EndPoint="0.0, 1">
+                                    <LinearGradientBrush.GradientStops>
+                                        <GradientStopCollection>
+                                            <GradientStop Offset="0" Color="White"/>
+                                            <GradientStop Offset="1" Color="White"/>
+                                        </GradientStopCollection>
+                                    </LinearGradientBrush.GradientStops>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition GeneratedDuration="0:0:0.5"/>
+                                        <VisualTransition GeneratedDuration="0" To="Pressed"/>
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="MouseOver"/>
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                Storyboard.TargetName="Border">
+                                                <EasingColorKeyFrame KeyTime="0" Value="Aqua"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                Storyboard.TargetName="Border">
+                                                <EasingColorKeyFrame KeyTime="0" Value="Beige"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                Storyboard.TargetName="Border">
+                                                <EasingColorKeyFrame KeyTime="0" Value="#FF70E5"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ResetGame" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="Border"
+                            BorderThickness="1"
+                            Padding="2, 7" Width="160" Height="50">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0.0, 0" EndPoint="0.0, 1">
+                                    <LinearGradientBrush.GradientStops>
+                                        <GradientStopCollection>
+                                            <GradientStop Offset="0" Color="White"/>
+                                            <GradientStop Offset="1" Color="White"/>
+                                        </GradientStopCollection>
+                                    </LinearGradientBrush.GradientStops>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition GeneratedDuration="0:0:0.5"/>
+                                        <VisualTransition GeneratedDuration="0" To="Pressed"/>
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="MouseOver"/>
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                Storyboard.TargetName="Border">
+                                                <EasingColorKeyFrame KeyTime="0" Value="Aqua"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                Storyboard.TargetName="Border">
+                                                <EasingColorKeyFrame KeyTime="0" Value="Beige"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                Storyboard.TargetName="Border">
+                                                <EasingColorKeyFrame KeyTime="0" Value="#FF70E5"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <!--<Window.DataContext>
         <local:MainWindowViewModel/>
     </Window.DataContext>-->
-    <Grid ShowGridLines="True">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="82"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Label Name="LabelName"
-               Grid.Row="0"
-               Content="Попробуй отгадать себя!" 
-               BorderBrush="Aqua"
-               BorderThickness="1"
-               Foreground="Red"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"
-               FontSize="22" 
-               Height="46" 
-               Width="262"/>
-        <DataGrid Name="TableName" 
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" Margin="0, 0, 0, 3" Height="18" 
+              HorizontalAlignment="Stretch" Background="White">
+            <MenuItem Header="Файл">
+                <MenuItem Header="Создать" Background="White"/>
+                <MenuItem Header="Открыть" Background="White"/>
+                <Separator/>
+                <MenuItem Header="Выход" Background="White"
+                          Command="{Binding CloseApp}"/>
+            </MenuItem>
+            <MenuItem Header="Справка"/>
+        </Menu>
+        <StackPanel>
+            <DataGrid Name="TableName"
                   AutoGenerateColumns="False" 
                   HeadersVisibility="Column"
                   CanUserAddRows="False"
                   ItemsSource="{Binding Students}"
-                  Grid.Row="1">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="№ пульта"
+                  VerticalScrollBarVisibility="Auto">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="№ пульта"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
-                                    Binding="{Binding RemoteId, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                     IsReadOnly="True"
-                                    CanUserResize="False"/>
-                <DataGridTextColumn Header="Персонаж"
+                                    CanUserResize="False">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding RemoteId}" Foreground="{Binding AnswerColor, Mode=OneWay}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Персонаж"
                                     Width="*"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
                                     Binding="{Binding Character}"/>
-                <DataGridTemplateColumn Header="Вопросы"
+                    <DataGridTemplateColumn Header="Вопросы"
+                                            x:Name="Question"
                                         Width="*"
                                         HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button 
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button 
                                     Command="{Binding DataContext.QuestionCmd, 
                                 RelativeSource={RelativeSource AncestorType={x:Type Window},
                                 Mode=FindAncestor}}"
                                     CommandParameter="{Binding}">
-                                <TextBlock Text="{Binding Question}"
-                                           Foreground="{Binding AnswerColor}"/>
-                            </Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="45" 
+                                    <TextBlock Text="{Binding Question}"/>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="45" 
                                         Header="Да"
                                         CanUserResize="False"
                                         HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Name="btnYes"
-                                    
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Name="btnYes"
                                     Command="{Binding DataContext.YesCmd, 
                                 RelativeSource={RelativeSource AncestorType={x:Type Window},
                                 Mode=FindAncestor}}"
                                     CommandParameter="{Binding}">
-                                <fa:ImageAwesome Height="15" Icon="Circle" Foreground="Green"/>
-                            </Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="63" 
+                                    <fa:ImageAwesome Height="12" Icon="Circle" Foreground="Green"/>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="63" 
                                         Header="Нет"
                                         CanUserResize="False"
                                         HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Name="btnNo"
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Name="btnNo"
                                     Command="{Binding DataContext.NoCmd, 
                                 RelativeSource={RelativeSource AncestorType={x:Type Window},
                                 Mode=FindAncestor}}"
                                     CommandParameter="{Binding}">
-                                <fa:ImageAwesome Height="12" Icon="CircleThin" Foreground="Red"/>
-                            </Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="75" 
+                                    <fa:ImageAwesome Height="12" Icon="CircleThin" Foreground="Red"/>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="75" 
                                         Header="Неизвестно"
                                         CanUserResize="False"
                                         HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Name="btnDontKnow"
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Name="btnDontKnow"
                                     Command="{Binding DataContext.DontKnowCmd, 
                                 RelativeSource={RelativeSource AncestorType={x:Type Window},
                                 Mode=FindAncestor}}"
                                     CommandParameter="{Binding}">
-                                <fa:ImageAwesome Height="12" Icon="TimesCircle" Foreground="Yellow"/>
-                            </Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Время"
+                                    <fa:ImageAwesome Height="12" Icon="TimesCircle" Foreground="Yellow"/>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Время"
                                     Width="60"
                                     IsReadOnly="False"
                                     CanUserResize="False"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
-                                    Binding="{Binding Time, StringFormat='mm:ss',
-                    UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
-                <DataGridTextColumn Header="Рейтинг участника"
+                                    Binding="{Binding Time, StringFormat='mm:ss', Mode=OneWay}"/>
+                    <DataGridTextColumn Header="Рейтинг участника"
                                     Width="120"
                                     IsReadOnly="False"
                                     CanUserResize="False"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
-                                    Binding="{Binding Rating, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
-            </DataGrid.Columns>
-        </DataGrid>
-    </Grid>
+                                    Binding="{Binding Rating, Mode=OneWay}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <DockPanel Margin="0, 2, 0, 0">
+                <StatusBar DockPanel.Dock="Left" Background="White">
+                    <StatusBarItem>
+                        <TextBlock Text="Победит быстреший ум!" Foreground="Black" FontSize="11"/>
+                    </StatusBarItem>
+                </StatusBar>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+
+                    <Button Content="Перезапустить игру" Style="{StaticResource ResetGame}"
+                    FontWeight="Bold" FontStretch="Normal" FontSize="15"
+                    Command="{Binding ResetGame}"/>
+
+                    <Button Content="Закончить игру" Style="{StaticResource EndGame}"
+                    FontWeight="Bold" FontStretch="Normal" FontSize="15"
+                    Command="{Binding EndGame}"/>
+                </StackPanel>
+            </DockPanel>
+        </StackPanel>
+    </DockPanel>
 </Window>

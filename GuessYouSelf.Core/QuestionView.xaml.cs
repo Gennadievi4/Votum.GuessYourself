@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Windows;
 
-namespace Guess.Yourself
+namespace GuessYouSelf.Core
 {
-    public partial class QuestionView : Window
+    public partial class QuestionView
     {
         public QuestionView(List<string> questions)
         {
-            
             InitializeComponent();
             lv.ItemsSource = questions;
         }
