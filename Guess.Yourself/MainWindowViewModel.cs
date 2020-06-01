@@ -3,6 +3,7 @@ using RLib.Remotes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Diagnostics;
@@ -30,7 +31,7 @@ namespace Guess.Yourself
                 Students.Add(new StudentModel());
             }
             timer.Tick += DispatcherTimer_Tick;
-            //timer.Start();
+            timer.Start();
             deviceManager.votumManager.ButtonClicked += VotumManager_ButtonClicked;
         }
 
@@ -77,6 +78,14 @@ namespace Guess.Yourself
                 std.Time = default;
             }
 
+        }
+        private void StopTimer()
+        {
+            foreach (var std in Students.Where(x => x.RemoteId != default && x.ReceiverId != default))
+            {
+                if (OnTick != null)
+                    OnTick -= std.UpTime;
+            }
         }
         private void EnsureRemoteAdded(int RemoteId, int ReceiverId)
         {
@@ -135,12 +144,15 @@ namespace Guess.Yourself
             //param.UserAnswer = StudentModel.AnswerType.Correct;
             //param.remotePacket.RemoteID = (int)param.RemoteId;
             //param.remotePacket.RemoteCommand = TRemoteCommandID.RF_ACK_DISPLAY_LOGO;
-            //SendbackCommand send = new SendbackCommand((int)param.RemoteId, param.ReceiverId, RemoteCommand.CMD_DISPLAY_STRING);
-            //param.remotePacket.RemoteCommand = (TRemoteCommandID)send.Command;
+            SendbackCommand send = new SendbackCommand(param.ReceiverId, (int)param.RemoteId, RemoteCommand.CMD_DISPLAY_LOGO);
+            param.remotePacket.ComplectID = param.ReceiverId;
+            param.remotePacket.RemoteID = (int)param.RemoteId;
+            param.remotePacket.PacketLength = 6;
+            param.remotePacket.RemoteCommand = TRemoteCommandID.RF_ACK_DISPLAY_LOGO;
+
             param.Question = null;
             if (OnTick != param.UpTime)
             {
-                timer.Start();
                 OnTick += param.UpTime;
             }
         },
@@ -152,11 +164,10 @@ namespace Guess.Yourself
         public RelayCommand<StudentModel> noCmd = null;
         public RelayCommand<StudentModel> NoCmd => noCmd ?? (noCmd = new RelayCommand<StudentModel>((param) =>
         {
-            //param.UserAnswer = StudentModel.AnswerType.NotCorrect;
+            //param.UserAnswer = StudentM1odel.AnswerType.NotCorrect;
             param.Question = null;
             if (OnTick != param.UpTime)
             {
-                timer.Start();
                 OnTick += param.UpTime;
             }
         },
@@ -172,7 +183,6 @@ namespace Guess.Yourself
             param.Question = null;
             if (OnTick != param.UpTime)
             {
-                timer.Start();
                 OnTick += param.UpTime;
             }
         },
@@ -202,15 +212,15 @@ namespace Guess.Yourself
         public RelayCommand<StudentModel> EndGame => endGame ?? (endGame = new RelayCommand<StudentModel>((param) =>
         {
             ChangeTextColorToDefault();
+            StopTimer();
 
             str.IsEnabled = false;
-            timer.Stop();
             deviceManager.votumManager.Stop();
         },
             (param) =>
             {
-                //var x = str.CurrentCell.Item;
-                return str.IsEnabled; //|| x?.Text != default;
+                var x = str.Columns[7].GetCellContent(str.Items[0]) as TextBlock;
+                return str.IsEnabled && x != null ? x.Text != "" : false;
             }));
 
         public RelayCommand<StudentModel> resetGame = null;
@@ -219,12 +229,10 @@ namespace Guess.Yourself
             ResetCollection();
 
             str.IsEnabled = true;
-            //timer.Start();
             deviceManager.votumManager.Start();
         },
             (param) =>
             {
-                
                 return (param != null || !str.IsEnabled) ? true : false;
             }
             ));
