@@ -196,7 +196,9 @@
                 <MenuItem Header="Выход" Background="White"
                           Command="{Binding CloseApp}"/>
             </MenuItem>
-            <MenuItem Header="Справка"/>
+            <MenuItem Header="Справка">
+                <TextBlock Text="Наш сайт: http://votum-edu.ru/"/>
+            </MenuItem>
         </Menu>
         <StackPanel>
             <DataGrid Name="TableName"
@@ -216,7 +218,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Персонаж"
+                    <DataGridTextColumn Header="Список объектов"
                                     Width="*"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
                                     Binding="{Binding Character}"/>

@@ -1,12 +1,11 @@
 ﻿using RLib;
 using RLib.Remotes;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Windows.Controls;
-using System.Windows.Diagnostics;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace Guess.Yourself
@@ -109,6 +108,7 @@ namespace Guess.Yourself
             var orderedCollection = Students.OrderBy(x => x.Time);
             var ratedStudent = orderedCollection.Where(x => x.RemoteId != null).Single(x => x.RemoteId == RemoteId);
             ratedStudent.Rating = orderedCollection.Where(x => x.RemoteId != null && x.Time != null).ToList().IndexOf(ratedStudent) + 1;
+            CommandManager.InvalidateRequerySuggested();
             //var std = Students.OrderBy(x => x.Time).ToList().FindIndex(x => x.Time != null);
             //var order = 1;
             //foreach (var student in Students.OrderBy(x => x.Time).Where(x => x.Time != null))

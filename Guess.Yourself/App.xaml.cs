@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Windows;
 
 namespace Guess.Yourself
@@ -18,7 +19,7 @@ namespace Guess.Yourself
             var requiredDllName = $"{(new AssemblyName(args.Name).Name)}.dll";
             var resources = current_Assembly.GetManifestResourceNames().Where(s => s.EndsWith(requiredDllName)).FirstOrDefault();
 
-            if(resources != null)
+            if (resources != null)
             {
                 using (var stream = current_Assembly.GetManifestResourceStream(resources))
                 {
@@ -34,6 +35,27 @@ namespace Guess.Yourself
             {
                 return null;
             }
+        }
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            if (!InstanceCheck())
+            {
+                MessageBox.Show("Приложение уже запущено!!!",
+                                "Внимание",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Exclamation);
+                Shutdown();
+                return;
+            }
+        }
+
+        private static Mutex InstanceCheckMutex;
+        private static bool InstanceCheck()
+        {
+            bool isOnlyInstance;
+            InstanceCheckMutex = new Mutex(true, @"Guess.Yourself", out isOnlyInstance);
+            return isOnlyInstance;
         }
     }
 }
