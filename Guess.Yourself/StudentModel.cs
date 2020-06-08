@@ -11,6 +11,7 @@ namespace Guess.Yourself
     {
         public string Character { get; set; }
         public bool IsAccess { get; private set; } = true;
+        public List<string> textString { get; set; } = new List<string>();
         public TRemotePacket remotePacket { get; set; } = new TRemotePacket();
         //THIDMessageID
 

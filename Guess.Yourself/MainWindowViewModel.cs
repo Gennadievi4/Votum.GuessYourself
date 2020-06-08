@@ -1,4 +1,5 @@
-﻿using RLib;
+﻿using Guess.Yourself.Interfaces;
+using RLib;
 using RLib.Remotes;
 using System;
 using System.Collections.ObjectModel;
@@ -14,6 +15,11 @@ namespace Guess.Yourself
     {
         public ObservableCollection<StudentModel> Students { get; set; } = new ObservableCollection<StudentModel>();
 
+        IFileService _fileService;
+
+        IDialogService _dialogService;
+        public StudentModel SelectedStudent { get; set; }
+
         private readonly DeviceManager deviceManager = new DeviceManager(new VotumDevicesManager());
 
         public DispatcherTimer timer = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 1) };
@@ -21,10 +27,12 @@ namespace Guess.Yourself
         DataGrid str = (DataGrid)App.Current.MainWindow.FindName("TableName");
 
         public event Action OnTick;
-        public StudentModel SelectedStudent { get; set; }
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(IDialogService dialogService, IFileService fileService)
         {
+            _dialogService = dialogService;
+            _fileService = fileService;
+
             for (int i = 0; i < 32; i++)
             {
                 Students.Add(new StudentModel());
@@ -236,6 +244,22 @@ namespace Guess.Yourself
                 return (param != null || !str.IsEnabled) ? true : false;
             }
             ));
+
+        public RelayCommand<StudentModel> openText = null;
+        public RelayCommand<StudentModel> OpenText => openText ?? (openText = new RelayCommand<StudentModel>((param) =>
+            {
+                if(_dialogService.OpenDialog() == true)
+                {
+                    var stringComboBox = _fileService.Open(_dialogService.FilePath);
+                    param.textString.Clear();
+
+                    foreach(var str in stringComboBox)
+                    {
+                        param.textString.Add(str);
+                    }
+                    _dialogService.ShowMessage("Список объектов заполнен!");
+                }
+            }));
         #endregion
     }
 }
