@@ -251,11 +251,13 @@ namespace Guess.Yourself
                 if(_dialogService.OpenDialog() == true)
                 {
                     var stringComboBox = _fileService.Open(_dialogService.FilePath);
+                    param.NameOfTheStudentsTextFile = _dialogService.FileName;
                     param.textString.Clear();
 
                     foreach(var str in stringComboBox)
                     {
                         param.textString.Add(str);
+                        param.TextString = param.textString[0];
                     }
                     _dialogService.ShowMessage("Список объектов заполнен!");
                 }

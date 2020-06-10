@@ -7,6 +7,7 @@ namespace Guess.Yourself
     public class DefaultDialogService : IDialogService
     {
         public string FilePath { get; set; }
+        public string FileName { get; set; }
 
         public bool OpenDialog()
         {
@@ -14,6 +15,7 @@ namespace Guess.Yourself
             if(openFileDialog.ShowDialog() == true)
             {
                 FilePath = openFileDialog.FileName;
+                FileName = openFileDialog.SafeFileName;
                 return true;
             }
             else
@@ -38,7 +40,7 @@ namespace Guess.Yourself
 
         public void ShowMessage(string message)
         {
-            MessageBox.Show(message);
+            MessageBox.Show(message, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

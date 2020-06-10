@@ -9,9 +9,43 @@ namespace Guess.Yourself
 {
     public class StudentModel : INotifyPropertyChanged
     {
-        public string Character { get; set; }
+        private string nameOfTheStudentsTextFile;
+        public string NameOfTheStudentsTextFile
+        {
+            get => nameOfTheStudentsTextFile;
+            set
+            {
+                if (nameOfTheStudentsTextFile == value) return;
+                nameOfTheStudentsTextFile = value;
+                RaisePropertyChanged(nameof(NameOfTheStudentsTextFile));
+            }
+        }
+
+        private string character;
+        public string Character
+        {
+            get => character;
+            set
+            {
+                if (character == value) return;
+                character = value;
+                RaisePropertyChanged(nameof(Character));
+            }
+        }
         public bool IsAccess { get; private set; } = true;
-        public List<string> textString { get; set; } = new List<string>();
+        public List<object> textString { get; set; } = new List<object>();
+
+        private object txtString;
+        public object TextString
+        {
+            get => txtString;
+            set
+            {
+                if (txtString == value) return;
+                txtString = value;
+                RaisePropertyChanged(nameof(TextString));
+            }
+        }
         public TRemotePacket remotePacket { get; set; } = new TRemotePacket();
         //THIDMessageID
 
