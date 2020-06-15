@@ -12,7 +12,14 @@ namespace Guess.Yourself
         public bool OpenDialog()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            if(openFileDialog.ShowDialog() == true)
+
+            openFileDialog.DefaultExt = ".txt";
+            openFileDialog.Filter = "Текстовый документ: (.txt)|*.txt";
+            openFileDialog.Title = "Обзор";
+            openFileDialog.Multiselect = false;
+            openFileDialog.ValidateNames = true;
+
+            if (openFileDialog.ShowDialog() == true)
             {
                 FilePath = openFileDialog.FileName;
                 FileName = openFileDialog.SafeFileName;

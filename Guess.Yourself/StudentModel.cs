@@ -33,7 +33,7 @@ namespace Guess.Yourself
             }
         }
         public bool IsAccess { get; private set; } = true;
-        public List<object> textString { get; set; } = new List<object>();
+        public List<string> textString { get; set; } = new List<string>();
 
         private object txtString;
         public object TextString
