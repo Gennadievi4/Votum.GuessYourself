@@ -9,7 +9,6 @@ namespace GuessYouSelf.Core
 {
     public class StudentModel : INotifyPropertyChanged
     {
-        public string Character { get; set; }
         public bool IsAccess { get; private set; } = true;
         public RemoteEventArgs send;
         public TRemotePacket remotePacket = new TRemotePacket();
@@ -17,6 +16,43 @@ namespace GuessYouSelf.Core
         private DateTime? StopWatch;
         //DateTime start = DateTime.Now;
         //public DateTime? Time => StopWatch;
+
+        public List<string> textString { get; set; } = new List<string>();
+        private object txtString;
+        public object TextString
+        {
+            get => txtString;
+            set
+            {
+                if (txtString == value) return;
+                txtString = value;
+                RaisePropertyChanged(nameof(TextString));
+            }
+        }
+
+        private string nameOfTheStudentsTextFile;
+        public string NameOfTheStudentsTextFile
+        {
+            get => nameOfTheStudentsTextFile;
+            set
+            {
+                if (nameOfTheStudentsTextFile == value) return;
+                nameOfTheStudentsTextFile = value;
+                RaisePropertyChanged(nameof(NameOfTheStudentsTextFile));
+            }
+        }
+
+        private string character;
+        public string Character
+        {
+            get => character;
+            set
+            {
+                if (character == value) return;
+                character = value;
+                RaisePropertyChanged(nameof(Character));
+            }
+        }
         public DateTime? Time
         {
             get => StopWatch;

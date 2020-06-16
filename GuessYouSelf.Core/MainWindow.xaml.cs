@@ -5,7 +5,7 @@
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModelCore();
+            DataContext = new MainWindowViewModelCore(new DefaultDialogService(), new TextFileService());
         }
     }
 }

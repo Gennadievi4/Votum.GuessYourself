@@ -5,6 +5,15 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>512x512bb.ico</ApplicationIcon>
+    <NeutralLanguage>ru</NeutralLanguage>
+    <AssemblyVersion>1.0.0.4</AssemblyVersion>
+    <FileVersion>1.0.0.4</FileVersion>
+    <Version>1.0.0.4</Version>
+    <Authors>VOTUM®</Authors>
+    <Product>Угадай Себя</Product>
+    <Company>VOTUM®</Company>
+    <AssemblyName>Угадай себя</AssemblyName>
+    <Copyright>VOTUM®</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

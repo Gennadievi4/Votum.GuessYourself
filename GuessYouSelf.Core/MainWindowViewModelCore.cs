@@ -1,9 +1,11 @@
-﻿using RLib;
+﻿using GuessYouSelf.Core.Interfaces;
+using RLib;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace GuessYouSelf.Core
@@ -12,6 +14,10 @@ namespace GuessYouSelf.Core
     {
         public ObservableCollection<StudentModel> Students { get; set; } = new ObservableCollection<StudentModel>();
 
+        private IFileService _fileService;
+        private IDialogService _dialogService;
+        public StudentModel SelectedStudent { get; set; }
+
         private readonly DeviceManager deviceManager = new DeviceManager(new VotumDevicesManager());
 
         public DispatcherTimer timer = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 1) };
@@ -19,16 +25,18 @@ namespace GuessYouSelf.Core
         DataGrid str = (DataGrid)Application.Current.MainWindow.FindName("TableName");
 
         public event Action OnTick;
-        public StudentModel SelectedStudent { get; set; }
 
-        public MainWindowViewModelCore()
+        public MainWindowViewModelCore(IDialogService dialogService, IFileService fileService)
         {
+            _dialogService = dialogService;
+            _fileService = fileService;
+
             for (int i = 0; i < 32; i++)
             {
                 Students.Add(new StudentModel());
             }
             timer.Tick += DispatcherTimer_Tick;
-            //timer.Start();
+            timer.Start();
             deviceManager.votumManager.ButtonClicked += VotumManager_ButtonClicked;
         }
 
@@ -74,8 +82,17 @@ namespace GuessYouSelf.Core
                 std.RemoteId = default;
                 std.Time = default;
             }
-
         }
+
+        private void StopTimer()
+        {
+            foreach (var std in Students.Where(x => x.RemoteId != default && x.ReceiverId != default))
+            {
+                if (OnTick != null)
+                    OnTick -= std.UpTime;
+            }
+        }
+
         private void EnsureRemoteAdded(int RemoteId, int ReceiverId)
         {
             if (!Students.Any(x => x.ReceiverId.Equals(ReceiverId) && x.RemoteId.Equals(Convert.ToUInt16(RemoteId))))
@@ -97,6 +114,7 @@ namespace GuessYouSelf.Core
             var orderedCollection = Students.OrderBy(x => x.Time);
             var ratedStudent = orderedCollection.Where(x => x.RemoteId != null).Single(x => x.RemoteId == RemoteId);
             ratedStudent.Rating = orderedCollection.Where(x => x.RemoteId != null && x.Time != null).ToList().IndexOf(ratedStudent) + 1;
+            CommandManager.InvalidateRequerySuggested();
             //var std = Students.OrderBy(x => x.Time).ToList().FindIndex(x => x.Time != null);
             //var order = 1;
             //foreach (var student in Students.OrderBy(x => x.Time).Where(x => x.Time != null))
@@ -133,7 +151,6 @@ namespace GuessYouSelf.Core
             param.Question = null;
             if (OnTick != param.UpTime)
             {
-                timer.Start();
                 OnTick += param.UpTime;
             }
         },
@@ -149,7 +166,6 @@ namespace GuessYouSelf.Core
             param.Question = null;
             if (OnTick != param.UpTime)
             {
-                timer.Start();
                 OnTick += param.UpTime;
             }
         },
@@ -165,7 +181,6 @@ namespace GuessYouSelf.Core
             param.Question = null;
             if (OnTick != param.UpTime)
             {
-                timer.Start();
                 OnTick += param.UpTime;
             }
         },
@@ -195,11 +210,15 @@ namespace GuessYouSelf.Core
         public RelayCommand<StudentModel> EndGame => endGame ?? (endGame = new RelayCommand<StudentModel>((param) =>
         {
             ChangeTextColorToDefault();
-
+            StopTimer();
             str.IsEnabled = false;
-            timer.Stop();
             deviceManager.votumManager.Stop();
-        }));
+        },
+            (param) =>
+            {
+                var x = str.Columns[7].GetCellContent(str.Items[0]) as TextBlock;
+                return str.IsEnabled && x != null ? x.Text != "" : false;
+            }));
 
         public RelayCommand<StudentModel> resetGame = null;
         public RelayCommand<StudentModel> ResetGame => resetGame ?? (resetGame = new RelayCommand<StudentModel>((param) =>
@@ -207,15 +226,38 @@ namespace GuessYouSelf.Core
             ResetCollection();
 
             str.IsEnabled = true;
-            //timer.Start();
             deviceManager.votumManager.Start();
         },
             (param) =>
             {
-
                 return (param != null || !str.IsEnabled) ? true : false;
             }
             ));
+
+        public RelayCommand<StudentModel> openText = null;
+        public RelayCommand<StudentModel> OpenText => openText ?? (openText = new RelayCommand<StudentModel>((param) =>
+        {
+            if (_dialogService.OpenDialog() == true)
+            {
+                var stringComboBox = _fileService.Open(_dialogService.FilePath);
+                param.textString.Clear();
+
+                if (stringComboBox.Any())
+                {
+                    param.NameOfTheStudentsTextFile = _dialogService.FileName;
+                    foreach (var str in stringComboBox)
+                    {
+                        param.textString.Add(str);
+                    }
+                    param.TextString = param.textString[0];
+                    _dialogService.ShowMessage("Список объектов заполнен!");
+                }
+                else
+                {
+                    _dialogService.ShowMessage("Файл пустой! Заполните файл объектами!");
+                }
+            }
+        }));
         #endregion
     }
 }

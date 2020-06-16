@@ -14,174 +14,174 @@
         ResizeMode="CanResize"
         Name="GuessYorselfMainWindow">
     <Window.Resources>
-    <Style x:Key="CenterDataGridColumnsHeaders" TargetType="DataGridColumnHeader">
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-    </Style>
-    <Style TargetType="Button">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border x:Name="Border"
+        <Style x:Key="CenterDataGridColumnsHeaders" TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border"
                                 BorderThickness="4.6">
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0.0, 0" EndPoint="0.0, 1">
-                                <GradientStopCollection>
-                                    <GradientStop Offset="0" Color="White"/>
-                                    <GradientStop Offset="1" Color="White"/>
-                                </GradientStopCollection>
-                            </LinearGradientBrush>
-                        </Border.Background>
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="CommonStates">
-                                <VisualStateGroup.Transitions>
-                                    <VisualTransition GeneratedDuration="0:0:0.5"/>
-                                    <VisualTransition GeneratedDuration="0" To="Pressed"/>
-                                </VisualStateGroup.Transitions>
-                                <VisualState x:Name="MouseOver"/>
-                                <VisualState x:Name="Normal">
-                                    <Storyboard>
-                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0.0, 0" EndPoint="0.0, 1">
+                                    <GradientStopCollection>
+                                        <GradientStop Offset="0" Color="White"/>
+                                        <GradientStop Offset="1" Color="White"/>
+                                    </GradientStopCollection>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition GeneratedDuration="0:0:0.5"/>
+                                        <VisualTransition GeneratedDuration="0" To="Pressed"/>
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="MouseOver"/>
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
                                                             Storyboard.TargetName="Border">
-                                            <EasingColorKeyFrame KeyTime="0" Value="Aqua"/>
-                                        </ColorAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Disabled">
-                                    <Storyboard>
-                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                <EasingColorKeyFrame KeyTime="0" Value="Aqua"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
                                                             Storyboard.TargetName="Border">
-                                            <EasingColorKeyFrame KeyTime="0" Value="Beige"/>
-                                        </ColorAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Pressed">
-                                    <Storyboard>
-                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                <EasingColorKeyFrame KeyTime="0" Value="Beige"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
                                                                           Storyboard.TargetName="Border">
-                                            <EasingColorKeyFrame KeyTime="0" Value="#FF70E5"/>
-                                        </ColorAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    <Style x:Key="EndGame" TargetType="{x:Type Button}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Border x:Name="Border"
+                                                <EasingColorKeyFrame KeyTime="0" Value="#FF70E5"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="EndGame" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="Border"
                             BorderThickness="1"
                                 Padding="2, 10" Width="155" Height="50">
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0.0, 0" EndPoint="0.0, 1">
-                                <LinearGradientBrush.GradientStops>
-                                    <GradientStopCollection>
-                                        <GradientStop Offset="0" Color="White"/>
-                                        <GradientStop Offset="1" Color="White"/>
-                                    </GradientStopCollection>
-                                </LinearGradientBrush.GradientStops>
-                            </LinearGradientBrush>
-                        </Border.Background>
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="CommonStates">
-                                <VisualStateGroup.Transitions>
-                                    <VisualTransition GeneratedDuration="0:0:0.5"/>
-                                    <VisualTransition GeneratedDuration="0" To="Pressed"/>
-                                </VisualStateGroup.Transitions>
-                                <VisualState x:Name="MouseOver"/>
-                                <VisualState x:Name="Normal">
-                                    <Storyboard>
-                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0.0, 0" EndPoint="0.0, 1">
+                                    <LinearGradientBrush.GradientStops>
+                                        <GradientStopCollection>
+                                            <GradientStop Offset="0" Color="White"/>
+                                            <GradientStop Offset="1" Color="White"/>
+                                        </GradientStopCollection>
+                                    </LinearGradientBrush.GradientStops>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition GeneratedDuration="0:0:0.5"/>
+                                        <VisualTransition GeneratedDuration="0" To="Pressed"/>
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="MouseOver"/>
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
                                                 Storyboard.TargetName="Border">
-                                            <EasingColorKeyFrame KeyTime="0" Value="Aqua"/>
-                                        </ColorAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Disabled">
-                                    <Storyboard>
-                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                <EasingColorKeyFrame KeyTime="0" Value="Aqua"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
                                                 Storyboard.TargetName="Border">
-                                            <EasingColorKeyFrame KeyTime="0" Value="Beige"/>
-                                        </ColorAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Pressed">
-                                    <Storyboard>
-                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                <EasingColorKeyFrame KeyTime="0" Value="Beige"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
                                                 Storyboard.TargetName="Border">
-                                            <EasingColorKeyFrame KeyTime="0" Value="#FF70E5"/>
-                                        </ColorAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    <Style x:Key="ResetGame" TargetType="{x:Type Button}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Border x:Name="Border"
+                                                <EasingColorKeyFrame KeyTime="0" Value="#FF70E5"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ResetGame" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="Border"
                             BorderThickness="1"
                             Padding="2, 7" Width="160" Height="50">
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0.0, 0" EndPoint="0.0, 1">
-                                <LinearGradientBrush.GradientStops>
-                                    <GradientStopCollection>
-                                        <GradientStop Offset="0" Color="White"/>
-                                        <GradientStop Offset="1" Color="White"/>
-                                    </GradientStopCollection>
-                                </LinearGradientBrush.GradientStops>
-                            </LinearGradientBrush>
-                        </Border.Background>
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="CommonStates">
-                                <VisualStateGroup.Transitions>
-                                    <VisualTransition GeneratedDuration="0:0:0.5"/>
-                                    <VisualTransition GeneratedDuration="0" To="Pressed"/>
-                                </VisualStateGroup.Transitions>
-                                <VisualState x:Name="MouseOver"/>
-                                <VisualState x:Name="Normal">
-                                    <Storyboard>
-                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0.0, 0" EndPoint="0.0, 1">
+                                    <LinearGradientBrush.GradientStops>
+                                        <GradientStopCollection>
+                                            <GradientStop Offset="0" Color="White"/>
+                                            <GradientStop Offset="1" Color="White"/>
+                                        </GradientStopCollection>
+                                    </LinearGradientBrush.GradientStops>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition GeneratedDuration="0:0:0.5"/>
+                                        <VisualTransition GeneratedDuration="0" To="Pressed"/>
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="MouseOver"/>
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
                                                 Storyboard.TargetName="Border">
-                                            <EasingColorKeyFrame KeyTime="0" Value="Aqua"/>
-                                        </ColorAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Disabled">
-                                    <Storyboard>
-                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                <EasingColorKeyFrame KeyTime="0" Value="Aqua"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
                                                 Storyboard.TargetName="Border">
-                                            <EasingColorKeyFrame KeyTime="0" Value="Beige"/>
-                                        </ColorAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Pressed">
-                                    <Storyboard>
-                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                <EasingColorKeyFrame KeyTime="0" Value="Beige"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
                                                 Storyboard.TargetName="Border">
-                                            <EasingColorKeyFrame KeyTime="0" Value="#FF70E5"/>
-                                        </ColorAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+                                                <EasingColorKeyFrame KeyTime="0" Value="#FF70E5"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <!--<Window.DataContext>
         <local:MainWindowViewModel/>
@@ -196,7 +196,9 @@
                 <MenuItem Header="Выход" Background="White"
                           Command="{Binding CloseApp}"/>
             </MenuItem>
-            <MenuItem Header="Справка"/>
+            <MenuItem Header="Справка">
+                <TextBlock Text="Наш сайт: http://votum-edu.ru/"/>
+            </MenuItem>
         </Menu>
         <StackPanel>
             <DataGrid Name="TableName"
@@ -216,10 +218,33 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Персонаж"
+                    <DataGridTemplateColumn Header="Список объектов"
                                     Width="*"
-                                    HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
-                                    Binding="{Binding Character}"/>
+                                    HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <DockPanel LastChildFill="False">
+                                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                                        <ComboBox DockPanel.Dock="Left" Width="270" MinWidth="200" MaxWidth="300" HorizontalContentAlignment="Center" ItemsSource="{Binding textString}"
+                                              SelectedItem="{Binding TextString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBlock DockPanel.Dock="Left" Width="Auto" MinWidth="100" TextAlignment="Center" Margin="100, 0, 2, 0"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                                   Text="{Binding NameOfTheStudentsTextFile}"/>
+                                    </StackPanel>
+                                    <Button DockPanel.Dock="Right" 
+                                            Command="{Binding DataContext.OpenText, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
+                                            CommandParameter="{Binding}">
+                                        <fa:ImageAwesome Icon="FileOutline" Width="14" Foreground="White"/>
+                                    </Button>
+                                </DockPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <TextBox TextAlignment="Center" TextWrapping="Wrap" Text="{Binding Character, Mode=TwoWay}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="Вопросы"
                                             x:Name="Question"
                                         Width="*"
