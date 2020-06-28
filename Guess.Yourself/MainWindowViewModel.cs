@@ -15,6 +15,15 @@ namespace Guess.Yourself
     {
         public ObservableCollection<StudentModel> Students { get; set; } = new ObservableCollection<StudentModel>();
 
+        #region Состояние команд
+        public enum CommandStates
+        {
+            StateCommandYesCMD, StateCommandNoCMD, StateCommandDontKnowCMD
+        }
+
+
+        #endregion
+
         IFileService _fileService;
 
         IDialogService _dialogService;
@@ -27,7 +36,7 @@ namespace Guess.Yourself
         DataGrid str = (DataGrid)App.Current.MainWindow.FindName("TableName");
 
         public event Action OnTick;
-
+        public MainWindowViewModel() { }
         public MainWindowViewModel(IDialogService dialogService, IFileService fileService)
         {
             _dialogService = dialogService;
@@ -149,7 +158,8 @@ namespace Guess.Yourself
 
         public RelayCommand<StudentModel> YesCmd => yesCmd ?? (yesCmd = new RelayCommand<StudentModel>((param) =>
         {
-            //param.UserAnswer = StudentModel.AnswerType.Correct;
+            param.UserAnswerYes = StudentModel.AnswerType.Correct;
+            
             //param.remotePacket.RemoteID = (int)param.RemoteId;
             //param.remotePacket.RemoteCommand = TRemoteCommandID.RF_ACK_DISPLAY_LOGO;
             SendbackCommand send = new SendbackCommand(param.ReceiverId, (int)param.RemoteId, RemoteCommand.CMD_DISPLAY_LOGO);
@@ -172,7 +182,7 @@ namespace Guess.Yourself
         public RelayCommand<StudentModel> noCmd = null;
         public RelayCommand<StudentModel> NoCmd => noCmd ?? (noCmd = new RelayCommand<StudentModel>((param) =>
         {
-            //param.UserAnswer = StudentM1odel.AnswerType.NotCorrect;
+            param.UserAnswerNo = StudentModel.AnswerType.NotCorrect;
             param.Question = null;
             if (OnTick != param.UpTime)
             {
@@ -187,7 +197,7 @@ namespace Guess.Yourself
         public RelayCommand<StudentModel> dontKnowCmd = null;
         public RelayCommand<StudentModel> DontKnowCmd => dontKnowCmd ?? (dontKnowCmd = new RelayCommand<StudentModel>((param) =>
         {
-            //param.UserAnswer = StudentModel.AnswerType.DontKnow;
+            param.UserAnswerDontKnow = StudentModel.AnswerType.DontKnow;
             param.Question = null;
             if (OnTick != param.UpTime)
             {
@@ -202,7 +212,7 @@ namespace Guess.Yourself
         public RelayCommand<StudentModel> questionCmd = null;
         public RelayCommand<StudentModel> QuestionCmd => questionCmd ?? (questionCmd = new RelayCommand<StudentModel>((param) =>
         {
-            new QuestionView(param.Questions).ShowDialog();
+            new QuestionView() { DataContext = param }.ShowDialog();
         },
             (param) =>
             {

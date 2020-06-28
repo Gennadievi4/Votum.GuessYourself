@@ -8,10 +8,10 @@
         mc:Ignorable="d"
         Title="Игра: Отгадай себя" 
         WindowStartupLocation="CenterScreen"
-        MinWidth="600"
-        MinHeight="400"
+        MinWidth="1500"
+        MinHeight="1050"
         WindowState="Maximized"
-        ResizeMode="CanResize"
+        ResizeMode="CanResizeWithGrip"
         Name="GuessYorselfMainWindow">
     <Window.Resources>
         <Style x:Key="CenterDataGridColumnsHeaders" TargetType="DataGridColumnHeader">
@@ -184,7 +184,7 @@
         </Style>
     </Window.Resources>
     <!--<Window.DataContext>
-        <local:MainWindowViewModel/>
+        <l:MainWindowViewModel/>
     </Window.DataContext>-->
     <DockPanel>
         <Menu DockPanel.Dock="Top" Margin="0, 0, 0, 3" Height="18" 
@@ -200,13 +200,18 @@
                 <TextBlock Text="Наш сайт: http://votum-edu.ru/"/>
             </MenuItem>
         </Menu>
-        <StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             <DataGrid Name="TableName"
                   AutoGenerateColumns="False" 
                   HeadersVisibility="Column"
                   CanUserAddRows="False"
                   ItemsSource="{Binding Students}"
-                  VerticalScrollBarVisibility="Auto">
+                  VerticalScrollBarVisibility="Auto"
+                  Grid.Row="0">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="№ пульта"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
@@ -224,7 +229,7 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <DockPanel LastChildFill="False">
-                                    <ComboBox DockPanel.Dock="Left" Width="270" MinWidth="200" MaxWidth="300" HorizontalContentAlignment="Center" ItemsSource="{Binding textString}"
+                                    <ComboBox DockPanel.Dock="Left" Width="270" MinWidth="100" MaxWidth="300" HorizontalContentAlignment="Center" ItemsSource="{Binding textString}"
                                               SelectedItem="{Binding TextString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                     <TextBlock DockPanel.Dock="Left" Width="Auto" MinWidth="100" TextAlignment="Center" Margin="100, 0, 2, 0"
                                                    HorizontalAlignment="Center" VerticalAlignment="Center" 
@@ -321,14 +326,13 @@
                                     Binding="{Binding Rating, Mode=OneWay}"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <DockPanel Margin="0, 2, 0, 0">
+            <DockPanel Grid.Row="1">
                 <StatusBar DockPanel.Dock="Left" Background="White">
                     <StatusBarItem>
                         <TextBlock Text="Победит быстреший ум!" Foreground="Black" FontSize="11"/>
                     </StatusBarItem>
                 </StatusBar>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-
                     <Button Content="Перезапустить игру" Style="{StaticResource ResetGame}"
                     FontWeight="Bold" FontStretch="Normal" FontSize="15"
                     Command="{Binding ResetGame}"/>
@@ -338,6 +342,6 @@
                     Command="{Binding EndGame}"/>
                 </StackPanel>
             </DockPanel>
-        </StackPanel>
+        </Grid>
     </DockPanel>
 </Window>

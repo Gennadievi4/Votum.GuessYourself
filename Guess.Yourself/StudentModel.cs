@@ -2,6 +2,7 @@
 using RLib.Remotes;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Media;
 
@@ -129,10 +130,54 @@ namespace Guess.Yourself
                 RaisePropertyChanged(nameof(RemoteId));
             }
         }
-        public List<string> Questions { get; set; } = new List<string>();
+
+        #region Цвета
+        public ObservableCollection<string> Questions { get; set; } = new ObservableCollection<string>();
 
         public static SolidColorBrush defaultColor = new SolidColorBrush(Colors.Black);
         public SolidColorBrush AnswerColor { get; set; } = defaultColor;
+        public SolidColorBrush Yes { get; set; } = defaultColor;
+        public SolidColorBrush No { get; set; } = defaultColor;
+        public SolidColorBrush DontKnow { get; set; } = defaultColor;
+
+        private AnswerType userAnswerYes;
+        public AnswerType UserAnswerYes
+        {
+            get => userAnswerYes;
+            set
+            {
+                userAnswerYes = value;
+                Yes = ChangeColor(value);
+                
+                RaisePropertyChanged(nameof(Yes));
+            }
+        }
+
+        private AnswerType userAnswerNo;
+        public AnswerType UserAnswerNo
+        {
+            get => userAnswerNo;
+            set
+            {
+                userAnswerNo = value;
+                No = ChangeColor(value);
+
+                RaisePropertyChanged(nameof(No));
+            }
+        }
+
+        private AnswerType userAnswerDontKnow;
+        public AnswerType UserAnswerDontKnow
+        {
+            get => userAnswerDontKnow;
+            set
+            {
+                userAnswerDontKnow = value;
+                DontKnow = ChangeColor(value);
+
+                RaisePropertyChanged(nameof(DontKnow));
+            }
+        }
 
         private AnswerType userAnswer;
         public AnswerType UserAnswer
@@ -146,6 +191,8 @@ namespace Guess.Yourself
                 RaisePropertyChanged(nameof(AnswerColor));
             }
         }
+        #endregion
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public StudentModel(int remoteId, int receiverId)
@@ -164,7 +211,7 @@ namespace Guess.Yourself
         }
         public void QuestionsAdd(string text)
         {
-            Questions.Add($"{Questions.Count + 1}. " + $" {text}");
+            Questions.Add($"{Questions.Count + 1}. {text}");
         }
         public void UpTime()
         {
