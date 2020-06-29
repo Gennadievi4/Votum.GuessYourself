@@ -136,48 +136,48 @@ namespace Guess.Yourself
 
         public static SolidColorBrush defaultColor = new SolidColorBrush(Colors.Black);
         public SolidColorBrush AnswerColor { get; set; } = defaultColor;
-        public SolidColorBrush Yes { get; set; } = defaultColor;
-        public SolidColorBrush No { get; set; } = defaultColor;
-        public SolidColorBrush DontKnow { get; set; } = defaultColor;
+        //public SolidColorBrush Yes { get; set; } = defaultColor;
+        //public SolidColorBrush No { get; set; } = defaultColor;
+        //public SolidColorBrush DontKnow { get; set; } = defaultColor;
 
-        private AnswerType userAnswerYes;
-        public AnswerType UserAnswerYes
-        {
-            get => userAnswerYes;
-            set
-            {
-                userAnswerYes = value;
-                Yes = ChangeColor(value);
+        //private AnswerType userAnswerYes;
+        //public AnswerType UserAnswerYes
+        //{
+        //    get => userAnswerYes;
+        //    set
+        //    {
+        //        userAnswerYes = value;
+        //        Yes = ChangeColor(value);
                 
-                RaisePropertyChanged(nameof(Yes));
-            }
-        }
+        //        RaisePropertyChanged(nameof(Yes));
+        //    }
+        //}
 
-        private AnswerType userAnswerNo;
-        public AnswerType UserAnswerNo
-        {
-            get => userAnswerNo;
-            set
-            {
-                userAnswerNo = value;
-                No = ChangeColor(value);
+        //private AnswerType userAnswerNo;
+        //public AnswerType UserAnswerNo
+        //{
+        //    get => userAnswerNo;
+        //    set
+        //    {
+        //        userAnswerNo = value;
+        //        No = ChangeColor(value);
 
-                RaisePropertyChanged(nameof(No));
-            }
-        }
+        //        RaisePropertyChanged(nameof(No));
+        //    }
+        //}
 
-        private AnswerType userAnswerDontKnow;
-        public AnswerType UserAnswerDontKnow
-        {
-            get => userAnswerDontKnow;
-            set
-            {
-                userAnswerDontKnow = value;
-                DontKnow = ChangeColor(value);
+        //private AnswerType userAnswerDontKnow;
+        //public AnswerType UserAnswerDontKnow
+        //{
+        //    get => userAnswerDontKnow;
+        //    set
+        //    {
+        //        userAnswerDontKnow = value;
+        //        DontKnow = ChangeColor(value);
 
-                RaisePropertyChanged(nameof(DontKnow));
-            }
-        }
+        //        RaisePropertyChanged(nameof(DontKnow));
+        //    }
+        //}
 
         private AnswerType userAnswer;
         public AnswerType UserAnswer

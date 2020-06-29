@@ -38,11 +38,6 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <ListView Grid.Row="0" Background="Gray" Height="300" ItemsSource="{Binding Questions}">
-            <!--<ListView.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding}" FontSize="32" Foreground="White"/>
-                </DataTemplate>
-            </ListView.ItemTemplate>-->
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Вопросы" Width="250">
@@ -55,21 +50,57 @@
                     <GridViewColumn Header="Да">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Background="{Binding Yes}" DataContext="{Binding StudentModel}"/>
+                                <Button Content="Да">
+                                    <Button.Resources>
+                                        <Style TargetType="{x:Type Button}">
+                                            <Setter Property="IsEnabled" Value="False"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DataContext.AnswerColor, 
+                                                    RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}">
+                                                    <Setter Property="Background" Value="Aqua"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Resources>
+                                </Button>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Нет">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Background="{Binding No}" DataContext="{Binding StudentModel}"/>
+                                <Button Content="Нет">
+                                    <Button.Resources>
+                                        <Style TargetType="{x:Type Button}">
+                                            <Setter Property="IsEnabled" Value="False"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DataContext.AnswerColor, 
+                                                    RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}">
+                                                    <Setter Property="Background" Value="Aqua"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Resources>
+                                </Button>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Не знаю">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Background="{Binding DontKnow}" DataContext="{Binding StudentModel}"/>
+                                <Button Content="Не знаю">
+                                    <Button.Resources>
+                                        <Style TargetType="Button">
+                                            <Setter Property="IsEnabled" Value="False"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DataContext.AnswerColor, 
+                                                    RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}" Value="DontKnow">
+                                                    <Setter Property="Background" Value="Aqua"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Resources>
+                                </Button>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

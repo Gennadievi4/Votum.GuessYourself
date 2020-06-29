@@ -15,15 +15,6 @@ namespace Guess.Yourself
     {
         public ObservableCollection<StudentModel> Students { get; set; } = new ObservableCollection<StudentModel>();
 
-        #region Состояние команд
-        public enum CommandStates
-        {
-            StateCommandYesCMD, StateCommandNoCMD, StateCommandDontKnowCMD
-        }
-
-
-        #endregion
-
         IFileService _fileService;
 
         IDialogService _dialogService;
@@ -158,7 +149,7 @@ namespace Guess.Yourself
 
         public RelayCommand<StudentModel> YesCmd => yesCmd ?? (yesCmd = new RelayCommand<StudentModel>((param) =>
         {
-            param.UserAnswerYes = StudentModel.AnswerType.Correct;
+            param.UserAnswer = StudentModel.AnswerType.Correct;
             
             //param.remotePacket.RemoteID = (int)param.RemoteId;
             //param.remotePacket.RemoteCommand = TRemoteCommandID.RF_ACK_DISPLAY_LOGO;
@@ -182,7 +173,7 @@ namespace Guess.Yourself
         public RelayCommand<StudentModel> noCmd = null;
         public RelayCommand<StudentModel> NoCmd => noCmd ?? (noCmd = new RelayCommand<StudentModel>((param) =>
         {
-            param.UserAnswerNo = StudentModel.AnswerType.NotCorrect;
+            param.UserAnswer = StudentModel.AnswerType.NotCorrect;
             param.Question = null;
             if (OnTick != param.UpTime)
             {
@@ -197,7 +188,7 @@ namespace Guess.Yourself
         public RelayCommand<StudentModel> dontKnowCmd = null;
         public RelayCommand<StudentModel> DontKnowCmd => dontKnowCmd ?? (dontKnowCmd = new RelayCommand<StudentModel>((param) =>
         {
-            param.UserAnswerDontKnow = StudentModel.AnswerType.DontKnow;
+            param.UserAnswer = StudentModel.AnswerType.DontKnow;
             param.Question = null;
             if (OnTick != param.UpTime)
             {
