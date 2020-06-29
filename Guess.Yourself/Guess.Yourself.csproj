@@ -196,6 +196,12 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="HidApiAdapter.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="RLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="hidapi32.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
