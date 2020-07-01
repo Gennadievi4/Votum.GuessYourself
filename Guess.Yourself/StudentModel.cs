@@ -3,12 +3,11 @@ using RLib.Remotes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows.Media;
 
 namespace Guess.Yourself
 {
-    public class StudentModel : INotifyPropertyChanged
+    public class StudentModel : NotifyPropertyChanged
     {
         private string nameOfTheStudentsTextFile;
         public string NameOfTheStudentsTextFile
@@ -18,7 +17,7 @@ namespace Guess.Yourself
             {
                 if (nameOfTheStudentsTextFile == value) return;
                 nameOfTheStudentsTextFile = value;
-                RaisePropertyChanged(nameof(NameOfTheStudentsTextFile));
+                OnPropertyChanged();
             }
         }
 
@@ -30,7 +29,7 @@ namespace Guess.Yourself
             {
                 if (character == value) return;
                 character = value;
-                RaisePropertyChanged(nameof(Character));
+                OnPropertyChanged();
             }
         }
         public bool IsAccess { get; private set; } = true;
@@ -44,7 +43,7 @@ namespace Guess.Yourself
             {
                 if (txtString == value) return;
                 txtString = value;
-                RaisePropertyChanged(nameof(TextString));
+                OnPropertyChanged();
             }
         }
         public TRemotePacket remotePacket { get; set; } = new TRemotePacket();
@@ -61,7 +60,7 @@ namespace Guess.Yourself
             {
                 if (StopWatch == value) return;
                 StopWatch = value;
-                RaisePropertyChanged(nameof(Time));
+                OnPropertyChanged();
             }
         }
 
@@ -87,7 +86,7 @@ namespace Guess.Yourself
             {
                 if (rating == value) return;
                 rating = value;
-                RaisePropertyChanged(nameof(Rating));
+                OnPropertyChanged();
             }
             get
             {
@@ -105,7 +104,7 @@ namespace Guess.Yourself
             {
                 if (question == value) return;
                 question = value;
-                RaisePropertyChanged(nameof(Question));
+                OnPropertyChanged();
             }
         }
 
@@ -127,57 +126,15 @@ namespace Guess.Yourself
             {
                 if (remoteId == value) return;
                 remoteId = value;
-                RaisePropertyChanged(nameof(RemoteId));
+                OnPropertyChanged();
             }
         }
 
         #region Цвета
-        public ObservableCollection<string> Questions { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<AnswerLog> Questions { get; set; } = new ObservableCollection<AnswerLog>();
 
         public static SolidColorBrush defaultColor = new SolidColorBrush(Colors.Black);
         public SolidColorBrush AnswerColor { get; set; } = defaultColor;
-        //public SolidColorBrush Yes { get; set; } = defaultColor;
-        //public SolidColorBrush No { get; set; } = defaultColor;
-        //public SolidColorBrush DontKnow { get; set; } = defaultColor;
-
-        //private AnswerType userAnswerYes;
-        //public AnswerType UserAnswerYes
-        //{
-        //    get => userAnswerYes;
-        //    set
-        //    {
-        //        userAnswerYes = value;
-        //        Yes = ChangeColor(value);
-                
-        //        RaisePropertyChanged(nameof(Yes));
-        //    }
-        //}
-
-        //private AnswerType userAnswerNo;
-        //public AnswerType UserAnswerNo
-        //{
-        //    get => userAnswerNo;
-        //    set
-        //    {
-        //        userAnswerNo = value;
-        //        No = ChangeColor(value);
-
-        //        RaisePropertyChanged(nameof(No));
-        //    }
-        //}
-
-        //private AnswerType userAnswerDontKnow;
-        //public AnswerType UserAnswerDontKnow
-        //{
-        //    get => userAnswerDontKnow;
-        //    set
-        //    {
-        //        userAnswerDontKnow = value;
-        //        DontKnow = ChangeColor(value);
-
-        //        RaisePropertyChanged(nameof(DontKnow));
-        //    }
-        //}
 
         private AnswerType userAnswer;
         public AnswerType UserAnswer
@@ -188,12 +145,11 @@ namespace Guess.Yourself
                 userAnswer = value;
                 AnswerColor = ChangeColor(value);
 
-                RaisePropertyChanged(nameof(AnswerColor));
+                OnPropertyChanged(nameof(AnswerColor));
+                OnPropertyChanged(nameof(UserAnswer));
             }
         }
         #endregion
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public StudentModel(int remoteId, int receiverId)
         {
@@ -205,13 +161,9 @@ namespace Guess.Yourself
 
         }
 
-        protected virtual void RaisePropertyChanged(string propertyName)
+        public void QuestionsAdd(string text, AnswerType answerType)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        public void QuestionsAdd(string text)
-        {
-            Questions.Add($"{Questions.Count + 1}. {text}");
+            Questions.Add(new AnswerLog { Question = $"{Questions.Count + 1}. {text}", UserAnswer = answerType });
         }
         public void UpTime()
         {
@@ -221,7 +173,7 @@ namespace Guess.Yourself
             //TimeSpan? elapsed = new TimeSpan(0, 0, 1);
             if (StopWatch is null) StopWatch = new DateTime();
             else StopWatch = ((DateTime)StopWatch).AddSeconds(1);
-            RaisePropertyChanged(nameof(Time));
+            OnPropertyChanged(nameof(Time));
         }
         SolidColorBrush ChangeColor(AnswerType answer)
         {
@@ -240,10 +192,6 @@ namespace Guess.Yourself
                 default:
                     throw new Exception("Не выбран цвет!");
             }
-        }
-        public enum AnswerType
-        {
-            Correct, NotCorrect, DontKnow, NotSet, NotGuessed
         }
     }
 }

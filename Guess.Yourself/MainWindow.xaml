@@ -219,7 +219,7 @@
                                     CanUserResize="False">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding RemoteId}" Foreground="{Binding AnswerColor, Mode=OneWay}"/>
+                                <TextBlock Text="{Binding RemoteId}" Foreground="{Binding AnswerColor, Mode=TwoWay}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

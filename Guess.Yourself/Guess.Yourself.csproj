@@ -108,17 +108,16 @@
     <Compile Include="AboutBox1.Designer.cs">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </Compile>
-    <Compile Include="AnswerConverter.cs" />
-    <Compile Include="ColorAnswer.cs" />
+    <Compile Include="AnswerLog.cs" />
+    <Compile Include="AnswerType.cs" />
     <Compile Include="CommandBase.cs" />
     <Compile Include="DefaultDialogService.cs" />
     <Compile Include="IEnumerableExtensions.cs" />
     <Compile Include="Interfaces\IDialogService.cs" />
     <Compile Include="Interfaces\IFileServices.cs" />
     <Compile Include="MainWindowViewModel.cs" />
-    <Compile Include="MyListView.xaml.cs">
-      <DependentUpon>MyListView.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="NotifyPropertyChanged.cs" />
+    <Compile Include="PropertyChangedEventArgsCache.cs" />
     <Compile Include="QuestionsViewModel.cs" />
     <Compile Include="QuestionView.xaml.cs">
       <DependentUpon>QuestionView.xaml</DependentUpon>
@@ -139,10 +138,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MyListView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="QuestionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -196,12 +191,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="HidApiAdapter.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="RLib.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="hidapi32.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

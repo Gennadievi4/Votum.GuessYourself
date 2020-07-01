@@ -18,7 +18,7 @@ namespace Guess.Yourself
         IFileService _fileService;
 
         IDialogService _dialogService;
-        public StudentModel SelectedStudent { get; set; }
+        internal StudentModel SelectedStudent { get; set; }
 
         private readonly DeviceManager deviceManager = new DeviceManager(new VotumDevicesManager());
 
@@ -69,9 +69,9 @@ namespace Guess.Yourself
 
         private void ChangeTextColorToDefault()
         {
-            foreach (var a in Students.Where(x => x.UserAnswer == StudentModel.AnswerType.NotGuessed))
+            foreach (var a in Students.Where(x => x.UserAnswer == AnswerType.NotGuessed))
             {
-                a.UserAnswer = StudentModel.AnswerType.NotSet;
+                a.UserAnswer = AnswerType.NotSet;
             }
         }
 
@@ -103,7 +103,7 @@ namespace Guess.Yourself
                     var std = Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)) || x.RemoteId == default);
                     if (std != null)
                     {
-                        std.UserAnswer = StudentModel.AnswerType.NotGuessed;
+                        std.UserAnswer = AnswerType.NotGuessed;
                         std.RemoteId = (ushort)RemoteId;
                         std.ReceiverId = ReceiverId;
                     }
@@ -129,7 +129,7 @@ namespace Guess.Yourself
             {
                 App.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)))?.QuestionsAdd(e.T2Text);
+                    Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)))?.QuestionsAdd(e.T2Text, AnswerType.NotGuessed);
                     var std = Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)));
                     if (std != null)
                     {
@@ -147,9 +147,11 @@ namespace Guess.Yourself
         #region Команды
         public RelayCommand<StudentModel> yesCmd = null;
 
-        public RelayCommand<StudentModel> YesCmd => yesCmd ?? (yesCmd = new RelayCommand<StudentModel>((param) =>
+        public ICommand YesCmd => yesCmd ?? (yesCmd = new RelayCommand<StudentModel>((param) =>
         {
-            param.UserAnswer = StudentModel.AnswerType.Correct;
+            param.Questions.First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
+            .UserAnswer = AnswerType.Correct;
+            
             
             //param.remotePacket.RemoteID = (int)param.RemoteId;
             //param.remotePacket.RemoteCommand = TRemoteCommandID.RF_ACK_DISPLAY_LOGO;
@@ -171,9 +173,12 @@ namespace Guess.Yourself
         }));
 
         public RelayCommand<StudentModel> noCmd = null;
-        public RelayCommand<StudentModel> NoCmd => noCmd ?? (noCmd = new RelayCommand<StudentModel>((param) =>
+        public ICommand NoCmd => noCmd ?? (noCmd = new RelayCommand<StudentModel>((param) =>
         {
-            param.UserAnswer = StudentModel.AnswerType.NotCorrect;
+            param.Questions
+            .First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
+            .UserAnswer = AnswerType.NotCorrect;
+
             param.Question = null;
             if (OnTick != param.UpTime)
             {
@@ -186,9 +191,11 @@ namespace Guess.Yourself
         }));
 
         public RelayCommand<StudentModel> dontKnowCmd = null;
-        public RelayCommand<StudentModel> DontKnowCmd => dontKnowCmd ?? (dontKnowCmd = new RelayCommand<StudentModel>((param) =>
+        public ICommand DontKnowCmd => dontKnowCmd ?? (dontKnowCmd = new RelayCommand<StudentModel>((param) =>
         {
-            param.UserAnswer = StudentModel.AnswerType.DontKnow;
+            param.Questions.First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
+            .UserAnswer = AnswerType.DontKnow;
+
             param.Question = null;
             if (OnTick != param.UpTime)
             {
@@ -201,24 +208,24 @@ namespace Guess.Yourself
         }));
 
         public RelayCommand<StudentModel> questionCmd = null;
-        public RelayCommand<StudentModel> QuestionCmd => questionCmd ?? (questionCmd = new RelayCommand<StudentModel>((param) =>
+        public ICommand QuestionCmd => questionCmd ?? (questionCmd = new RelayCommand<StudentModel>((param) =>
         {
             new QuestionView() { DataContext = param }.ShowDialog();
         },
             (param) =>
             {
-                return (param != null && param.Questions.Count == 0) ? false : true;
+                return (param != null && param.Questions.Count > 0) ? true : false;
             }
             ));
 
         public RelayCommand<StudentModel> closeApp = null;
-        public RelayCommand<StudentModel> CloseApp => closeApp ?? (closeApp = new RelayCommand<StudentModel>((param) =>
+        public ICommand CloseApp => closeApp ?? (closeApp = new RelayCommand<StudentModel>((param) =>
         {
             Environment.Exit(0);
         }));
 
         public RelayCommand<StudentModel> endGame = null;
-        public RelayCommand<StudentModel> EndGame => endGame ?? (endGame = new RelayCommand<StudentModel>((param) =>
+        public ICommand EndGame => endGame ?? (endGame = new RelayCommand<StudentModel>((param) =>
         {
             ChangeTextColorToDefault();
             StopTimer();
@@ -233,7 +240,7 @@ namespace Guess.Yourself
             }));
 
         public RelayCommand<StudentModel> resetGame = null;
-        public RelayCommand<StudentModel> ResetGame => resetGame ?? (resetGame = new RelayCommand<StudentModel>((param) =>
+        public ICommand ResetGame => resetGame ?? (resetGame = new RelayCommand<StudentModel>((param) =>
         {
             ResetCollection();
 
@@ -247,7 +254,7 @@ namespace Guess.Yourself
             ));
 
         public RelayCommand<StudentModel> openText = null;
-        public RelayCommand<StudentModel> OpenText => openText ?? (openText = new RelayCommand<StudentModel>((param) =>
+        public ICommand OpenText => openText ?? (openText = new RelayCommand<StudentModel>((param) =>
             {
                 if(_dialogService.OpenDialog() == true)
                 {

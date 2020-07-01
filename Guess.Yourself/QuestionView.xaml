@@ -30,7 +30,6 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        <local:AnswerConverter x:Key="AnswerConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -43,64 +42,61 @@
                     <GridViewColumn Header="Вопросы" Width="250">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding}" FontSize="14" Foreground="White" TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding Question}" FontSize="14" Foreground="White" TextWrapping="Wrap"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Да">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="Да">
-                                    <Button.Resources>
-                                        <Style TargetType="{x:Type Button}">
-                                            <Setter Property="IsEnabled" Value="False"/>
+                                <Rectangle Width="30" Height="30">
+                                    <Rectangle.Style>
+                                        <Style TargetType="{x:Type Rectangle}">
+                                            <Setter Property="Fill" Value="LightGray"/>
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding DataContext.AnswerColor, 
-                                                    RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}">
-                                                    <Setter Property="Background" Value="Aqua"/>
+                                                <DataTrigger Binding="{Binding UserAnswer}" Value="Correct">
+                                                    <Setter Property="Fill" Value="Green"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
-                                    </Button.Resources>
-                                </Button>
+                                    </Rectangle.Style>
+                                </Rectangle>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Нет">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="Нет">
-                                    <Button.Resources>
-                                        <Style TargetType="{x:Type Button}">
-                                            <Setter Property="IsEnabled" Value="False"/>
+                                <Rectangle Width="30" Height="30">
+                                    <Rectangle.Style>
+                                        <Style TargetType="{x:Type Rectangle}">
+                                            <Setter Property="Fill" Value="LightGray"/>
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding DataContext.AnswerColor, 
-                                                    RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}">
-                                                    <Setter Property="Background" Value="Aqua"/>
+                                                <DataTrigger Binding="{Binding UserAnswer}" Value="NotCorrect">
+                                                    <Setter Property="Fill" Value="Red"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
-                                    </Button.Resources>
-                                </Button>
+                                    </Rectangle.Style>
+                                </Rectangle>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Не знаю">
+                    <GridViewColumn Header="Нет">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="Не знаю">
-                                    <Button.Resources>
-                                        <Style TargetType="Button">
-                                            <Setter Property="IsEnabled" Value="False"/>
+                                <Rectangle Width="30" Height="30">
+                                    <Rectangle.Style>
+                                        <Style TargetType="{x:Type Rectangle}">
+                                            <Setter Property="Fill" Value="LightGray"/>
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding DataContext.AnswerColor, 
-                                                    RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}" Value="DontKnow">
-                                                    <Setter Property="Background" Value="Aqua"/>
+                                                <DataTrigger Binding="{Binding UserAnswer}" Value="DontKnow">
+                                                    <Setter Property="Fill" Value="Yellow"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
-                                    </Button.Resources>
-                                </Button>
+                                    </Rectangle.Style>
+                                </Rectangle>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
