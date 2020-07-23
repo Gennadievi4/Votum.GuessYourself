@@ -3,6 +3,7 @@ using RLib.Remotes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Guess.Yourself
@@ -143,24 +144,19 @@ namespace Guess.Yourself
             set
             {
                 userAnswer = value;
-                AnswerColor = ChangeColor(value);
+                //AnswerColor = ChangeColor(value);
 
-                OnPropertyChanged(nameof(AnswerColor));
-                OnPropertyChanged(nameof(UserAnswer));
+                //OnPropertyChanged(nameof(AnswerColor));
+                OnPropertyChanged();
             }
         }
         #endregion
-
         public StudentModel(int remoteId, int receiverId)
         {
             RemoteId = (ushort)remoteId;
             ReceiverId = receiverId;
         }
-        public StudentModel()
-        {
-
-        }
-
+        
         public void QuestionsAdd(string text, AnswerType answerType)
         {
             Questions.Add(new AnswerLog { Question = $"{Questions.Count + 1}. {text}", UserAnswer = answerType });
@@ -175,23 +171,47 @@ namespace Guess.Yourself
             else StopWatch = ((DateTime)StopWatch).AddSeconds(1);
             OnPropertyChanged(nameof(Time));
         }
-        SolidColorBrush ChangeColor(AnswerType answer)
+        public StudentModel()
         {
-            switch (answer)
+            SaveTextCommand  = new RelayCommand<StudentModel>(OnSaveTextCommandExecute, CanSaveTextCommandExecute);
+        }
+        public ICommand SaveTextCommand { get; }
+
+        private bool CanSaveTextCommandExecute(StudentModel student) => true;
+        private void OnSaveTextCommandExecute(StudentModel student)
+        {
+            if (MainWindowViewModel.DialogService.SaveDialog() == true)
             {
-                case AnswerType.NotGuessed:
-                    return new SolidColorBrush(Colors.Transparent);
-                case AnswerType.Correct:
-                    return new SolidColorBrush(Colors.Green);
-                case AnswerType.NotCorrect:
-                    return new SolidColorBrush(Colors.Red);
-                case AnswerType.DontKnow:
-                    return new SolidColorBrush(Colors.Yellow);
-                case AnswerType.NotSet:
-                    return defaultColor;
-                default:
-                    throw new Exception("Не выбран цвет!");
+                MainWindowViewModel.FileService.Save(MainWindowViewModel.DialogService.FilePath, Questions);
             }
         }
+
+        //private ICommand saveTextCommand;
+        //public ICommand SaveTextCommand => saveTextCommand ?? (saveTextCommand = new RelayCommand<StudentModel>(student =>
+        //{
+        //    if (MainWindowViewModel.DialogService.SaveDialog())
+        //    {
+        //        MainWindowViewModel.FileService.Save(MainWindowViewModel.DialogService.FilePath, Questions);
+        //    }
+        //}));
+
+        //SolidColorBrush ChangeColor(AnswerType answer)
+        //{
+        //    switch (answer)
+        //    {
+        //        case AnswerType.NotGuessed:
+        //            return new SolidColorBrush(Colors.Transparent);
+        //        case AnswerType.Correct:
+        //            return new SolidColorBrush(Colors.Green);
+        //        case AnswerType.NotCorrect:
+        //            return new SolidColorBrush(Colors.Red);
+        //        case AnswerType.DontKnow:
+        //            return new SolidColorBrush(Colors.Yellow);
+        //        case AnswerType.NotSet:
+        //            return defaultColor;
+        //        default:
+        //            throw new Exception("Не выбран цвет!");
+        //    }
+        //}
     }
 }

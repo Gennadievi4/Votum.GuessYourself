@@ -1,6 +1,6 @@
 ﻿namespace Guess.Yourself.Interfaces
 {
-    public interface IDialogService
+    public interface IDialogServices
     {
         void ShowMessage(string message);
         string FilePath { get; set; }

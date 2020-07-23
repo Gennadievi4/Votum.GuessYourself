@@ -5,6 +5,8 @@ namespace Guess.Yourself.Interfaces
     public interface IFileService
     {
         IEnumerable<string> Open(string fileName);
-        void Save(string fileName, IEnumerable<string> str);
+        void Save(string fileName, IEnumerable<AnswerLog> str);
+
+        void SaveAs();
     }
 }

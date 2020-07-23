@@ -1,10 +1,11 @@
 ﻿using Guess.Yourself.Interfaces;
 using Microsoft.Win32;
+using System;
 using System.Windows;
 
 namespace Guess.Yourself
 {
-    public class DefaultDialogService : IDialogService
+    public class DefaultDialogService : IDialogServices
     {
         public string FilePath { get; set; }
         public string FileName { get; set; }
@@ -34,9 +35,18 @@ namespace Guess.Yourself
         public bool SaveDialog()
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            if(saveFileDialog.ShowDialog() == false)
+            FolderService folderService = new FolderService();
+
+            saveFileDialog.Filter = "Документ Word: (*.docx)|*.docx|Документ Word 97-2003: (*.doc)|*.doc";
+            saveFileDialog.DefaultExt = ".docx";
+            saveFileDialog.AddExtension = true;
+
+            folderService.CreateFolder();
+            saveFileDialog.InitialDirectory = folderService.PathToFolder;
+
+            if (saveFileDialog.ShowDialog() == true)
             {
-                FilePath = saveFileDialog.FileName;
+                FilePath = folderService.PathToFolder;
                 return true;
             }
             else

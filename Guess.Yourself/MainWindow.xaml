@@ -219,7 +219,19 @@
                                     CanUserResize="False">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding RemoteId}" Foreground="{Binding AnswerColor, Mode=TwoWay}"/>
+                                <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock.Style>
+                                        <Style TargetType="{x:Type TextBlock}">
+                                            <Setter Property="Text" Value="{Binding RemoteId}"/>
+                                            <Setter Property="Foreground" Value="Transparent"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding UserAnswer}" Value="NotSet">
+                                                    <Setter Property="Foreground" Value="Black"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -229,7 +241,8 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <DockPanel LastChildFill="False">
-                                    <ComboBox DockPanel.Dock="Left" Width="270" MinWidth="100" MaxWidth="300" HorizontalContentAlignment="Center" ItemsSource="{Binding textString}"
+                                    <ComboBox DockPanel.Dock="Left" Width="270" MinWidth="100" MaxWidth="300" HorizontalContentAlignment="Center"
+                                              ItemsSource="{Binding textString}"
                                               SelectedItem="{Binding TextString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                     <TextBlock DockPanel.Dock="Left" Width="Auto" MinWidth="100" TextAlignment="Center" Margin="100, 0, 2, 0"
                                                    HorizontalAlignment="Center" VerticalAlignment="Center" 
@@ -317,13 +330,27 @@
                                     IsReadOnly="False"
                                     CanUserResize="False"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
-                                    Binding="{Binding Time, StringFormat='mm:ss', Mode=OneWay}"/>
+                                    Binding="{Binding Time, StringFormat='mm:ss', Mode=OneWay}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="Рейтинг участника"
                                     Width="120"
                                     IsReadOnly="False"
                                     CanUserResize="False"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
-                                    Binding="{Binding Rating, Mode=OneWay}"/>
+                                    Binding="{Binding Rating, Mode=OneWay}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
             <DockPanel Grid.Row="1">

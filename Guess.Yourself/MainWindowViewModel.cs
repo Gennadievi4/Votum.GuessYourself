@@ -15,10 +15,20 @@ namespace Guess.Yourself
     {
         public ObservableCollection<StudentModel> Students { get; set; } = new ObservableCollection<StudentModel>();
 
-        IFileService _fileService;
+        public static IFileService FileService { get; private set; }
 
-        IDialogService _dialogService;
-        internal StudentModel SelectedStudent { get; set; }
+        public static IDialogServices DialogService { get; private set;}
+
+        private StudentModel studentModel;
+        public StudentModel SelectedStudent
+        {
+            get => studentModel;
+            set
+            {
+                if (studentModel == value) return;
+                studentModel = value;
+            }
+        }
 
         private readonly DeviceManager deviceManager = new DeviceManager(new VotumDevicesManager());
 
@@ -28,10 +38,10 @@ namespace Guess.Yourself
 
         public event Action OnTick;
         public MainWindowViewModel() { }
-        public MainWindowViewModel(IDialogService dialogService, IFileService fileService)
+        public MainWindowViewModel(IDialogServices dialogService, IFileService fileService)
         {
-            _dialogService = dialogService;
-            _fileService = fileService;
+            DialogService = dialogService;
+            FileService = fileService;
 
             for (int i = 0; i < 32; i++)
             {
@@ -151,8 +161,8 @@ namespace Guess.Yourself
         {
             param.Questions.First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
             .UserAnswer = AnswerType.Correct;
-            
-            
+
+
             //param.remotePacket.RemoteID = (int)param.RemoteId;
             //param.remotePacket.RemoteCommand = TRemoteCommandID.RF_ACK_DISPLAY_LOGO;
             SendbackCommand send = new SendbackCommand(param.ReceiverId, (int)param.RemoteId, RemoteCommand.CMD_DISPLAY_LOGO);
@@ -214,7 +224,7 @@ namespace Guess.Yourself
         },
             (param) =>
             {
-                return (param != null && param.Questions.Count > 0) ? true : false;
+                return (param != null && param.Questions.Count > 0);
             }
             ));
 
@@ -256,24 +266,24 @@ namespace Guess.Yourself
         public RelayCommand<StudentModel> openText = null;
         public ICommand OpenText => openText ?? (openText = new RelayCommand<StudentModel>((param) =>
             {
-                if(_dialogService.OpenDialog() == true)
+                if (DialogService.OpenDialog() == true)
                 {
-                    var stringComboBox = _fileService.Open(_dialogService.FilePath);
+                    var stringComboBox = FileService.Open(DialogService.FilePath);
                     param.textString.Clear();
 
                     if (stringComboBox.Any())
                     {
-                        param.NameOfTheStudentsTextFile = _dialogService.FileName;
+                        param.NameOfTheStudentsTextFile = DialogService.FileName;
                         foreach (var str in stringComboBox)
                         {
                             param.textString.Add(str);
                         }
                         param.TextString = param.textString[0];
-                        _dialogService.ShowMessage("Список объектов заполнен!");
+                        DialogService.ShowMessage("Список объектов заполнен!");
                     }
                     else
                     {
-                        _dialogService.ShowMessage("Файл пустой! Заполните файл объектами!");
+                        DialogService.ShowMessage("Файл пустой! Заполните файл объектами!");
                     }
                 }
             }));

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -51,7 +50,7 @@ namespace Guess.Yourself
             }
         }
 
-        public void Save(string fileName, IEnumerable<string> str)
+        public void Save(string fileName, IEnumerable<AnswerLog> str)
         {
             using (StreamWriter sr = new StreamWriter(fileName, true, Encoding.Default))
             {
@@ -60,6 +59,11 @@ namespace Guess.Yourself
                     sr.WriteLine(st);
                 }
             }
+        }
+
+        public void SaveAs()
+        {
+
         }
     }
 }

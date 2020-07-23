@@ -2,7 +2,7 @@
 
 namespace Guess.Yourself
 {
-    public class QuestionsViewModel : INotifyPropertyChanged
+    public class QuestionsViewModel
     {
         MainWindowViewModel _MainWindowViewModel;
         public QuestionsViewModel(MainWindowViewModel mainWindowViewModel)
@@ -10,11 +10,5 @@ namespace Guess.Yourself
             _MainWindowViewModel = mainWindowViewModel;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public virtual void RaisePropertyChanged(string property)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
     }
 }
