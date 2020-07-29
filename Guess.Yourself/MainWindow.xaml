@@ -8,9 +8,9 @@
         mc:Ignorable="d"
         Title="Игра: Отгадай себя" 
         WindowStartupLocation="CenterScreen"
-        MinWidth="1500"
-        MinHeight="1050"
         WindowState="Maximized"
+        MinHeight="1050"
+        MinWidth="1500"
         ResizeMode="CanResizeWithGrip"
         Name="GuessYorselfMainWindow">
     <Window.Resources>
@@ -186,7 +186,7 @@
     <!--<Window.DataContext>
         <l:MainWindowViewModel/>
     </Window.DataContext>-->
-    <DockPanel>
+    <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top" Margin="0, 0, 0, 3" Height="18" 
               HorizontalAlignment="Stretch" Background="White">
             <MenuItem Header="Файл">
@@ -203,15 +203,16 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="30*"/>
             </Grid.RowDefinitions>
             <DataGrid Name="TableName"
-                  AutoGenerateColumns="False" 
-                  HeadersVisibility="Column"
-                  CanUserAddRows="False"
-                  ItemsSource="{Binding Students}"
-                  VerticalScrollBarVisibility="Auto"
-                  Grid.Row="0">
+                      AutoGenerateColumns="False"
+                      HeadersVisibility="Column"
+                      CanUserAddRows="False"
+                      ItemsSource="{Binding Students}"
+                      RowHeight="28"
+                      Grid.Row="0"
+                      BorderThickness="0, 1, 0, 0">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="№ пульта"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
@@ -247,7 +248,7 @@
                                     <TextBlock DockPanel.Dock="Left" Width="Auto" MinWidth="100" TextAlignment="Center" Margin="100, 0, 2, 0"
                                                    HorizontalAlignment="Center" VerticalAlignment="Center" 
                                                    Text="{Binding NameOfTheStudentsTextFile}"/>
-                                    <Button DockPanel.Dock="Right" 
+                                    <Button DockPanel.Dock="Right"
                                             Command="{Binding DataContext.OpenText, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}" 
                                             CommandParameter="{Binding}">
                                         <fa:ImageAwesome Icon="FileOutline" Width="14" Foreground="White"/>
@@ -257,7 +258,11 @@
                         </DataGridTemplateColumn.CellTemplate>
                         <DataGridTemplateColumn.CellEditingTemplate>
                             <DataTemplate>
-                                <TextBox TextAlignment="Center" TextWrapping="Wrap" Text="{Binding Character, Mode=TwoWay}"/>
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <TextBox TextAlignment="Center" TextWrapping="Wrap" 
+                                              BorderThickness="0" Text="{Binding Character, Mode=TwoWay}"
+                                             VerticalContentAlignment="Center"/>
+                                </ScrollViewer>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
