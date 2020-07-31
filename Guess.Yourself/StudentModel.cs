@@ -179,10 +179,10 @@ namespace Guess.Yourself
 
         private bool CanSaveTextCommandExecute(StudentModel student) => true;
         private void OnSaveTextCommandExecute(StudentModel student)
-        {
+        { 
             if (MainWindowViewModel.DialogService.SaveDialog() == true)
             {
-                MainWindowViewModel.FileService.Save(MainWindowViewModel.DialogService.FilePath, Questions);
+                MainWindowViewModel.FileService.Save(MainWindowViewModel.DialogService.FilePath, student);
             }
         }
 

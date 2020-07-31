@@ -46,7 +46,7 @@ namespace Guess.Yourself
 
             if (saveFileDialog.ShowDialog() == true)
             {
-                FilePath = folderService.PathToFolder;
+                FilePath = saveFileDialog.FileName;
                 return true;
             }
             else

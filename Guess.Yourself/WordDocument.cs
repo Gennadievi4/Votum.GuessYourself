@@ -10,12 +10,19 @@ using V = DocumentFormat.OpenXml.Vml;
 using M = DocumentFormat.OpenXml.Math;
 using Ovml = DocumentFormat.OpenXml.Vml.Office;
 using W14 = DocumentFormat.OpenXml.Office2010.Word;
+using System.Xml;
+using System;
 
-namespace GeneratedCode
+namespace Guess.Yourself
 {
-    public class GeneratedClass
+    public class WordDocument
     {
         // Creates a WordprocessingDocument.
+        private StudentModel selectedStudent;
+        public WordDocument(StudentModel std)
+        {
+            selectedStudent = std;
+        }
         public void CreatePackage(string filePath)
         {
             using (WordprocessingDocument package = WordprocessingDocument.Create(filePath, WordprocessingDocumentType.Document))
@@ -59,7 +66,7 @@ namespace GeneratedCode
             Ap.Template template1 = new Ap.Template();
             template1.Text = "Normal.dotm";
             Ap.TotalTime totalTime1 = new Ap.TotalTime();
-            totalTime1.Text = "87";
+            totalTime1.Text = "3";
             Ap.Pages pages1 = new Ap.Pages();
             pages1.Text = "1";
             Ap.Words words1 = new Ap.Words();
@@ -194,7 +201,7 @@ namespace GeneratedCode
             tableProperties1.Append(tableLook1);
 
             TableGrid tableGrid1 = new TableGrid();
-            GridColumn gridColumn1 = new GridColumn() { Width = "2336" };
+            GridColumn gridColumn1 = new GridColumn() { Width = "7508" };
             GridColumn gridColumn2 = new GridColumn() { Width = "2336" };
             GridColumn gridColumn3 = new GridColumn() { Width = "2336" };
             GridColumn gridColumn4 = new GridColumn() { Width = "2337" };
@@ -204,12 +211,12 @@ namespace GeneratedCode
             tableGrid1.Append(gridColumn3);
             tableGrid1.Append(gridColumn4);
 
-            TableRow tableRow1 = new TableRow() { RsidTableRowAddition = "00954C83", RsidTableRowProperties = "00F26699", ParagraphId = "15CB4694", TextId = "77777777" };
+            TableRow tableRow1 = new TableRow() { RsidTableRowAddition = "00954C83", RsidTableRowProperties = "00174B9E", ParagraphId = "15CB4694", TextId = "77777777" };
 
             TableCell tableCell1 = new TableCell();
 
             TableCellProperties tableCellProperties1 = new TableCellProperties();
-            TableCellWidth tableCellWidth1 = new TableCellWidth() { Width = "2336", Type = TableWidthUnitValues.Dxa };
+            TableCellWidth tableCellWidth1 = new TableCellWidth() { Width = "7508", Type = TableWidthUnitValues.Dxa };
 
             tableCellProperties1.Append(tableCellWidth1);
 
@@ -887,12 +894,12 @@ namespace GeneratedCode
             tableRow1.Append(tableCell3);
             tableRow1.Append(tableCell4);
 
-            TableRow tableRow2 = new TableRow() { RsidTableRowAddition = "00954C83", RsidTableRowProperties = "00F26699", ParagraphId = "199B0298", TextId = "77777777" };
+            TableRow tableRow2 = new TableRow() { RsidTableRowAddition = "00954C83", RsidTableRowProperties = "00174B9E", ParagraphId = "199B0298", TextId = "77777777" };
 
             TableCell tableCell5 = new TableCell();
 
             TableCellProperties tableCellProperties5 = new TableCellProperties();
-            TableCellWidth tableCellWidth5 = new TableCellWidth() { Width = "2336", Type = TableWidthUnitValues.Dxa };
+            TableCellWidth tableCellWidth5 = new TableCellWidth() { Width = "7508", Type = TableWidthUnitValues.Dxa };
 
             tableCellProperties5.Append(tableCellWidth5);
 
@@ -1033,12 +1040,12 @@ namespace GeneratedCode
             tableRow2.Append(tableCell7);
             tableRow2.Append(tableCell8);
 
-            TableRow tableRow3 = new TableRow() { RsidTableRowAddition = "00F26699", RsidTableRowProperties = "00F26699", ParagraphId = "7C6B0139", TextId = "77777777" };
+            TableRow tableRow3 = new TableRow() { RsidTableRowAddition = "00F26699", RsidTableRowProperties = "00174B9E", ParagraphId = "7C6B0139", TextId = "77777777" };
 
             TableCell tableCell9 = new TableCell();
 
             TableCellProperties tableCellProperties9 = new TableCellProperties();
-            TableCellWidth tableCellWidth9 = new TableCellWidth() { Width = "2336", Type = TableWidthUnitValues.Dxa };
+            TableCellWidth tableCellWidth9 = new TableCellWidth() { Width = "7508", Type = TableWidthUnitValues.Dxa };
 
             tableCellProperties9.Append(tableCellWidth9);
 
@@ -1179,12 +1186,12 @@ namespace GeneratedCode
             tableRow3.Append(tableCell11);
             tableRow3.Append(tableCell12);
 
-            TableRow tableRow4 = new TableRow() { RsidTableRowAddition = "00F26699", RsidTableRowProperties = "00F26699", ParagraphId = "2A5CA9DE", TextId = "77777777" };
+            TableRow tableRow4 = new TableRow() { RsidTableRowAddition = "00F26699", RsidTableRowProperties = "00174B9E", ParagraphId = "2A5CA9DE", TextId = "77777777" };
 
             TableCell tableCell13 = new TableCell();
 
             TableCellProperties tableCellProperties13 = new TableCellProperties();
-            TableCellWidth tableCellWidth13 = new TableCellWidth() { Width = "2336", Type = TableWidthUnitValues.Dxa };
+            TableCellWidth tableCellWidth13 = new TableCellWidth() { Width = "7508", Type = TableWidthUnitValues.Dxa };
 
             tableCellProperties13.Append(tableCellWidth13);
 
@@ -1325,12 +1332,12 @@ namespace GeneratedCode
             tableRow4.Append(tableCell15);
             tableRow4.Append(tableCell16);
 
-            TableRow tableRow5 = new TableRow() { RsidTableRowAddition = "00F26699", RsidTableRowProperties = "00F26699", ParagraphId = "318BABCE", TextId = "77777777" };
+            TableRow tableRow5 = new TableRow() { RsidTableRowAddition = "00F26699", RsidTableRowProperties = "00174B9E", ParagraphId = "318BABCE", TextId = "77777777" };
 
             TableCell tableCell17 = new TableCell();
 
             TableCellProperties tableCellProperties17 = new TableCellProperties();
-            TableCellWidth tableCellWidth17 = new TableCellWidth() { Width = "2336", Type = TableWidthUnitValues.Dxa };
+            TableCellWidth tableCellWidth17 = new TableCellWidth() { Width = "7508", Type = TableWidthUnitValues.Dxa };
 
             tableCellProperties17.Append(tableCellWidth17);
 
@@ -1495,9 +1502,9 @@ namespace GeneratedCode
             paragraph21.Append(paragraphProperties21);
             paragraph21.Append(run12);
 
-            SectionProperties sectionProperties1 = new SectionProperties() { RsidRPr = "00954C83", RsidR = "00535D33" };
-            PageSize pageSize1 = new PageSize() { Width = (UInt32Value)11906U, Height = (UInt32Value)16838U };
-            PageMargin pageMargin1 = new PageMargin() { Top = 1134, Right = (UInt32Value)850U, Bottom = 1134, Left = (UInt32Value)1701U, Header = (UInt32Value)708U, Footer = (UInt32Value)708U, Gutter = (UInt32Value)0U };
+            SectionProperties sectionProperties1 = new SectionProperties() { RsidRPr = "00954C83", RsidR = "00535D33", RsidSect = "00174B9E" };
+            PageSize pageSize1 = new PageSize() { Width = (UInt32Value)16838U, Height = (UInt32Value)11906U, Orient = PageOrientationValues.Landscape };
+            PageMargin pageMargin1 = new PageMargin() { Top = 1701, Right = (UInt32Value)1134U, Bottom = 850, Left = (UInt32Value)1134U, Header = (UInt32Value)708U, Footer = (UInt32Value)708U, Gutter = (UInt32Value)0U };
             Columns columns1 = new Columns() { Space = "708" };
             DocGrid docGrid1 = new DocGrid() { LinePitch = 360 };
 
@@ -1558,6 +1565,7 @@ namespace GeneratedCode
             settings1.AddNamespaceDeclaration("w16se", "http://schemas.microsoft.com/office/word/2015/wordml/symex");
             settings1.AddNamespaceDeclaration("sl", "http://schemas.openxmlformats.org/schemaLibrary/2006/main");
             Zoom zoom1 = new Zoom() { Percent = "100" };
+            ProofState proofState1 = new ProofState() { Spelling = ProofingStateValues.Clean, Grammar = ProofingStateValues.Clean };
             DefaultTabStop defaultTabStop1 = new DefaultTabStop() { Val = 708 };
             CharacterSpacingControl characterSpacingControl1 = new CharacterSpacingControl() { Val = CharacterSpacingValues.DoNotCompress };
 
@@ -1578,13 +1586,14 @@ namespace GeneratedCode
 
             Rsids rsids1 = new Rsids();
             RsidRoot rsidRoot1 = new RsidRoot() { Val = "00F85061" };
-            Rsid rsid1 = new Rsid() { Val = "00345B88" };
-            Rsid rsid2 = new Rsid() { Val = "00444A71" };
-            Rsid rsid3 = new Rsid() { Val = "00535D33" };
-            Rsid rsid4 = new Rsid() { Val = "00954C83" };
-            Rsid rsid5 = new Rsid() { Val = "00B4054E" };
-            Rsid rsid6 = new Rsid() { Val = "00F26699" };
-            Rsid rsid7 = new Rsid() { Val = "00F85061" };
+            Rsid rsid1 = new Rsid() { Val = "00174B9E" };
+            Rsid rsid2 = new Rsid() { Val = "00345B88" };
+            Rsid rsid3 = new Rsid() { Val = "00444A71" };
+            Rsid rsid4 = new Rsid() { Val = "00535D33" };
+            Rsid rsid5 = new Rsid() { Val = "00954C83" };
+            Rsid rsid6 = new Rsid() { Val = "00B4054E" };
+            Rsid rsid7 = new Rsid() { Val = "00F26699" };
+            Rsid rsid8 = new Rsid() { Val = "00F85061" };
 
             rsids1.Append(rsidRoot1);
             rsids1.Append(rsid1);
@@ -1594,6 +1603,7 @@ namespace GeneratedCode
             rsids1.Append(rsid5);
             rsids1.Append(rsid6);
             rsids1.Append(rsid7);
+            rsids1.Append(rsid8);
 
             M.MathProperties mathProperties1 = new M.MathProperties();
             M.MathFont mathFont1 = new M.MathFont() { Val = "Cambria Math" };
@@ -1640,6 +1650,7 @@ namespace GeneratedCode
             OpenXmlUnknownElement openXmlUnknownElement2 = OpenXmlUnknownElement.CreateOpenXmlUnknownElement("<w15:docId w15:val=\"{818F426F-562F-4D99-A62E-BCCD569D3DC6}\" xmlns:w15=\"http://schemas.microsoft.com/office/word/2012/wordml\" />");
 
             settings1.Append(zoom1);
+            settings1.Append(proofState1);
             settings1.Append(defaultTabStop1);
             settings1.Append(characterSpacingControl1);
             settings1.Append(compatibility1);
@@ -2517,7 +2528,7 @@ namespace GeneratedCode
             StyleName styleName5 = new StyleName() { Val = "Table Grid" };
             BasedOn basedOn1 = new BasedOn() { Val = "a1" };
             UIPriority uIPriority4 = new UIPriority() { Val = 39 };
-            Rsid rsid8 = new Rsid() { Val = "00954C83" };
+            Rsid rsid9 = new Rsid() { Val = "00954C83" };
 
             StyleParagraphProperties styleParagraphProperties1 = new StyleParagraphProperties();
             SpacingBetweenLines spacingBetweenLines2 = new SpacingBetweenLines() { After = "0", Line = "240", LineRule = LineSpacingRuleValues.Auto };
@@ -2546,7 +2557,7 @@ namespace GeneratedCode
             style5.Append(styleName5);
             style5.Append(basedOn1);
             style5.Append(uIPriority4);
-            style5.Append(rsid8);
+            style5.Append(rsid9);
             style5.Append(styleParagraphProperties1);
             style5.Append(styleTableProperties2);
 
@@ -3194,10 +3205,10 @@ namespace GeneratedCode
 
             Font font3 = new Font() { Name = "Calibri Light" };
             Panose1Number panose1Number3 = new Panose1Number() { Val = "020F0302020204030204" };
-            FontCharSet fontCharSet3 = new FontCharSet() { Val = "00" };
+            FontCharSet fontCharSet3 = new FontCharSet() { Val = "CC" };
             FontFamily fontFamily3 = new FontFamily() { Val = FontFamilyValues.Swiss };
             Pitch pitch3 = new Pitch() { Val = FontPitchValues.Variable };
-            FontSignature fontSignature3 = new FontSignature() { UnicodeSignature0 = "A00002EF", UnicodeSignature1 = "4000207B", UnicodeSignature2 = "00000000", UnicodeSignature3 = "00000000", CodePageSignature0 = "0000009F", CodePageSignature1 = "00000000" };
+            FontSignature fontSignature3 = new FontSignature() { UnicodeSignature0 = "A0002AEF", UnicodeSignature1 = "4000207B", UnicodeSignature2 = "00000000", UnicodeSignature3 = "00000000", CodePageSignature0 = "000001FF", CodePageSignature1 = "00000000" };
 
             font3.Append(panose1Number3);
             font3.Append(fontCharSet3);
@@ -3214,14 +3225,17 @@ namespace GeneratedCode
 
         private void SetPackageProperties(OpenXmlPackage document)
         {
+            string DateCreated = DateTime.Now.ToString();
+            string DateModified = DateTime.Now.ToString();
+
             document.PackageProperties.Creator = "dotNet csharp";
             document.PackageProperties.Title = "";
             document.PackageProperties.Subject = "";
             document.PackageProperties.Keywords = "";
             document.PackageProperties.Description = "";
-            document.PackageProperties.Revision = "5";
-            document.PackageProperties.Created = System.Xml.XmlConvert.ToDateTime("2020-07-02T10:33:00Z", System.Xml.XmlDateTimeSerializationMode.RoundtripKind);
-            document.PackageProperties.Modified = System.Xml.XmlConvert.ToDateTime("2020-07-06T13:09:00Z", System.Xml.XmlDateTimeSerializationMode.RoundtripKind);
+            document.PackageProperties.Revision = "2";
+            document.PackageProperties.Created = XmlConvert.ToDateTime($"{DateCreated}", XmlDateTimeSerializationMode.RoundtripKind);
+            document.PackageProperties.Modified = XmlConvert.ToDateTime($"{DateModified}", XmlDateTimeSerializationMode.RoundtripKind);
             document.PackageProperties.LastModifiedBy = "dotNet csharp";
         }
 

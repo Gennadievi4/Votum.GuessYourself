@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Guess.Yourself
@@ -50,15 +49,17 @@ namespace Guess.Yourself
             }
         }
 
-        public void Save(string fileName, IEnumerable<AnswerLog> str)
+        public void Save(string fileName, StudentModel std)
         {
-            using (StreamWriter sr = new StreamWriter(fileName, true, Encoding.Default))
-            {
-                foreach (var st in str)
-                {
-                    sr.WriteLine(st);
-                }
-            }
+            //using (StreamWriter sr = new StreamWriter(fileName, true, Encoding.Default))
+            //{
+            //    foreach (var st in str)
+            //    {
+            //        sr.WriteLine(st);
+            //    }
+            //}
+            WordDocument wordDocument = new WordDocument(std);
+            wordDocument.CreatePackage(fileName);
         }
 
         public void SaveAs()
