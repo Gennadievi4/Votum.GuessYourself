@@ -213,5 +213,24 @@ namespace Guess.Yourself
         //            throw new Exception("Не выбран цвет!");
         //    }
         //}
+
+        //public string ChangeColor(AnswerType answer)
+        //{
+        //    switch (answer)
+        //    {
+        //        case AnswerType.NotGuessed:
+        //            return "FFFFFF";
+        //        case AnswerType.Correct:
+        //            return "00B050";
+        //        case AnswerType.NotCorrect:
+        //            return "FF0000";
+        //        case AnswerType.DontKnow:
+        //            return "FFFF00";
+        //        case AnswerType.NotSet:
+        //            return "FFFFFF";
+        //        default:
+        //            throw new Exception("Не выбран цвет!");
+        //    }
+        //}
     }
 }
