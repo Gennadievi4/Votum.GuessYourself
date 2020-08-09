@@ -1,0 +1,22 @@
+﻿<Window x:Class="Guess.Yourself.AboutGuessYourself"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:l="clr-namespace:Guess.Yourself"
+        mc:Ignorable="d"
+        Title="О программе &quot;Угадай себя&quot;" Height="320" Width="450">
+    <DockPanel Margin="5">
+        <Image Source="Resources/GuessYourself.jpg" Width="130" Height="auto"/>
+        <StackPanel>
+            <TextBlock>
+                <Run Text="Название организации: "/>
+            </TextBlock>
+            <TextBlock/>
+            <TextBlock/>
+            <TextBlock/>
+            <TextBlock/>
+            <Button/>
+        </StackPanel>
+    </DockPanel>
+</Window>
