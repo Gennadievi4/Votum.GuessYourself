@@ -287,6 +287,12 @@ namespace Guess.Yourself
                     }
                 }
             }));
+
+        public RelayCommand<StudentModel> openAboutUs = null;
+        public ICommand OpenAboutUs => openAboutUs ?? (openAboutUs = new RelayCommand<StudentModel>((std) =>
+            {
+                new AboutGuessYourself().ShowDialog();
+            }));
         #endregion
     }
 }

@@ -5,18 +5,47 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:l="clr-namespace:Guess.Yourself"
         mc:Ignorable="d"
-        Title="О программе &quot;Угадай себя&quot;" Height="320" Width="450">
+        Title="О программе &quot;Угадай себя&quot;" 
+        Height="320" Width="450"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Icon="Resources/GuessYourself.jpg">
     <DockPanel Margin="5">
         <Image Source="Resources/GuessYourself.jpg" Width="130" Height="auto"/>
-        <StackPanel>
+        <StackPanel Margin="2, 0, 0, 0">
             <TextBlock>
-                <Run Text="Название организации: "/>
+                <Run Text="Название продукта:                                   Угадай себя"/>
             </TextBlock>
-            <TextBlock/>
-            <TextBlock/>
-            <TextBlock/>
-            <TextBlock/>
-            <Button/>
+            <TextBlock>
+                <Run Text="Версия:                                                                 1.0.0.3."/>
+            </TextBlock>
+            <TextBlock>
+                <Run Text="Авторские права:                                    ©Votum 2020"/>
+            </TextBlock>
+            <TextBlock>
+                <Run Text="Название организации:                                 VOTUM®"/>
+            </TextBlock>
+            <TextBlock>
+                <Run Text="Наш сайт: "/>
+                <Hyperlink NavigateUri="http://votum-edu.ru" RequestNavigate="Hyperlink_RequestNavigate">
+                    <TextBlock Text="http://votum-edu.ru" HorizontalAlignment="Right"/>
+                </Hyperlink>
+                <LineBreak/>
+                <Run Text="Связаться с нами:"/>
+                <Hyperlink NavigateUri="http://votum-edu.ru/page/kontakty.html" 
+                           RequestNavigate="Hyperlink_RequestNavigate"
+                           FontSize="10">http://votum-edu.ru/page/kontakty.html</Hyperlink>
+            </TextBlock>
+            <Border BorderThickness="1" BorderBrush="Black">
+                <TextBlock Height="130" TextWrapping="Wrap">
+                    <Run Text="Описание:"/>
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run Text="&quot;Угадай себя&quot; - это программа, которая позволяет контроллировать действия участников игры.
+                         Составляет рэйтинг участника игры, формирует отчёт с ответами участника игры."/>
+                </TextBlock>
+            </Border>
+            <Button Width="75" Height="23" HorizontalAlignment="Right" Margin="0, 14, 10, 0" Content="Ok" Click="Button_Click"/>
         </StackPanel>
     </DockPanel>
 </Window>

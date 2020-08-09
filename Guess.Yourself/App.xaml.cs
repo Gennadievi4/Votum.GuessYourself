@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Threading;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace Guess.Yourself
 {
@@ -62,6 +64,15 @@ namespace Guess.Yourself
             bool isOnlyInstance;
             InstanceCheckMutex = new Mutex(true, @"Guess.Yourself", out isOnlyInstance);
             return isOnlyInstance;
+        }
+
+        private void Application_NavigationFailed(object sender, NavigationFailedEventArgs e)
+        {
+            if(e.Exception is WebException)
+            {
+                MessageBox.Show("Страница " + e.Uri.ToString() + " не может быть открыта.");
+                e.Handled = true;
+            }
         }
     }
 }

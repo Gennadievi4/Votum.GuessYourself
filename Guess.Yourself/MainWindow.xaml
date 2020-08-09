@@ -197,7 +197,7 @@
                           Command="{Binding CloseApp}"/>
             </MenuItem>
             <MenuItem Header="Справка">
-                <TextBlock Text="Наш сайт: http://votum-edu.ru/"/>
+                <MenuItem Header="О программе &quot;Угадай себя&quot;" Command="{Binding OpenAboutUs}"/>
             </MenuItem>
         </Menu>
         <Grid>
