@@ -111,7 +111,6 @@
     </Compile>
     <Compile Include="AnswerLog.cs" />
     <Compile Include="AnswerType.cs" />
-    <Compile Include="CreaterTableRowDocx.cs" />
     <Compile Include="DefaultDialogService.cs" />
     <Compile Include="FolderService.cs" />
     <Compile Include="IEnumerableExtensions.cs" />

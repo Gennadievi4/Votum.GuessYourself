@@ -5,25 +5,46 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:l="clr-namespace:Guess.Yourself"
         mc:Ignorable="d"
-        Title="О программе &quot;Угадай себя&quot;" 
         Height="320" Width="450"
-        ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
-        Icon="Resources/GuessYourself.jpg">
+        ResizeMode="NoResize">
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="{x:Static WindowChrome.GlassFrameCompleteThickness}"/>
+    </WindowChrome.WindowChrome>
+    <Window.Template>
+        <ControlTemplate TargetType="{x:Type Window}">
+            <Border BorderBrush="Black" BorderThickness="2">
+                <Grid SnapsToDevicePixels="True">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal" Margin="7,7,7,0">
+                        <TextBlock VerticalAlignment="Center" Text ="О программе &quot;Угадай себя&quot;"/>
+                    </StackPanel>
+
+                    <Border Grid.Row="1" Margin="7" BorderBrush="Black"
+                        BorderThickness="1" Background="{TemplateBinding Background}">
+                        <ContentPresenter Content="{TemplateBinding Content}"/>
+                    </Border>
+                </Grid>
+            </Border>
+        </ControlTemplate>
+    </Window.Template>
     <DockPanel Margin="5">
         <Image Source="Resources/GuessYourself.jpg" Width="130" Height="auto"/>
         <StackPanel Margin="2, 0, 0, 0">
             <TextBlock>
-                <Run Text="Название продукта:                                   Угадай себя"/>
+                <Run Text="Название продукта:                                 Угадай себя"/>
             </TextBlock>
             <TextBlock>
-                <Run Text="Версия:                                                                 1.0.0.3."/>
+                <Run Text="Версия:                                                               1.0.0.3."/>
             </TextBlock>
             <TextBlock>
-                <Run Text="Авторские права:                                    ©Votum 2020"/>
+                <Run Text="Авторские права:                                  ©Votum 2020"/>
             </TextBlock>
             <TextBlock>
-                <Run Text="Название организации:                                 VOTUM®"/>
+                <Run Text="Название организации:                               VOTUM®"/>
             </TextBlock>
             <TextBlock>
                 <Run Text="Наш сайт: "/>
@@ -42,7 +63,7 @@
                     <LineBreak/>
                     <LineBreak/>
                     <Run Text="&quot;Угадай себя&quot; - это программа, которая позволяет контроллировать действия участников игры.
-                         Составляет рэйтинг участника игры, формирует отчёт с ответами участника игры."/>
+                         Составляет рейтинг участников игры, формирует отчёт с ответами участников игры."/>
                 </TextBlock>
             </Border>
             <Button Width="75" Height="23" HorizontalAlignment="Right" Margin="0, 14, 10, 0" Content="Ok" Click="Button_Click"/>
