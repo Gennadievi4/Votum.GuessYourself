@@ -183,28 +183,36 @@
             </Setter>
         </Style>
         <ControlTemplate x:Key="MenuItemControlTemplate1" TargetType="{x:Type MenuItem}">
-            <Border x:Name="templateRoot" BorderBrush="{TemplateBinding BorderBrush}" 
-                    BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+            <Border x:Name="templateRoot" 
+                    BorderBrush="{TemplateBinding BorderBrush}" 
+                    BorderThickness="{TemplateBinding BorderThickness}" 
+                    Background="{TemplateBinding Background}" 
+                    SnapsToDevicePixels="True">
                 <Grid x:Name="Grid" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Path x:Name="GlyphPanel" Data="F1M10,1.2L4.7,9.1 4.5,9.1 0,5.2 1.3,3.5 4.3,6.1 8.3,0 10,1.2z" 
                           Fill="{TemplateBinding Foreground}"
-                          FlowDirection="LeftToRight" Margin="3" 
+                          FlowDirection="LeftToRight" 
+                          Margin="3" 
                           Visibility="Collapsed" 
                           VerticalAlignment="Center"/>
                     <ContentPresenter x:Name="ContentPresenter"
                                       ContentTemplate="{TemplateBinding HeaderTemplate}" 
-                                      Content="{TemplateBinding Header}" Grid.Column="0" 
+                                      Content="{TemplateBinding Header}" 
+                                      Grid.Column="0" 
                                       ContentStringFormat="{TemplateBinding HeaderStringFormat}" 
-                                      ContentSource="Header" Margin="{TemplateBinding Padding}" 
-                                      RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                    <Popup x:Name="PART_Popup" VerticalOffset="17" HorizontalOffset="0"
+                                      ContentSource="Header" 
+                                      Margin="{TemplateBinding Padding}" 
+                                      RecognizesAccessKey="True" 
+                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    <Popup x:Name="PART_Popup" 
                            AllowsTransparency="True" Focusable="False" 
                            IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
                            PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}"
-                           Placement="RelativePoint">
+                           PlacementTarget="{Binding ElementName=templateRoot}"
+                           Placement="Bottom">
                         <Border x:Name="SubMenuBorder" BorderBrush="#FF999999" BorderThickness="1" Background="#FFF0F0F0" Padding="2">
                             <ScrollViewer x:Name="SubMenuScrollViewer" 
                                           Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
@@ -348,7 +356,7 @@
                       AutoGenerateColumns="False"
                       HeadersVisibility="Column"
                       CanUserAddRows="False"
-                      ItemsSource="{Binding Students}"
+                      ItemsSource="{Binding Students, Mode=TwoWay}"
                       RowHeight="28"
                       Grid.Row="0"
                       BorderThickness="0, 1, 0, 0">
@@ -497,17 +505,17 @@
                     </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
-            <DockPanel Grid.Row="1">
+            <DockPanel Grid.Row="1" LastChildFill="False">
                 <StatusBar DockPanel.Dock="Left" Background="White">
                     <StatusBarItem>
-                        <TextBlock Text="Победит быстреший ум!" Foreground="Black" FontSize="11"/>
+                        <TextBlock Text="{Binding MainLeader}"/>
                     </StatusBarItem>
                 </StatusBar>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
                     <Button Content="Перезапустить игру" Style="{StaticResource ResetGame}"
                     FontWeight="Bold" FontStretch="Normal" FontSize="15"
                     Command="{Binding ResetGame}"/>
-
+                    
                     <Button Content="Закончить игру" Style="{StaticResource EndGame}"
                     FontWeight="Bold" FontStretch="Normal" FontSize="15"
                     Command="{Binding EndGame}"/>

@@ -1,5 +1,4 @@
-﻿using RLib;
-using RLib.Remotes;
+﻿using RLib.Remotes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -80,6 +79,7 @@ namespace Guess.Yourself
         //            rating.ToString();
         //    }
         //}
+
         private int? rating;
         public int? Rating
         {

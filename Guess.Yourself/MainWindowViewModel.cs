@@ -6,12 +6,13 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace Guess.Yourself
 {
-    public class MainWindowViewModel
+    public class MainWindowViewModel : NotifyPropertyChanged
     {
         public ObservableCollection<StudentModel> Students { get; set; } = new ObservableCollection<StudentModel>();
 
@@ -131,6 +132,11 @@ namespace Guess.Yourself
             //var order = 1;
             //foreach (var student in Students.OrderBy(x => x.Time).Where(x => x.Time != null))
             //    student.Rating = order++;
+        }
+
+        private void FindWinner(ushort? RemouteId)
+        {
+            var studentWinner = Students.Where(x => x.RemoteId != null && x.Question != null && x.RemoteId == RemouteId && x.Question.Contains(x.Character));
         }
 
         private void GettingAQuestionsRemotely(int RemoteId, ButtonClickEventArgs e)
