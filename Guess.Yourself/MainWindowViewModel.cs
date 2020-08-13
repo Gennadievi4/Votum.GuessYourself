@@ -6,7 +6,6 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Windows.Controls;
-using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -30,6 +29,8 @@ namespace Guess.Yourself
                 studentModel = value;
             }
         }
+
+
 
         private readonly DeviceManager deviceManager = new DeviceManager(new VotumDevicesManager());
 

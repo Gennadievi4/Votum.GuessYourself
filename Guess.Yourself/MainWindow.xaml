@@ -6,7 +6,7 @@
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:l="clr-namespace:Guess.Yourself"
         mc:Ignorable="d"
-        Title="Игра: Отгадай себя" 
+        Title="Игра: Угадай себя" 
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
         MinHeight="1050"
@@ -308,16 +308,20 @@
         <l:MainWindowViewModel/>
     </Window.DataContext>-->
     <DockPanel LastChildFill="True">
-        <Menu DockPanel.Dock="Top" Margin="0, 0, 0, 3" Height="18" 
-              HorizontalAlignment="Stretch" Background="White">
+        <Menu DockPanel.Dock="Top" 
+              Margin="0, 0, 0, 3" 
+              Height="18" 
+              HorizontalAlignment="Stretch" 
+              Background="White"
+              Name="MenuTriggered">
            
-            <MenuItem Header="Файл">
+            <MenuItem Header="Файл" Name="File">
                 <MenuItem Header="Создать"/>
                 <MenuItem Header="Открыть"/>
                 <Separator/>
                 <MenuItem Header="Выход" Command="{Binding CloseApp}"/>
             </MenuItem>
-            <MenuItem Header="Справка" Template="{DynamicResource MenuItemControlTemplate1}">
+            <MenuItem Header="Справка" Name="help" Template="{DynamicResource MenuItemControlTemplate1}">
                 <!--<MenuItem.ItemContainerStyle>
                     <Style TargetType="MenuItem">
                         <Setter Property="Template">
@@ -342,6 +346,7 @@
                     </Style>
                 </MenuItem.ItemContainerStyle>-->
                 <MenuItem Header="О программе &quot;Угадай себя&quot;" 
+                          Name="About"
                           Command="{Binding OpenAboutUs}" 
                           Template="{DynamicResource MenuItemControlTemplate2}"
                           Padding="1"/>
@@ -356,7 +361,7 @@
                       AutoGenerateColumns="False"
                       HeadersVisibility="Column"
                       CanUserAddRows="False"
-                      ItemsSource="{Binding Students, Mode=TwoWay}"
+                      ItemsSource="{Binding Students}"
                       RowHeight="28"
                       Grid.Row="0"
                       BorderThickness="0, 1, 0, 0">
@@ -508,7 +513,30 @@
             <DockPanel Grid.Row="1" LastChildFill="False">
                 <StatusBar DockPanel.Dock="Left" Background="White">
                     <StatusBarItem>
-                        <TextBlock Text="{Binding MainLeader}"/>
+                        <TextBlock>
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Text" Value="Победит быстрейший ум!"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=MenuTriggered, Path=IsMouseOver}" Value="true">
+                                            <Setter Property="Text" Value="Меню игры"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=TableName, Path=IsMouseOver}" Value="true">
+                                            <Setter Property="Text" Value="Таблица участников игры"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=help, Path=IsHighlighted}" Value="true">
+                                            <Setter Property="Text" Value="Меню игры: Справка"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=About, Path=IsHighlighted}" Value="true">
+                                            <Setter Property="Text" Value="Меню игры: Справка -> О программе"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=File, Path=IsMouseOver}" Value="true">
+                                            <Setter Property="Text" Value="Меню игры: Файл"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                     </StatusBarItem>
                 </StatusBar>
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
