@@ -14,10 +14,10 @@ namespace Guess.Yourself
     public class MainWindowViewModel : NotifyPropertyChanged
     {
         public ObservableCollection<StudentModel> Students { get; set; } = new ObservableCollection<StudentModel>();
-
+        public ObservableCollection<StudentWinner> Winners { get; set; } = new ObservableCollection<StudentWinner>();
         public static IFileService FileService { get; private set; }
 
-        public static IDialogServices DialogService { get; private set;}
+        public static IDialogServices DialogService { get; private set; }
 
         private StudentModel studentModel;
         public StudentModel SelectedStudent
@@ -69,6 +69,7 @@ namespace Guess.Yourself
         {
             EnsureRemoteAdded(e.RemoteId, e.ReceiverId);
             GettingAQuestionsRemotely(e.RemoteId, e);
+            FindWinner((ushort?)e.RemoteId, e);
             //if (e.Button.Type == ButtonType.PauseT2)
             //{
             //    RemoteCommand remoteCMD = RemoteCommand.CMD_NO_ACTION;
@@ -135,9 +136,28 @@ namespace Guess.Yourself
             //    student.Rating = order++;
         }
 
-        private void FindWinner(ushort? RemouteId)
+        private void FindWinner(ushort? RemouteId, ButtonClickEventArgs e)
         {
-            var studentWinner = Students.Where(x => x.RemoteId != null && x.Question != null && x.RemoteId == RemouteId && x.Question.Contains(x.Character));
+            if (e.IsT2TextPresent && e.Button.Type == ButtonType.PauseT2)
+            {
+                var studentWinner = Students
+                    .Where(x => x.RemoteId != null && x.Question != null && x.Character != null)
+                    .Select((x, i) => (i, x))
+                    .Where(x => x.x.RemoteId == RemouteId && x.x.Question.Contains(x.x?.Character))
+                    .Select(x => x.i);
+                //.Select((x, index) => new { index, x }).Select();
+
+                int temp = 0;
+
+                App.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    foreach (var std in studentWinner)
+                    {
+                        temp = std + ++temp;
+                        Winners.Add(new StudentWinner { StdWin = temp});
+                    }
+                }));
+            }
         }
 
         private void GettingAQuestionsRemotely(int RemoteId, ButtonClickEventArgs e)
@@ -252,7 +272,7 @@ namespace Guess.Yourself
         },
             (param) =>
             {
-                var x = str.Columns[7].GetCellContent(str.Items[0]) as TextBlock;
+var x = str.Columns[7].GetCellContent(str.Items[0]) as TextBlock;
                 return str.IsEnabled && x != null ? x.Text != "" : false;
             }));
 

@@ -182,373 +182,313 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <ControlTemplate x:Key="MenuItemControlTemplate1" TargetType="{x:Type MenuItem}">
-            <Border x:Name="templateRoot" 
-                    BorderBrush="{TemplateBinding BorderBrush}" 
-                    BorderThickness="{TemplateBinding BorderThickness}" 
-                    Background="{TemplateBinding Background}" 
-                    SnapsToDevicePixels="True">
-                <Grid x:Name="Grid" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Path x:Name="GlyphPanel" Data="F1M10,1.2L4.7,9.1 4.5,9.1 0,5.2 1.3,3.5 4.3,6.1 8.3,0 10,1.2z" 
-                          Fill="{TemplateBinding Foreground}"
-                          FlowDirection="LeftToRight" 
-                          Margin="3" 
-                          Visibility="Collapsed" 
-                          VerticalAlignment="Center"/>
-                    <ContentPresenter x:Name="ContentPresenter"
-                                      ContentTemplate="{TemplateBinding HeaderTemplate}" 
-                                      Content="{TemplateBinding Header}" 
-                                      Grid.Column="0" 
-                                      ContentStringFormat="{TemplateBinding HeaderStringFormat}" 
-                                      ContentSource="Header" 
-                                      Margin="{TemplateBinding Padding}" 
-                                      RecognizesAccessKey="True" 
-                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                    <Popup x:Name="PART_Popup" 
-                           AllowsTransparency="True" Focusable="False" 
-                           IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
-                           PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}"
-                           PlacementTarget="{Binding ElementName=templateRoot}"
-                           Placement="Bottom">
-                        <Border x:Name="SubMenuBorder" BorderBrush="#FF999999" BorderThickness="1" Background="#FFF0F0F0" Padding="2">
-                            <ScrollViewer x:Name="SubMenuScrollViewer" 
-                                          Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
-                                <Grid x:Name="Grid1" RenderOptions.ClearTypeHint="Enabled">
-                                    <!--<Canvas x:Name="Canvas" HorizontalAlignment="Center" Height="0" VerticalAlignment="Top" Width="0">
-                                        <Rectangle x:Name="OpaqueRect"
-                                                   Fill="{Binding Background, ElementName=SubMenuBorder}"
-                                                   Height="{Binding ActualHeight, ElementName=SubMenuBorder}"
-                                                   Width="{Binding ActualWidth, ElementName=SubMenuBorder}"/>
-                                    </Canvas>-->
-                                    <ItemsPresenter x:Name="ItemsPresenter"
-                                                    Grid.IsSharedSizeScope="True"
-                                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                                </Grid>
-                            </ScrollViewer>
-                        </Border>
-                    </Popup>
-                </Grid>
-            </Border>
-            <ControlTemplate.Triggers>
-                <Trigger Property="IsSuspendingPopupAnimation" Value="True">
-                    <Setter Property="PopupAnimation" TargetName="PART_Popup" Value="None"/>
-                </Trigger>
-                <Trigger Property="IsChecked" Value="True">
-                    <Setter Property="Visibility" TargetName="GlyphPanel" Value="Visible"/>
-                </Trigger>
-                <Trigger Property="IsHighlighted" Value="True">
-                    <Setter Property="Background" TargetName="templateRoot" Value="#3D26A0DA"/>
-                    <Setter Property="BorderBrush" TargetName="templateRoot" Value="#FF26A0DA"/>
-                </Trigger>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="TextElement.Foreground" TargetName="templateRoot" Value="#FF707070"/>
-                    <Setter Property="Fill" TargetName="GlyphPanel" Value="#FF707070"/>
-                </Trigger>
-                <!--<Trigger Property="CanContentScroll" SourceName="SubMenuScrollViewer" Value="False">
-                    <Setter Property="Canvas.Top" TargetName="OpaqueRect" Value="{Binding VerticalOffset, ElementName=SubMenuScrollViewer}"/>
-                    <Setter Property="Canvas.Left" TargetName="OpaqueRect" Value="{Binding HorizontalOffset, ElementName=SubMenuScrollViewer}"/>
-                </Trigger>-->
-            </ControlTemplate.Triggers>
-        </ControlTemplate>
-        <ControlTemplate x:Key="MenuItemControlTemplate2" TargetType="{x:Type MenuItem}">
-            <Border x:Name="templateRoot"
-                    BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Border x:Name="GlyphPanel" 
-                            BorderBrush="#FF26A0DA" 
-                            BorderThickness="1" 
-                            Background="#3D26A0DA" 
-                            ClipToBounds="False" HorizontalAlignment="Left" Height="22" Visibility="Hidden" VerticalAlignment="Center" Width="22">
-                        <Path x:Name="Glyph" Data="F1M10,1.2L4.7,9.1 4.5,9.1 0,5.2 1.3,3.5 4.3,6.1 8.3,0 10,1.2z" Fill="#FF212121" FlowDirection="LeftToRight" Height="11" Width="10"/>
-                    </Border>
-                    <ContentPresenter x:Name="menuHeaderContainer" 
-                                      ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" 
-                                      Grid.Column="0" 
-                                      ContentStringFormat="{TemplateBinding HeaderStringFormat}" 
-                                      ContentSource="Header" 
-                                      HorizontalAlignment="Left" 
-                                      Margin="{TemplateBinding Padding}" 
-                                      RecognizesAccessKey="True" 
-                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
-                                      VerticalAlignment="Center"/>
-                    <TextBlock x:Name="menuGestureText" Grid.Column="1" Margin="{TemplateBinding Padding}" Opacity="0.7" Text="{TemplateBinding InputGestureText}" VerticalAlignment="Center"/>
-                </Grid>
-            </Border>
-            <ControlTemplate.Triggers>
-                <Trigger Property="IsChecked" Value="True">
-                    <Setter Property="Visibility" TargetName="GlyphPanel" Value="Visible"/>
-                </Trigger>
-                <Trigger Property="IsHighlighted" Value="True">
-                    <Setter Property="Background" TargetName="templateRoot" Value="#3D26A0DA"/>
-                    <Setter Property="BorderBrush" TargetName="templateRoot" Value="#FF26A0DA"/>
-                </Trigger>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="TextElement.Foreground" TargetName="templateRoot" Value="#FF707070"/>
-                    <Setter Property="Fill" TargetName="Glyph" Value="#FF707070"/>
-                </Trigger>
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="IsHighlighted" Value="True"/>
-                        <Condition Property="IsEnabled" Value="False"/>
-                    </MultiTrigger.Conditions>
-                        <Setter Property="Background" TargetName="templateRoot" Value="#0A000000"/>
-                        <Setter Property="BorderBrush" TargetName="templateRoot" Value="#21000000"/>
-                </MultiTrigger>
-            </ControlTemplate.Triggers>
-        </ControlTemplate>
     </Window.Resources>
     <!--<Window.DataContext>
         <l:MainWindowViewModel/>
     </Window.DataContext>-->
-    <DockPanel LastChildFill="True">
-        <Menu DockPanel.Dock="Top" 
-              Margin="0, 0, 0, 3" 
-              Height="18" 
-              HorizontalAlignment="Stretch" 
-              Background="White"
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="30*"/>
+        </Grid.RowDefinitions>
+        <Menu Background="White"
               Name="MenuTriggered">
-           
+            <Menu.Resources>
+                <Style x:Key="MenuItemStyle" TargetType="{x:Type MenuItem}">
+                    <Setter Property="Template" Value="{StaticResource ResourceKey={x:Static MenuItem.TopLevelItemTemplateKey}}"/>
+                    <Setter Property="Padding" Value="10, 3"/>
+                </Style>
+            </Menu.Resources>
             <MenuItem Header="Файл" Name="File">
                 <MenuItem Header="Создать"/>
                 <MenuItem Header="Открыть"/>
                 <Separator/>
                 <MenuItem Header="Выход" Command="{Binding CloseApp}"/>
             </MenuItem>
-            <MenuItem Header="Справка" Name="help" Template="{DynamicResource MenuItemControlTemplate1}">
-                <!--<MenuItem.ItemContainerStyle>
-                    <Style TargetType="MenuItem">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type MenuItem}">
-                                    <Grid Background="{TemplateBinding Background}">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Border BorderThickness="0" Grid.Column="0">
-                                            <ContentPresenter ContentSource="Header"/>
-                                        </Border>
-                                    </Grid>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="Blue"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </MenuItem.ItemContainerStyle>-->
+            <MenuItem Header="Справка" Name="help" ItemContainerStyle="{StaticResource MenuItemStyle}">
+                <MenuItem.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" Background="{DynamicResource ResourceKey={x:Static SystemColors.MenuBrushKey}}"/>
+                    </ItemsPanelTemplate>
+                </MenuItem.ItemsPanel>
                 <MenuItem Header="О программе &quot;Угадай себя&quot;" 
                           Name="About"
-                          Command="{Binding OpenAboutUs}" 
-                          Template="{DynamicResource MenuItemControlTemplate2}"
-                          Padding="1"/>
+                          Command="{Binding OpenAboutUs}"/>
             </MenuItem>
         </Menu>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="30*"/>
-            </Grid.RowDefinitions>
-            <DataGrid Name="TableName"
+        <DataGrid Name="TableName"
                       AutoGenerateColumns="False"
                       HeadersVisibility="Column"
                       CanUserAddRows="False"
                       ItemsSource="{Binding Students}"
                       RowHeight="28"
-                      Grid.Row="0"
+                      Grid.Row="1"
                       BorderThickness="0, 1, 0, 0">
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="№ пульта"
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="№ пульта"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
                                     IsReadOnly="True"
                                     CanUserResize="False">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <TextBlock.Style>
-                                        <Style TargetType="{x:Type TextBlock}">
-                                            <Setter Property="Text" Value="{Binding RemoteId}"/>
-                                            <Setter Property="Foreground" Value="Transparent"/>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding UserAnswer}" Value="NotSet">
-                                                    <Setter Property="Foreground" Value="Black"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Список объектов"
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="Text" Value="{Binding RemoteId}"/>
+                                        <Setter Property="Foreground" Value="Transparent"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding UserAnswer}" Value="NotSet">
+                                                <Setter Property="Foreground" Value="Black"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Список объектов"
                                     Width="*"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <DockPanel LastChildFill="False">
-                                    <ComboBox DockPanel.Dock="Left" Width="270" MinWidth="100" MaxWidth="300" HorizontalContentAlignment="Center"
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <DockPanel LastChildFill="False">
+                                <ComboBox DockPanel.Dock="Left" Width="270" MinWidth="100" MaxWidth="300" HorizontalContentAlignment="Center"
                                               ItemsSource="{Binding textString}"
                                               SelectedItem="{Binding TextString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <TextBlock DockPanel.Dock="Left" Width="Auto" MinWidth="100" TextAlignment="Center" Margin="100, 0, 2, 0"
+                                <TextBlock DockPanel.Dock="Left" Width="Auto" MinWidth="100" TextAlignment="Center" Margin="100, 0, 2, 0"
                                                    HorizontalAlignment="Center" VerticalAlignment="Center" 
                                                    Text="{Binding NameOfTheStudentsTextFile}"/>
-                                    <Button DockPanel.Dock="Right"
+                                <Button DockPanel.Dock="Right"
                                             Command="{Binding DataContext.OpenText, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}" 
                                             CommandParameter="{Binding}">
-                                        <fa:ImageAwesome Icon="FileOutline" Width="14" Foreground="White"/>
-                                    </Button>
-                                </DockPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                        <DataGridTemplateColumn.CellEditingTemplate>
-                            <DataTemplate>
-                                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                    <TextBox TextAlignment="Center" TextWrapping="Wrap" 
+                                    <fa:ImageAwesome Icon="FileOutline" Width="14" Foreground="White"/>
+                                </Button>
+                            </DockPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <TextBox TextAlignment="Center" TextWrapping="Wrap" 
                                               BorderThickness="0" Text="{Binding Character, Mode=TwoWay}"
                                              VerticalContentAlignment="Center"/>
-                                </ScrollViewer>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellEditingTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Вопросы"
+                            </ScrollViewer>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Вопросы"
                                             x:Name="Question"
                                         Width="*"
                                         HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button 
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button 
                                     Command="{Binding DataContext.QuestionCmd, 
                                 RelativeSource={RelativeSource AncestorType={x:Type Window},
                                 Mode=FindAncestor}}"
                                     CommandParameter="{Binding}">
-                                    <TextBlock Text="{Binding Question}"/>
-                                </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Width="45" 
+                                <TextBlock Text="{Binding Question}"/>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="45" 
                                         Header="Да"
                                         CanUserResize="False"
                                         HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Name="btnYes"
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="btnYes"
                                     Command="{Binding DataContext.YesCmd, 
                                 RelativeSource={RelativeSource AncestorType={x:Type Window},
                                 Mode=FindAncestor}}"
                                     CommandParameter="{Binding}">
-                                    <fa:ImageAwesome Height="12" Icon="Circle" Foreground="Green"/>
-                                </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Width="63" 
+                                <fa:ImageAwesome Height="12" Icon="Circle" Foreground="Green"/>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="63" 
                                         Header="Нет"
                                         CanUserResize="False"
                                         HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Name="btnNo"
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="btnNo"
                                     Command="{Binding DataContext.NoCmd, 
                                 RelativeSource={RelativeSource AncestorType={x:Type Window},
                                 Mode=FindAncestor}}"
                                     CommandParameter="{Binding}">
-                                    <fa:ImageAwesome Height="12" Icon="CircleThin" Foreground="Red"/>
-                                </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Width="75" 
+                                <fa:ImageAwesome Height="12" Icon="CircleThin" Foreground="Red"/>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="75" 
                                         Header="Неизвестно"
                                         CanUserResize="False"
                                         HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Name="btnDontKnow"
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="btnDontKnow"
                                     Command="{Binding DataContext.DontKnowCmd, 
                                 RelativeSource={RelativeSource AncestorType={x:Type Window},
                                 Mode=FindAncestor}}"
                                     CommandParameter="{Binding}">
-                                    <fa:ImageAwesome Height="12" Icon="TimesCircle" Foreground="Yellow"/>
-                                </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Время"
+                                <fa:ImageAwesome Height="12" Icon="TimesCircle" Foreground="Yellow"/>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Время"
                                     Width="60"
                                     IsReadOnly="False"
                                     CanUserResize="False"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
                                     Binding="{Binding Time, StringFormat='mm:ss', Mode=OneWay}">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="Рейтинг участника"
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Рейтинг участника"
                                     Width="120"
                                     IsReadOnly="False"
                                     CanUserResize="False"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
                                     Binding="{Binding Rating, Mode=OneWay}">
-                        <DataGridTextColumn.ElementStyle>
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <DockPanel Grid.Row="2" LastChildFill="True">
+            <StatusBar DockPanel.Dock="Left" Background="White">
+                <StatusBarItem>
+                    <TextBlock>
+                        <TextBlock.Style>
                             <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Text" Value="Победит быстрейший ум!"/>
+                                <Setter Property="Width" Value="211"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=MenuTriggered, Path=IsMouseOver}" Value="true">
+                                        <Setter Property="Text" Value="Меню игры"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=TableName, Path=IsMouseOver}" Value="true">
+                                        <Setter Property="Text" Value="Таблица участников игры"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=help, Path=IsHighlighted}" Value="true">
+                                        <Setter Property="Text" Value="Меню игры: Справка"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=About, Path=IsHighlighted}" Value="true">
+                                        <Setter Property="Text" Value="Меню игры: Справка -> О программе"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=File, Path=IsMouseOver}" Value="true">
+                                        <Setter Property="Text" Value="Меню игры: Файл"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
                             </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-            <DockPanel Grid.Row="1" LastChildFill="False">
-                <StatusBar DockPanel.Dock="Left" Background="White">
-                    <StatusBarItem>
-                        <TextBlock>
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Text" Value="Победит быстрейший ум!"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ElementName=MenuTriggered, Path=IsMouseOver}" Value="true">
-                                            <Setter Property="Text" Value="Меню игры"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ElementName=TableName, Path=IsMouseOver}" Value="true">
-                                            <Setter Property="Text" Value="Таблица участников игры"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ElementName=help, Path=IsHighlighted}" Value="true">
-                                            <Setter Property="Text" Value="Меню игры: Справка"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ElementName=About, Path=IsHighlighted}" Value="true">
-                                            <Setter Property="Text" Value="Меню игры: Справка -> О программе"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ElementName=File, Path=IsMouseOver}" Value="true">
-                                            <Setter Property="Text" Value="Меню игры: Файл"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </StatusBarItem>
-                </StatusBar>
-                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-                    <Button Content="Перезапустить игру" Style="{StaticResource ResetGame}"
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StatusBarItem>
+            </StatusBar>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <Button Content="Перезапустить игру" Style="{StaticResource ResetGame}"
                     FontWeight="Bold" FontStretch="Normal" FontSize="15"
                     Command="{Binding ResetGame}"/>
-                    
-                    <Button Content="Закончить игру" Style="{StaticResource EndGame}"
-                    FontWeight="Bold" FontStretch="Normal" FontSize="15"
-                    Command="{Binding EndGame}"/>
-                </StackPanel>
-            </DockPanel>
-        </Grid>
-    </DockPanel>
+
+                <Button Content="Закончить игру" Style="{StaticResource EndGame}"
+                        FontWeight="Bold" 
+                        FontStretch="Normal" 
+                        FontSize="15"
+                        Command="{Binding EndGame}"/>
+            </StackPanel>
+            <!--<ListBox ItemsSource="{Binding Winners}">
+                <ListBox.Template>
+                    <ControlTemplate>
+                        <Border BorderThickness="1" BorderBrush="Black" CornerRadius="8">
+                            <DockPanel>
+                                <Grid DockPanel.Dock="Top">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Label Content="Угадавшие участники игры:" 
+                                                   HorizontalContentAlignment="Center"
+                                                   VerticalContentAlignment="Center"
+                                                   BorderThickness="0, 0, 0, 1"
+                                                   BorderBrush="Black"
+                                                   Padding="0"/>
+                                </Grid>
+                                <ScrollViewer>
+                                    <ItemsPresenter SnapsToDevicePixels="True"/>
+                                </ScrollViewer>
+                            </DockPanel>
+                        </Border>
+                    </ControlTemplate>
+                </ListBox.Template>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="BorderThickness" Value="0, 0, 0, 1"/>
+                        <Setter Property="BorderBrush" Value="Black"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="White"/>
+                                <Setter Property="BorderBrush" Value="Black"/>
+                                <Setter Property="BorderThickness" Value="0, 0, 0, 1"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="White"/>
+                                <Setter Property="BorderBrush" Value="Black"/>
+                                <Setter Property="BorderThickness" Value="0, 0, 0, 1"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding StdWin}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>-->
+            <ItemsControl ItemsSource="{Binding Winners}" Margin="0, 1, 0, 0">
+                <ItemsControl.Template>
+                    <ControlTemplate>
+                        <Border BorderThickness="1, 1, 1, 0" BorderBrush="Black" CornerRadius="8, 8, 0, 0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Label Content="Угадавшие участники игры: "
+                                       HorizontalContentAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       BorderThickness="0, 0, 0, 1"
+                                       BorderBrush="Black"
+                                       Padding="0"
+                                       Grid.Row="0"/>
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
+                                    <ItemsPresenter SnapsToDevicePixels="True"/>
+                                </ScrollViewer>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </ItemsControl.Template>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderThickness="0, 0, 0, 1" BorderBrush="Black">
+                            <TextBlock Text="{Binding StdWin, StringFormat='Угадал участник №{0}.'}"/>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </DockPanel>
+    </Grid>
 </Window>
