@@ -69,7 +69,7 @@ namespace Guess.Yourself
         {
             EnsureRemoteAdded(e.RemoteId, e.ReceiverId);
             GettingAQuestionsRemotely(e.RemoteId, e);
-            FindWinner((ushort?)e.RemoteId, e);
+            FindWinner(e.RemoteId, e);
             //if (e.Button.Type == ButtonType.PauseT2)
             //{
             //    RemoteCommand remoteCMD = RemoteCommand.CMD_NO_ACTION;
@@ -96,6 +96,8 @@ namespace Guess.Yourself
                 std.Rating = default;
                 std.RemoteId = default;
                 std.Time = default;
+                std.IsAccess = false;
+                std.IsWinner = false;
             }
 
         }
@@ -119,6 +121,7 @@ namespace Guess.Yourself
                         std.UserAnswer = AnswerType.NotGuessed;
                         std.RemoteId = (ushort)RemoteId;
                         std.ReceiverId = ReceiverId;
+                        std.IsAccess = true;
                     }
                 }));
             }
@@ -136,24 +139,26 @@ namespace Guess.Yourself
             //    student.Rating = order++;
         }
 
-        private void FindWinner(ushort? RemouteId, ButtonClickEventArgs e)
+        private void FindWinner(int RemouteId, ButtonClickEventArgs e)
         {
             if (e.IsT2TextPresent && e.Button.Type == ButtonType.PauseT2)
             {
-                var studentWinner = Students
+                var studentWinnerListBox = Students
                     .Where(x => x.RemoteId != null && x.Question != null && x.Character != null)
-                    .Select((x, i) => (i, x))
-                    .Where(x => x.x.RemoteId == RemouteId && x.x.Question.Contains(x.x?.Character))
-                    .Select(x => x.i);
-                //.Select((x, index) => new { index, x }).Select();
+                    .Select((std, index) => (index, std))
+                    .Where(x => x.std.RemoteId == RemouteId && x.std.Question.Contains(x.std?.Character))
+                    .Select(x => x.index);
 
+                var student = Students.Where(x => x.RemoteId.Equals(Convert.ToUInt16(RemouteId)) && x.Question.Contains(x.Character));
+                
                 int temp = 0;
 
                 App.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    foreach (var std in studentWinner)
+                    foreach (var std in studentWinnerListBox)
                     {
                         temp = std + ++temp;
+                        student.ToList().ForEach(x => { x.IsWinner = true; x.IsAccess = false; x.IsWinnerAccess = true; });
                         Winners.Add(new StudentWinner { StdWin = temp});
                     }
                 }));

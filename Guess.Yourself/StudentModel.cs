@@ -32,7 +32,42 @@ namespace Guess.Yourself
                 OnPropertyChanged();
             }
         }
-        public bool IsAccess { get; private set; } = true;
+        private bool isWinnerAcces;
+        public bool IsWinnerAccess
+        {
+            get => isWinnerAcces;
+            set
+            {
+                if (isWinnerAcces == value) return;
+                isWinnerAcces = value;
+                OnPropertyChanged(nameof(IsAccess));
+                OnPropertyChanged(nameof(IsWinnerAccess));
+            }
+        }
+
+        private bool isWinner;
+        public bool IsWinner
+        {
+            get => isWinner;
+            set
+            {
+                if (isWinner == value) return;
+                isWinner = value;
+                OnPropertyChanged();
+            }
+        }
+
+        //private bool isAccess;
+        public bool IsAccess { get; set; } = true;
+        //{
+        //    get => isAccess;
+        //    set
+        //    {
+        //        if (isAccess == value) return;
+        //        isAccess = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
         public List<string> textString { get; set; } = new List<string>();
 
         private object txtString;

@@ -201,8 +201,7 @@
                 </Style>
             </Menu.Resources>
             <MenuItem Header="Файл" Name="File">
-                <MenuItem Header="Создать"/>
-                <MenuItem Header="Открыть"/>
+                <MenuItem Header="Импортёр"/>
                 <Separator/>
                 <MenuItem Header="Выход" Command="{Binding CloseApp}"/>
             </MenuItem>
@@ -225,6 +224,52 @@
                       RowHeight="28"
                       Grid.Row="1"
                       BorderThickness="0, 1, 0, 0">
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="IsEnabled" Value="{Binding IsAccess}"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsAccess}" Value="false">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Duration="0:0:0.2"
+                                                        RepeatBehavior="0:0:5.5"
+                                                        To="LightCoral"
+                                                        Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsWinner}" Value="true">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ThicknessAnimation Duration="0:0:1"
+                                                            To="3"
+                                                            Storyboard.TargetProperty="BorderThickness"/>
+                                        <ColorAnimation Duration="0:0:1"
+                                                        To="Red"
+                                                        AutoReverse="True"
+                                                        RepeatBehavior="0:0:5.5"
+                                                        FillBehavior="Stop"
+                                                        Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
+                                        <ThicknessAnimation Duration="0:0:1"
+                                                            From="3" To="0"
+                                                            BeginTime="0:0:5.5"
+                                                            Storyboard.TargetProperty="BorderThickness"/>
+                                        <!--<ColorAnimation Duration="0:0:1"
+                                                        BeginTime="0:0:5.5"
+                                                        To="LightCoral"
+                                                        Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"/>-->
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="№ пульта"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
@@ -371,6 +416,15 @@
             </DataGrid.Columns>
         </DataGrid>
         <DockPanel Grid.Row="2" LastChildFill="True">
+            <DockPanel.Resources>
+                <SolidColorBrush x:Key="Item.MouseOver.Background" Color="AliceBlue"/>
+                <SolidColorBrush x:Key="Item.MouseOver.Border" Color="Aquamarine"/>
+                <SolidColorBrush x:Key="Item.SelectedInactive.Background" Color="#3DDADADA"/>
+                <SolidColorBrush x:Key="Item.SelectedInactive.Border" Color="#FFDADADA"/>
+                <SolidColorBrush x:Key="Item.SelectedActive.Background" Color="#3D26A0DA"/>
+                <SolidColorBrush x:Key="Item.SelectedActive.Border" Color="#FF26A0DA"/>
+                <SolidColorBrush x:Key="MyColor" Color="DarkRed"/>
+            </DockPanel.Resources>
             <StatusBar DockPanel.Dock="Left" Background="White">
                 <StatusBarItem>
                     <TextBlock>
@@ -435,21 +489,51 @@
                     </ControlTemplate>
                 </ListBox.Template>
                 <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
+                    <Style TargetType="{x:Type ListBoxItem}">
                         <Setter Property="BorderThickness" Value="0, 0, 0, 1"/>
+                        <Setter Property="Background" Value="Transparent"/>
                         <Setter Property="BorderBrush" Value="Black"/>
-                        <Style.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="White"/>
-                                <Setter Property="BorderBrush" Value="Black"/>
-                                <Setter Property="BorderThickness" Value="0, 0, 0, 1"/>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="White"/>
-                                <Setter Property="BorderBrush" Value="Black"/>
-                                <Setter Property="BorderThickness" Value="0, 0, 0, 1"/>
-                            </Trigger>
-                        </Style.Triggers>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                    <Border x:Name="Bd" 
+                                            BorderBrush="{TemplateBinding BorderBrush}" 
+                                            BorderThickness="{TemplateBinding BorderThickness}" 
+                                            Background="{TemplateBinding Background}" 
+                                            Padding="{TemplateBinding Padding}" 
+                                            SnapsToDevicePixels="true">
+                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="IsMouseOver" Value="True"/>
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="Background" TargetName="Bd" Value="{StaticResource Item.MouseOver.Background}"/>
+                                            <Setter Property="BorderBrush" TargetName="Bd" Value="{StaticResource MyColor}"/>
+                                        </MultiTrigger>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                                                <Condition Property="IsSelected" Value="True"/>
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="Background" Value="{x:Static SystemColors.ActiveCaptionBrush}"/>
+                                            <Setter Property="BorderBrush" Value="Bisque"/>
+                                        </MultiTrigger>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                                                <Condition Property="IsSelected" Value="True"/>
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="Background" Value="Cornsilk"/>
+                                            <Setter Property="BorderBrush" Value="HotPink"/>
+                                        </MultiTrigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
                     </Style>
                 </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
