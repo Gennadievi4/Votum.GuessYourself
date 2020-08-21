@@ -96,6 +96,7 @@ namespace Guess.Yourself
                 std.Rating = default;
                 std.RemoteId = default;
                 std.Time = default;
+                std.Character = default;
                 std.IsAccess = true;
                 std.IsWinner = false;
             }
