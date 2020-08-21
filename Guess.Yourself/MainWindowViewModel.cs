@@ -97,7 +97,6 @@ namespace Guess.Yourself
                 std.RemoteId = default;
                 std.Time = default;
                 std.IsAccess = true;
-                std.IsWinnerAccess = true;
                 std.IsWinner = false;
             }
             Winners.Clear();
