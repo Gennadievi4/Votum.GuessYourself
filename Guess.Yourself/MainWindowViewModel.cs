@@ -96,10 +96,11 @@ namespace Guess.Yourself
                 std.Rating = default;
                 std.RemoteId = default;
                 std.Time = default;
-                std.IsAccess = false;
+                std.IsAccess = true;
+                std.IsWinnerAccess = true;
                 std.IsWinner = false;
             }
-
+            Winners.Clear();
         }
         private void StopTimer()
         {
@@ -121,7 +122,6 @@ namespace Guess.Yourself
                         std.UserAnswer = AnswerType.NotGuessed;
                         std.RemoteId = (ushort)RemoteId;
                         std.ReceiverId = ReceiverId;
-                        std.IsAccess = true;
                     }
                 }));
             }
@@ -150,16 +150,15 @@ namespace Guess.Yourself
                     .Select(x => x.index);
 
                 var student = Students.Where(x => x.RemoteId.Equals(Convert.ToUInt16(RemouteId)) && x.Question.Contains(x.Character));
-                
-                int temp = 0;
+                student.ToList().ForEach(x => { x.IsWinner = true; x.IsAccess = false; });
 
                 App.Current.Dispatcher.Invoke(new Action(() =>
                 {
+                    int temp = 0;
                     foreach (var std in studentWinnerListBox)
                     {
-                        temp = std + ++temp;
-                        student.ToList().ForEach(x => { x.IsWinner = true; x.IsAccess = false; x.IsWinnerAccess = true; });
-                        Winners.Add(new StudentWinner { StdWin = temp});
+                        temp +=std + 1;
+                        Winners.Add(new StudentWinner { StdWin = temp });
                     }
                 }));
             }
@@ -277,8 +276,9 @@ namespace Guess.Yourself
         },
             (param) =>
             {
-var x = str.Columns[7].GetCellContent(str.Items[0]) as TextBlock;
-                return str.IsEnabled && x != null ? x.Text != "" : false;
+                //var x = str.Columns[2].GetCellContent(str.Items[0]) as System.Windows.Controls.Button;
+                //return str.IsEnabled && x != null ? x.Content.ToString() != "" : false;
+                return Students.FirstOrDefault().Question != null && str.IsEnabled;
             }));
 
         public RelayCommand<StudentModel> resetGame = null;

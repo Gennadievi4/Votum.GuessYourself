@@ -190,7 +190,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="30*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Menu Background="White"
               Name="MenuTriggered">
@@ -217,13 +217,14 @@
             </MenuItem>
         </Menu>
         <DataGrid Name="TableName"
-                      AutoGenerateColumns="False"
-                      HeadersVisibility="Column"
-                      CanUserAddRows="False"
-                      ItemsSource="{Binding Students}"
-                      RowHeight="28"
-                      Grid.Row="1"
-                      BorderThickness="0, 1, 0, 0">
+                  AutoGenerateColumns="False"
+                  HeadersVisibility="Column"
+                  CanUserAddRows="False"
+                  ItemsSource="{Binding Students}"
+                  RowHeight="28"
+                  Grid.Row="1"
+                  BorderThickness="0, 1, 0, 0"    
+                  VirtualizingPanel.ScrollUnit="Pixel">
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <Setter Property="IsEnabled" Value="{Binding IsAccess}"/>
@@ -235,13 +236,25 @@
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <ColorAnimation Duration="0:0:0.2"
-                                                        RepeatBehavior="0:0:5.5"
+                                                        RepeatBehavior="0:0:2"
+                                                        BeginTime="0:0:5.5"
                                                         To="LightCoral"
                                                         Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation From="Transparent"
+                                                        Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
                         </DataTrigger>
+                        <!--<DataTrigger Binding="{Binding IsAccess}" Value="true">
+                            <Setter Property="Background" Value="Transparent"/>
+                        </DataTrigger>-->
                         <DataTrigger Binding="{Binding IsWinner}" Value="true">
                             <DataTrigger.EnterActions>
                                 <BeginStoryboard>
@@ -300,8 +313,8 @@
                         <DataTemplate>
                             <DockPanel LastChildFill="False">
                                 <ComboBox DockPanel.Dock="Left" Width="270" MinWidth="100" MaxWidth="300" HorizontalContentAlignment="Center"
-                                              ItemsSource="{Binding textString}"
-                                              SelectedItem="{Binding TextString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                          ItemsSource="{Binding textString}"
+                                          SelectedItem="{Binding TextString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                 <TextBlock DockPanel.Dock="Left" Width="Auto" MinWidth="100" TextAlignment="Center" Margin="100, 0, 2, 0"
                                                    HorizontalAlignment="Center" VerticalAlignment="Center" 
                                                    Text="{Binding NameOfTheStudentsTextFile}"/>

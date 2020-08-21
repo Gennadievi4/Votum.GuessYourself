@@ -32,18 +32,6 @@ namespace Guess.Yourself
                 OnPropertyChanged();
             }
         }
-        private bool isWinnerAcces;
-        public bool IsWinnerAccess
-        {
-            get => isWinnerAcces;
-            set
-            {
-                if (isWinnerAcces == value) return;
-                isWinnerAcces = value;
-                OnPropertyChanged(nameof(IsAccess));
-                OnPropertyChanged(nameof(IsWinnerAccess));
-            }
-        }
 
         private bool isWinner;
         public bool IsWinner
@@ -57,17 +45,17 @@ namespace Guess.Yourself
             }
         }
 
-        //private bool isAccess;
-        public bool IsAccess { get; set; } = true;
-        //{
-        //    get => isAccess;
-        //    set
-        //    {
-        //        if (isAccess == value) return;
-        //        isAccess = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
+        private bool isAccess = true;
+        public bool IsAccess
+        {
+            get => isAccess;
+            set
+            {
+                if (isAccess == value) return;
+                isAccess = value;
+                OnPropertyChanged();
+            }
+        }
         public List<string> textString { get; set; } = new List<string>();
 
         private object txtString;
@@ -191,7 +179,7 @@ namespace Guess.Yourself
             RemoteId = (ushort)remoteId;
             ReceiverId = receiverId;
         }
-        
+
         public void QuestionsAdd(string text, AnswerType answerType)
         {
             Questions.Add(new AnswerLog { Question = $"{Questions.Count + 1}. {text}", UserAnswer = answerType });
@@ -208,13 +196,13 @@ namespace Guess.Yourself
         }
         public StudentModel()
         {
-            SaveTextCommand  = new RelayCommand<StudentModel>(OnSaveTextCommandExecute, CanSaveTextCommandExecute);
+            SaveTextCommand = new RelayCommand<StudentModel>(OnSaveTextCommandExecute, CanSaveTextCommandExecute);
         }
         public ICommand SaveTextCommand { get; }
 
         private bool CanSaveTextCommandExecute(StudentModel student) => true;
         private void OnSaveTextCommandExecute(StudentModel student)
-        { 
+        {
             if (MainWindowViewModel.DialogService.SaveDialog() == true)
             {
                 MainWindowViewModel.FileService.Save(MainWindowViewModel.DialogService.FilePath, student);
