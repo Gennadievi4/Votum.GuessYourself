@@ -14,9 +14,20 @@ namespace Guess.Yourself
     public class MainWindowViewModel : NotifyPropertyChanged
     {
         public ObservableCollection<StudentModel> Students { get; set; } = new ObservableCollection<StudentModel>();
-        public ObservableCollection<StudentWinner> Winners { get; set; } = new ObservableCollection<StudentWinner>();
+        public AsyncObservableCollection<StudentWinner> Winners { get; set; } = new AsyncObservableCollection<StudentWinner>();
         public static IFileService FileService { get; private set; }
 
+        private int? idRemouteStdWinner;
+        public int? IdRemoteStdWinner
+        {
+            get => idRemouteStdWinner;
+            set
+            {
+                if (idRemouteStdWinner == value) return;
+                idRemouteStdWinner = value;
+                OnPropertyChanged();
+            }
+        }
         public static IDialogServices DialogService { get; private set; }
 
         private StudentModel studentModel;
@@ -67,9 +78,16 @@ namespace Guess.Yourself
 
         private void VotumManager_ButtonClicked(object sender, ButtonClickEventArgs e)
         {
-            EnsureRemoteAdded(e.RemoteId, e.ReceiverId);
-            GettingAQuestionsRemotely(e.RemoteId, e);
-            FindWinner(e.RemoteId, e);
+            if (Winners.Any(x => x.StdWinner.RemoteId == e.RemoteId))
+            {
+                return;
+            }
+            else
+            {
+                EnsureRemoteAdded(e.RemoteId, e.ReceiverId);
+                GettingAQuestionsRemotely(e.RemoteId, e);
+                FindWinner(e.RemoteId, e);
+            }
             //if (e.Button.Type == ButtonType.PauseT2)
             //{
             //    RemoteCommand remoteCMD = RemoteCommand.CMD_NO_ACTION;
@@ -100,6 +118,7 @@ namespace Guess.Yourself
                 std.IsAccess = true;
                 std.IsWinner = false;
             }
+            IdRemoteStdWinner = default;
             Winners.Clear();
         }
         private void StopTimer()
@@ -146,21 +165,28 @@ namespace Guess.Yourself
                 var studentWinnerListBox = Students
                     .Where(x => x.RemoteId != null && x.Question != null && x.Character != null)
                     .Select((std, index) => (index, std))
-                    .Where(x => x.std.RemoteId == RemouteId && x.std.Question.Contains(x.std?.Character))
-                    .Select(x => x.index);
+                    .Where(x => x.std.RemoteId == RemouteId && x.std.Question.Contains(x.std?.Character));
+                //.Select(x => x.index);
 
-                var student = Students.Where(x => x.RemoteId.Equals(Convert.ToUInt16(RemouteId)) && x.Question.Contains(x.Character));
+                var student = Students.Where(x => x.RemoteId.Equals(Convert.ToUInt16(RemouteId)) && x.Character != null && x.Question.Contains(x.Character));
                 student.ToList().ForEach(x => { x.IsWinner = true; x.IsAccess = false; });
 
-                App.Current.Dispatcher.Invoke(new Action(() =>
+                int temp = 0;
+                foreach (var std in studentWinnerListBox)
                 {
-                    int temp = 0;
-                    foreach (var std in studentWinnerListBox)
-                    {
-                        temp +=std + 1;
-                        Winners.Add(new StudentWinner { StdWin = temp });
-                    }
-                }));
+                    temp += std.index + 1;
+                    Winners.Add(new StudentWinner { StdWin = temp, StdWinner = std.std });
+                }
+
+                //App.Current.Dispatcher.Invoke(new Action(() =>
+                //{
+                //    int temp = 0;
+                //    foreach (var std in studentWinnerListBox)
+                //    {
+                //        temp += std.index + 1;
+                //        Winners.Add(new StudentWinner { StdWin = temp, StdWinner = std.std });
+                //    }
+                //}));
             }
         }
 
@@ -271,14 +297,30 @@ namespace Guess.Yourself
             ChangeTextColorToDefault();
             StopTimer();
 
+            Students.Where(x => x.Question == null && x.RemoteId != null).ToList().ForEach(x => { x.Rating = null; x.Time = null; });
+
+            if (Students.Any(x => x.Question != null && x.RemoteId != null && x.Character != null && x.Rating != null && x.Question.Equals(x.Character)))
+            {
+                var winner = Students
+                .Where(x => x.Question != null && x.RemoteId != null && x.Rating != null)
+                .OrderBy(x => x.Rating)
+                .ToList()
+                .Single().RemoteId;
+                IdRemoteStdWinner = winner;
+            }
+            else
+            {
+                IdRemoteStdWinner = Winners.SingleOrDefault().StdWinner.RemoteId;
+            }
+
             str.IsEnabled = false;
             deviceManager.votumManager.Stop();
         },
             (param) =>
             {
-                //var x = str.Columns[2].GetCellContent(str.Items[0]) as System.Windows.Controls.Button;
+                //var x = str.Columns[7].GetCellContent(str.Items[0]) as System.Windows.Controls.Button;
                 //return str.IsEnabled && x != null ? x.Content.ToString() != "" : false;
-                return Students.FirstOrDefault().Question != null && str.IsEnabled;
+                return Students.Any(x => x.Question != null || x.Time != null) && str.IsEnabled;
             }));
 
         public RelayCommand<StudentModel> resetGame = null;

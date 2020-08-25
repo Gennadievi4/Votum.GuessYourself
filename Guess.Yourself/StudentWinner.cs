@@ -13,5 +13,28 @@
                 OnPropertyChanged();
             }
         }
+
+        //private int? idRemouteStdWinner;
+        //public int? IdRemoteStdWinner
+        //{
+        //    get => idRemouteStdWinner;
+        //    set
+        //    {
+        //        if (idRemouteStdWinner == value) return;
+        //        idRemouteStdWinner = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
+
+        private StudentModel stdWinner;
+        public StudentModel StdWinner
+        {
+            get => stdWinner;
+            set
+            {
+                if (stdWinner == value) return;
+                stdWinner = value;
+            }
+        }
     }
 }
