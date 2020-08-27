@@ -610,7 +610,7 @@
                             <EventTrigger RoutedEvent="Binding.TargetUpdated">
                                 <EventTrigger.Actions>
                                     <BeginStoryboard>
-                                        <Storyboard Duration="0:0:5">
+                                        <Storyboard>
                                             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
                                                                           FillBehavior="HoldEnd"
                                                                           AutoReverse="True">
@@ -620,6 +620,8 @@
                                                     <DiscreteColorKeyFrame KeyTime="0:0:0.2" Value="Black"/>
                                                     <DiscreteColorKeyFrame KeyTime="0:0:0.3" Value="White"/>
                                                     <DiscreteColorKeyFrame KeyTime="0:0:0.4" Value="Black"/>
+                                                    <DiscreteColorKeyFrame KeyTime="0:0:0.5" Value="White"/>
+                                                    <DiscreteColorKeyFrame KeyTime="0:0:0.6" Value="Black"/>
                                                 </ColorAnimationUsingKeyFrames.KeyFrames>
                                             </ColorAnimationUsingKeyFrames>
                                         </Storyboard>
