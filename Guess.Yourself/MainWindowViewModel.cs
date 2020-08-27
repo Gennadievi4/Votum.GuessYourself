@@ -17,8 +17,8 @@ namespace Guess.Yourself
         public AsyncObservableCollection<StudentWinner> Winners { get; set; } = new AsyncObservableCollection<StudentWinner>();
         public static IFileService FileService { get; private set; }
 
-        private int? idRemouteStdWinner;
-        public int? IdRemoteStdWinner
+        private string idRemouteStdWinner;
+        public string IdRemoteStdWinner
         {
             get => idRemouteStdWinner;
             set
@@ -306,11 +306,11 @@ namespace Guess.Yourself
                 .OrderBy(x => x.Rating)
                 .ToList()
                 .Single().RemoteId;
-                IdRemoteStdWinner = winner;
+                IdRemoteStdWinner = $"Победил участник игры с пультом №{winner}";
             }
             else
             {
-                IdRemoteStdWinner = Winners.SingleOrDefault().StdWinner.RemoteId;
+                if (Winners.Any()) IdRemoteStdWinner = $"Победил участник игры с пультом №{Winners.Single().StdWinner.RemoteId}";
             }
 
             str.IsEnabled = false;

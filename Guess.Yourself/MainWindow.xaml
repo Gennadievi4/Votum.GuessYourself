@@ -30,7 +30,7 @@
                                 <LinearGradientBrush StartPoint="0.0, 0" EndPoint="0.0, 1">
                                     <GradientStopCollection>
                                         <GradientStop Offset="0" Color="White"/>
-                                        <GradientStop Offset="1" Color="White"/>
+                                        <GradientStop Offset="1" Color="SteelBlue"/>
                                     </GradientStopCollection>
                                 </LinearGradientBrush>
                             </Border.Background>
@@ -45,7 +45,7 @@
                                         <Storyboard>
                                             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
                                                             Storyboard.TargetName="Border">
-                                                <EasingColorKeyFrame KeyTime="0" Value="Aqua"/>
+                                                <EasingColorKeyFrame KeyTime="0" Value="SkyBlue"/>
                                             </ColorAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
@@ -79,13 +79,15 @@
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Border x:Name="Border"
                             BorderThickness="1"
-                                Padding="2, 10" Width="155" Height="50">
+                                Padding="2, 10" 
+                                Width="155" 
+                                Height="50">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0.0, 0" EndPoint="0.0, 1">
                                     <LinearGradientBrush.GradientStops>
                                         <GradientStopCollection>
                                             <GradientStop Offset="0" Color="White"/>
-                                            <GradientStop Offset="1" Color="White"/>
+                                            <GradientStop Offset="1" Color="LightSteelBlue"/>
                                         </GradientStopCollection>
                                     </LinearGradientBrush.GradientStops>
                                 </LinearGradientBrush>
@@ -101,7 +103,7 @@
                                         <Storyboard>
                                             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
                                                 Storyboard.TargetName="Border">
-                                                <EasingColorKeyFrame KeyTime="0" Value="Aqua"/>
+                                                <EasingColorKeyFrame KeyTime="0" Value="SkyBlue"/>
                                             </ColorAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
@@ -141,7 +143,7 @@
                                     <LinearGradientBrush.GradientStops>
                                         <GradientStopCollection>
                                             <GradientStop Offset="0" Color="White"/>
-                                            <GradientStop Offset="1" Color="White"/>
+                                            <GradientStop Offset="1" Color="LightSteelBlue"/>
                                         </GradientStopCollection>
                                     </LinearGradientBrush.GradientStops>
                                 </LinearGradientBrush>
@@ -157,7 +159,7 @@
                                         <Storyboard>
                                             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)"
                                                 Storyboard.TargetName="Border">
-                                                <EasingColorKeyFrame KeyTime="0" Value="Aqua"/>
+                                                <EasingColorKeyFrame KeyTime="0" Value="SkyBlue"/>
                                             </ColorAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
@@ -236,6 +238,7 @@
                             <Setter Property="Background" Value="#80CCCCCC"/>
                             <!--<Setter Property="BorderBrush" Value="Black"/>-->
                             <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Foreground" Value="Black"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
@@ -453,6 +456,7 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="Text" Value="Победит быстрейший ум!"/>
                                 <Setter Property="Width" Value="211"/>
+                                <Setter Property="TextAlignment" Value="Center"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=MenuTriggered, Path=IsMouseOver}" Value="true">
                                         <Setter Property="Text" Value="Меню игры"/>
@@ -563,7 +567,7 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>-->
-            <ItemsControl ItemsSource="{Binding Winners}" Margin="0, 1, 0, 0">
+            <ItemsControl ItemsSource="{Binding Winners}" Margin="0, 1, 0, 0" Width="250">
                 <ItemsControl.Template>
                     <ControlTemplate>
                         <Border BorderThickness="1, 1, 1, 0" BorderBrush="Black" CornerRadius="8, 8, 0, 0">
@@ -573,6 +577,7 @@
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
                                 <Label Content="Угадавшие участники игры: "
+                                       FontSize="18"
                                        HorizontalContentAlignment="Center"
                                        VerticalContentAlignment="Center"
                                        BorderThickness="0, 0, 0, 1"
@@ -594,11 +599,37 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <TextBlock Text="{Binding IdRemoteStdWinner, TargetNullValue='Победитель не найден!', StringFormat='Победил участник игры с пультом №{0}'}"
+            <TextBlock Text="{Binding IdRemoteStdWinner, NotifyOnTargetUpdated=True, TargetNullValue='Победитель не найден!'}"
                        FontSize="40"
-                       Margin="2" 
-                       VerticalAlignment="Center" 
-                       HorizontalAlignment="Stretch"/>
+                       Margin="2"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <EventTrigger RoutedEvent="Binding.TargetUpdated">
+                                <EventTrigger.Actions>
+                                    <BeginStoryboard>
+                                        <Storyboard Duration="0:0:5">
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
+                                                                          FillBehavior="HoldEnd"
+                                                                          AutoReverse="True">
+                                                <ColorAnimationUsingKeyFrames.KeyFrames>
+                                                    <DiscreteColorKeyFrame KeyTime="0:0:0" Value="Black"/>
+                                                    <DiscreteColorKeyFrame KeyTime="0:0:0.1" Value="White"/>
+                                                    <DiscreteColorKeyFrame KeyTime="0:0:0.2" Value="Black"/>
+                                                    <DiscreteColorKeyFrame KeyTime="0:0:0.3" Value="White"/>
+                                                    <DiscreteColorKeyFrame KeyTime="0:0:0.4" Value="Black"/>
+                                                </ColorAnimationUsingKeyFrames.KeyFrames>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger.Actions>
+                            </EventTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
         </DockPanel>
     </Grid>
 </Window>
