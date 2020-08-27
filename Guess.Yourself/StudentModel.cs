@@ -9,18 +9,6 @@ namespace Guess.Yourself
 {
     public class StudentModel : NotifyPropertyChanged
     {
-        private string nameOfTheStudentsTextFile;
-        public string NameOfTheStudentsTextFile
-        {
-            get => nameOfTheStudentsTextFile;
-            set
-            {
-                if (nameOfTheStudentsTextFile == value) return;
-                nameOfTheStudentsTextFile = value;
-                OnPropertyChanged();
-            }
-        }
-
         private string character;
         public string Character
         {
@@ -208,52 +196,5 @@ namespace Guess.Yourself
                 MainWindowViewModel.FileService.Save(MainWindowViewModel.DialogService.FilePath, student);
             }
         }
-
-        //private ICommand saveTextCommand;
-        //public ICommand SaveTextCommand => saveTextCommand ?? (saveTextCommand = new RelayCommand<StudentModel>(student =>
-        //{
-        //    if (MainWindowViewModel.DialogService.SaveDialog())
-        //    {
-        //        MainWindowViewModel.FileService.Save(MainWindowViewModel.DialogService.FilePath, Questions);
-        //    }
-        //}));
-
-        //SolidColorBrush ChangeColor(AnswerType answer)
-        //{
-        //    switch (answer)
-        //    {
-        //        case AnswerType.NotGuessed:
-        //            return new SolidColorBrush(Colors.Transparent);
-        //        case AnswerType.Correct:
-        //            return new SolidColorBrush(Colors.Green);
-        //        case AnswerType.NotCorrect:
-        //            return new SolidColorBrush(Colors.Red);
-        //        case AnswerType.DontKnow:
-        //            return new SolidColorBrush(Colors.Yellow);
-        //        case AnswerType.NotSet:
-        //            return defaultColor;
-        //        default:
-        //            throw new Exception("Не выбран цвет!");
-        //    }
-        //}
-
-        //public string ChangeColor(AnswerType answer)
-        //{
-        //    switch (answer)
-        //    {
-        //        case AnswerType.NotGuessed:
-        //            return "FFFFFF";
-        //        case AnswerType.Correct:
-        //            return "00B050";
-        //        case AnswerType.NotCorrect:
-        //            return "FF0000";
-        //        case AnswerType.DontKnow:
-        //            return "FFFF00";
-        //        case AnswerType.NotSet:
-        //            return "FFFFFF";
-        //        default:
-        //            throw new Exception("Не выбран цвет!");
-        //    }
-        //}
     }
 }

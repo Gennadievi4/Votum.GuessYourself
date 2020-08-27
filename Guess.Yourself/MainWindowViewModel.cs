@@ -337,31 +337,6 @@ namespace Guess.Yourself
             }
             ));
 
-        public RelayCommand<StudentModel> openText = null;
-        public ICommand OpenText => openText ?? (openText = new RelayCommand<StudentModel>((param) =>
-            {
-                if (DialogService.OpenDialog() == true)
-                {
-                    var stringComboBox = FileService.Open(DialogService.FilePath);
-                    param.textString.Clear();
-
-                    if (stringComboBox.Any())
-                    {
-                        param.NameOfTheStudentsTextFile = DialogService.FileName;
-                        foreach (var str in stringComboBox)
-                        {
-                            param.textString.Add(str);
-                        }
-                        param.TextString = param.textString[0];
-                        DialogService.ShowMessage("Список объектов заполнен!");
-                    }
-                    else
-                    {
-                        DialogService.ShowMessage("Файл пустой! Заполните файл объектами!");
-                    }
-                }
-            }));
-
         public RelayCommand<StudentModel> openAboutUs = null;
         public ICommand OpenAboutUs => openAboutUs ?? (openAboutUs = new RelayCommand<StudentModel>((std) =>
             {

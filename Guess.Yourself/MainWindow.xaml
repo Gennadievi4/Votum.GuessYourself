@@ -16,9 +16,10 @@
     <Window.Resources>
         <Style x:Key="CenterDataGridColumnsHeaders" TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="BorderThickness" Value="0, 0, 0, 1"/>
+            <Setter Property="BorderThickness" Value="0, 0, 1, 1"/>
             <Setter Property="Padding" Value="4, 0, 4, 0"/>
             <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="FontSize" Value="15"/>
         </Style>
         <Style TargetType="Button">
             <Setter Property="Template">
@@ -205,9 +206,12 @@
                     <Setter Property="Padding" Value="10, 3"/>
                 </Style>
             </Menu.Resources>
-            <MenuItem Header="Файл" Name="File">
-                <MenuItem Header="Импортёр"/>
-                <Separator/>
+            <MenuItem Header="Файл" Name="File" ItemContainerStyle="{StaticResource MenuItemStyle}">
+                <MenuItem.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" Background="{DynamicResource ResourceKey={x:Static SystemColors.MenuBrushKey}}"/>
+                    </ItemsPanelTemplate>
+                </MenuItem.ItemsPanel>
                 <MenuItem Header="Выход" Command="{Binding CloseApp}"/>
             </MenuItem>
             <MenuItem Header="Справка" Name="help" ItemContainerStyle="{StaticResource MenuItemStyle}">
@@ -322,33 +326,57 @@
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <DockPanel LastChildFill="False">
-                                <ComboBox DockPanel.Dock="Left" Width="270" MinWidth="100" MaxWidth="300" HorizontalContentAlignment="Center"
-                                          ItemsSource="{Binding textString}"
-                                          SelectedItem="{Binding TextString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                <TextBlock DockPanel.Dock="Left" Width="Auto" MinWidth="100" TextAlignment="Center" Margin="100, 0, 2, 0"
-                                                   HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                                   Text="{Binding NameOfTheStudentsTextFile}"/>
-                                <Button DockPanel.Dock="Right"
-                                            Command="{Binding DataContext.OpenText, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}" 
-                                            CommandParameter="{Binding}">
-                                    <fa:ImageAwesome Icon="FileOutline" Width="14" Foreground="White"/>
-                                </Button>
-                            </DockPanel>
+                            <TextBox Text="{Binding Character, UpdateSourceTrigger=PropertyChanged}" 
+                                     BorderThickness="0"
+                                     TextAlignment="Center"
+                                     VerticalContentAlignment="Center"
+                                     Background="Transparent">
+                                <TextBox.Style>
+                                    <Style TargetType="{x:Type TextBox}">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type TextBox}">
+                                                    <Border x:Name="border" 
+                                                            BorderBrush="{TemplateBinding BorderBrush}" 
+                                                            BorderThickness="{TemplateBinding BorderThickness}" 
+                                                            Background="{TemplateBinding Background}" 
+                                                            SnapsToDevicePixels="True">
+                                                        <ScrollViewer x:Name="PART_ContentHost" 
+                                                                      Focusable="false" 
+                                                                      HorizontalScrollBarVisibility="Hidden" 
+                                                                      VerticalScrollBarVisibility="Hidden"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <!--<EventTrigger RoutedEvent="TextBox.MouseEnter">
+                                                            <EventTrigger.Actions>
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <ColorAnimation Duration="0:0:0"
+                                                                                        From="Transparent"
+                                                                                        To="White"
+                                                                                        Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)"/>
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </EventTrigger.Actions>
+                                                        </EventTrigger>-->
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" TargetName="border" Value="White"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsKeyboardFocused" Value="true">
+                                                            <Setter Property="Background" Value="Transparent" TargetName="border"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                    <DataGridTemplateColumn.CellEditingTemplate>
-                        <DataTemplate>
-                            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                <TextBox TextAlignment="Center" TextWrapping="Wrap" 
-                                              BorderThickness="0" Text="{Binding Character, Mode=TwoWay}"
-                                             VerticalContentAlignment="Center"/>
-                            </ScrollViewer>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Вопросы"
-                                            x:Name="Question"
+                                        x:Name="Question"
                                         Width="*"
                                         HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
                     <DataGridTemplateColumn.CellTemplate>
@@ -395,7 +423,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="75" 
+                <DataGridTemplateColumn Width="90" 
                                         Header="Неизвестно"
                                         CanUserResize="False"
                                         HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
@@ -425,7 +453,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="Рейтинг участника"
-                                    Width="120"
+                                    Width="140"
                                     IsReadOnly="False"
                                     CanUserResize="False"
                                     HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
@@ -594,7 +622,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border BorderThickness="0, 0, 0, 1" BorderBrush="Black">
-                            <TextBlock Text="{Binding StdWin, StringFormat='Угадал участник №{0}.'}"/>
+                            <TextBlock Text="{Binding StdWin, StringFormat='Угадал участник №{0}.'}" TextAlignment="Center"/>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
