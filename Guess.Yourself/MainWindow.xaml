@@ -279,7 +279,7 @@
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <ThicknessAnimation Duration="0:0:1"
-                                                            To="3"
+                                                            To="0, 3, 0, 3"
                                                             Storyboard.TargetProperty="BorderThickness"/>
                                         <ColorAnimation Duration="0:0:1"
                                                         To="Red"
@@ -288,7 +288,7 @@
                                                         FillBehavior="Stop"
                                                         Storyboard.TargetProperty="BorderBrush.(SolidColorBrush.Color)"/>
                                         <ThicknessAnimation Duration="0:0:1"
-                                                            From="3" To="0"
+                                                            From="0, 3, 0, 3" To="0"
                                                             BeginTime="0:0:5.5"
                                                             Storyboard.TargetProperty="BorderThickness"/>
                                     </Storyboard>
