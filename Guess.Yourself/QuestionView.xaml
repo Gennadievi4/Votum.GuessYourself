@@ -9,7 +9,7 @@
         SizeToContent="WidthAndHeight"
         Topmost="True"
         ResizeMode="NoResize"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen" d:DesignWidth="418" d:DesignHeight="431">
     <Window.Resources>
         <Style TargetType="GridViewColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -20,15 +20,6 @@
         <Style TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="{x:Null}"/>
-                    <Setter Property="BorderBrush" Value="Gray"/>
-                </Trigger>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="LightBlue"/>
-                </Trigger>
-            </Style.Triggers>
         </Style>
     </Window.Resources>
     <Grid>
@@ -36,13 +27,83 @@
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <ListView Grid.Row="0" Background="Gray" Height="300" ItemsSource="{Binding Questions}">
+        <ListView Grid.Row="0" 
+                  Background="Transparent" 
+                  Height="300" 
+                  ItemsSource="{Binding Questions}"
+                  BorderThickness="10"
+                  Padding="3">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <Border Name="border" 
+                                        Background="{TemplateBinding Background}"
+                                        BorderThickness="1, 0, 1, 1"
+                                        BorderBrush="Black">
+                                    <GridViewRowPresenter/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" TargetName="border" Value="LightSlateGray"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" TargetName="border" Value="LightSlateGray"/>
+                                    </Trigger>
+                                    <!--<MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="Selector.IsSelected" Value="False"/>
+                                            <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                                        </MultiTrigger.Conditions>
+                                        <MultiTrigger.Setters>
+                                            <Setter Property="Background" TargetName="border" Value="Black"/>
+                                        </MultiTrigger.Setters>
+                                    </MultiTrigger>-->
+                                    <!--<EventTrigger RoutedEvent="ListViewItem.LostFocus">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Duration="0:0:0"
+                                                                To="AntiqueWhite"
+                                                                Storyboard.TargetProperty="Background.(SolidColorBrush.Color)">
+                                                </ColorAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>-->
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.View>
                 <GridView>
+                    <GridView.ColumnHeaderContainerStyle>
+                        <Style TargetType="GridViewColumnHeader">
+                            <Setter Property="OverridesDefaultStyle" Value="True" />
+                            <Setter Property="Foreground" Value="Black" />
+                            <Setter Property="FontFamily" Value="Segoe UI" />
+                            <Setter Property="FontSize" Value="12" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                                        <Border 
+                                            BorderThickness="0, 0, 0, 1" 
+                                            BorderBrush="Black"
+                                            Background="Transparent">
+                                            <TextBlock Text="{TemplateBinding Content}"
+                                                       Width="{TemplateBinding Width}"
+                                                       TextAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GridView.ColumnHeaderContainerStyle>
                     <GridViewColumn Header="Вопросы" Width="250">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Question}" FontSize="14" Foreground="White" TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding Question}" FontSize="14" Foreground="Black" TextWrapping="Wrap"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
