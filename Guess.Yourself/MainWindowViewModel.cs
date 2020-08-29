@@ -28,6 +28,30 @@ namespace Guess.Yourself
                 OnPropertyChanged();
             }
         }
+
+        private bool isAnimation;
+        public bool IsAnimation
+        {
+            get => isAnimation;
+            set
+            {
+                if (isAnimation == value) return;
+                isAnimation = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool isAnimationEndGame;
+        public bool IsAnimationEndGame
+        {
+            get => isAnimationEndGame;
+            set
+            {
+                if (isAnimationEndGame == value) return;
+                isAnimationEndGame = value;
+                OnPropertyChanged();
+            }
+        }
         public static IDialogServices DialogService { get; private set; }
 
         private StudentModel studentModel;
@@ -86,6 +110,7 @@ namespace Guess.Yourself
             {
                 EnsureRemoteAdded(e.RemoteId, e.ReceiverId);
                 GettingAQuestionsRemotely(e.RemoteId, e);
+                IsAnimation = false;
                 FindWinner(e.RemoteId, e);
             }
             //if (e.Button.Type == ButtonType.PauseT2)
@@ -118,6 +143,8 @@ namespace Guess.Yourself
                 std.IsAccess = true;
                 std.IsWinner = false;
             }
+            IsAnimation = false;
+            IsAnimationEndGame = false;
             IdRemoteStdWinner = default;
             Winners.Clear();
         }
@@ -175,9 +202,10 @@ namespace Guess.Yourself
                 foreach (var std in studentWinnerListBox)
                 {
                     temp += std.index + 1;
+                    IsAnimation = true;
                     Winners.Add(new StudentWinner { StdWin = temp, StdWinner = std.std });
+                    IdRemoteStdWinner = $"Внимание! Участник №{temp} угадал!";
                 }
-
                 //App.Current.Dispatcher.Invoke(new Action(() =>
                 //{
                 //    int temp = 0;
@@ -310,7 +338,11 @@ namespace Guess.Yourself
             }
             else
             {
-                if (Winners.Any()) IdRemoteStdWinner = $"Победил участник игры с пультом №{Winners.Single().StdWinner.RemoteId}";
+                if (Winners.Any())
+                {
+                    IsAnimationEndGame = true;
+                    IdRemoteStdWinner = $"Победил участник игры с пультом №{Winners.Select((std, ind) => (ind, std)).OrderBy(x => x.ind).Single(x => x.ind == 0).std.StdWinner.RemoteId}";
+                }
             }
 
             str.IsEnabled = false;

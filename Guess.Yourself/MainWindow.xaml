@@ -549,7 +549,7 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </StackPanel>
-            
+
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
                 <Button Content="Перезапустить игру" Style="{StaticResource ResetGame}"
                     FontWeight="Bold" FontStretch="Normal" FontSize="15"
@@ -638,9 +638,9 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>-->
-            
+
             <Viewbox Stretch="Uniform" StretchDirection="DownOnly">
-                <TextBlock Text="{Binding IdRemoteStdWinner, NotifyOnTargetUpdated=True, TargetNullValue='Победитель не найден!'}"
+                <!--<TextBlock Text="{Binding IdRemoteStdWinner, NotifyOnTargetUpdated=True, TargetNullValue='Победитель не найден!'}"
                                FontSize="40"
                                Margin="2"
                                VerticalAlignment="Center"
@@ -669,6 +669,50 @@
                                         </BeginStoryboard>
                                     </EventTrigger.Actions>
                                 </EventTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>-->
+                <TextBlock Text="{Binding IdRemoteStdWinner, TargetNullValue='Игра запущена. Ждём ответов!'}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="FontSize" Value="40"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsAnimation}" Value="true">
+                                    <DataTrigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimationUsingKeyFrames FillBehavior="Stop"
+                                                                              RepeatBehavior="0:0:3"
+                                                                              Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)">
+                                                    <ColorAnimationUsingKeyFrames.KeyFrames>
+                                                        <DiscreteColorKeyFrame KeyTime="0:0:0" Value="Black"/>
+                                                        <DiscreteColorKeyFrame KeyTime="0:0:0.1" Value="White"/>
+                                                        <DiscreteColorKeyFrame KeyTime="0:0:0.2" Value="Black"/>
+                                                        <DiscreteColorKeyFrame KeyTime="0:0:0.3" Value="White"/>
+                                                        <DiscreteColorKeyFrame KeyTime="0:0:0.4" Value="Black"/>
+                                                        <DiscreteColorKeyFrame KeyTime="0:0:0.5" Value="White"/>
+                                                        <DiscreteColorKeyFrame KeyTime="0:0:0.6" Value="Black"/>
+                                                    </ColorAnimationUsingKeyFrames.KeyFrames>
+                                                </ColorAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.EnterActions>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsAnimationEndGame}" Value="true">
+                                    <DataTrigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Duration="0:0:0.5"
+                                                                To="Transparent"
+                                                                FillBehavior="Stop"
+                                                                RepeatBehavior="0:0:3"
+                                                                Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.EnterActions>
+                                </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </TextBlock.Style>
