@@ -704,11 +704,19 @@
                                     <DataTrigger.EnterActions>
                                         <BeginStoryboard>
                                             <Storyboard>
-                                                <ColorAnimation Duration="0:0:0.5"
-                                                                To="Transparent"
-                                                                FillBehavior="Stop"
+                                                <ColorAnimationUsingKeyFrames FillBehavior="Stop"
                                                                 RepeatBehavior="0:0:3"
-                                                                Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"/>
+                                                                Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)">
+                                                    <ColorAnimationUsingKeyFrames.KeyFrames>
+                                                        <DiscreteColorKeyFrame KeyTime="0:0:0" Value="Black"/>
+                                                        <DiscreteColorKeyFrame KeyTime="0:0:0.1" Value="White"/>
+                                                        <DiscreteColorKeyFrame KeyTime="0:0:0.2" Value="Black"/>
+                                                        <DiscreteColorKeyFrame KeyTime="0:0:0.3" Value="White"/>
+                                                        <DiscreteColorKeyFrame KeyTime="0:0:0.4" Value="Black"/>
+                                                        <DiscreteColorKeyFrame KeyTime="0:0:0.5" Value="White"/>
+                                                        <DiscreteColorKeyFrame KeyTime="0:0:0.6" Value="Black"/>
+                                                    </ColorAnimationUsingKeyFrames.KeyFrames>
+                                                </ColorAnimationUsingKeyFrames>
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </DataTrigger.EnterActions>
@@ -717,6 +725,37 @@
                         </Style>
                     </TextBlock.Style>
                 </TextBlock>
+                <!--<TextBlock>
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="FontSize" Value="40"/>
+                            <Setter Property="Margin" Value="2"/>
+                            <Setter Property="Text" Value="{Binding IdRemoteStdWinner}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IdRemoteStdWinner}" Value="{x:Null}">
+                                    <Setter Property="Text" Value="Игра начата. Ожидаем ответов!"/>
+                                    <DataTrigger.EnterActions>
+                                        <RemoveStoryboard BeginStoryboardName="BlinkAnimation"/>
+                                    </DataTrigger.EnterActions>
+                                    <DataTrigger.ExitActions>
+                                        <BeginStoryboard Name="BlinkAnimation">
+                                            <Storyboard>
+                                                <DoubleAnimation 
+                                                    Duration="0:0:0.1"
+                                                    From="0"
+                                                    To="1"
+                                                    RepeatBehavior="0:0:3"
+                                                    AutoReverse="True"
+                                                    FillBehavior="Stop"
+                                                    Storyboard.TargetProperty="Opacity"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.ExitActions>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>-->
             </Viewbox>
         </DockPanel>
     </Grid>
