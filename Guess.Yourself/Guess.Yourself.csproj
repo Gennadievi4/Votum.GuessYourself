@@ -112,6 +112,8 @@
     <Compile Include="AnswerLog.cs" />
     <Compile Include="AnswerType.cs" />
     <Compile Include="AsyncObservableCollection.cs" />
+    <Compile Include="Converters\ActualHeightTriggerToVisibility.cs" />
+    <Compile Include="Converters\ActualHeightTriggerToVisibilityForButton.cs" />
     <Compile Include="DefaultDialogService.cs" />
     <Compile Include="FolderService.cs" />
     <Compile Include="IEnumerableExtensions.cs" />
@@ -130,6 +132,7 @@
     <Compile Include="StudentWinner.cs" />
     <Compile Include="TextBlockFilled.cs" />
     <Compile Include="TextFileService.cs" />
+    <Compile Include="Converters\ActualWidthTriggerToVisibility.cs" />
     <Compile Include="WordDocument.cs" />
     <Page Include="AboutGuessYourself.xaml">
       <SubType>Designer</SubType>

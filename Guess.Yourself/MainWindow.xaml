@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:l="clr-namespace:Guess.Yourself"
+        xmlns:c="clr-namespace:Guess.Yourself.Converters"
         mc:Ignorable="d"
         Title="Игра: Угадай себя" 
         WindowStartupLocation="CenterScreen"
@@ -14,6 +15,9 @@
         ResizeMode="CanResizeWithGrip"
         Name="GuessYorselfMainWindow" d:DesignWidth="800" d:DesignHeight="700">
     <Window.Resources>
+        <c:ActualWidthTriggerToVisibility x:Key="WidthToVisibility"/>
+        <c:ActualHeightTriggerToVisibility x:Key="HeihtToVisibility"/>
+        <c:ActualHeightTriggerToVisibilityForButton x:Key="HeightToVisibilityButtom"/>
         <Style x:Key="CenterDataGridColumnsHeaders" TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="BorderThickness" Value="0, 0, 1, 1"/>
@@ -469,7 +473,7 @@
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <DockPanel Grid.Row="2" LastChildFill="True">
+        <DockPanel Grid.Row="2" LastChildFill="True" Name="DoclPanelStatus">
             <DockPanel.Resources>
                 <SolidColorBrush x:Key="Item.MouseOver.Background" Color="AliceBlue"/>
                 <SolidColorBrush x:Key="Item.MouseOver.Border" Color="Aquamarine"/>
@@ -516,7 +520,21 @@
                         </TextBlock>
                     </StatusBarItem>
                 </StatusBar>
+                <Button Content="Список угадавших игроков"
+                        Margin="0, 3, 0, 0"
+                        Width="280"
+                        Height="50"
+                        FontSize="20"
+                        FontWeight="DemiBold"
+                        Visibility="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource HeightToVisibilityButtom}}"
+                        Command="">
+                </Button>
                 <ItemsControl ItemsSource="{Binding Winners}" Name="WinnerTable" Margin="0, 3, 0, 0" Width="250" DockPanel.Dock="Left">
+                    <ItemsControl.Style>
+                        <Style TargetType="ItemsControl">
+                            <Setter Property="Visibility" Value="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={StaticResource HeihtToVisibility}}"/>
+                        </Style>
+                    </ItemsControl.Style>
                     <ItemsControl.Template>
                         <ControlTemplate>
                             <Border BorderThickness="1, 1, 1, 0" BorderBrush="Black" CornerRadius="8, 8, 0, 0">
@@ -639,7 +657,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>-->
 
-            <Viewbox Stretch="Uniform" StretchDirection="DownOnly">
+            <Viewbox Stretch="Uniform" StretchDirection="DownOnly" Name="ViewBoxStatus">
                 <!--<TextBlock Text="{Binding IdRemoteStdWinner, NotifyOnTargetUpdated=True, TargetNullValue='Победитель не найден!'}"
                                FontSize="40"
                                Margin="2"
@@ -673,11 +691,12 @@
                         </Style>
                     </TextBlock.Style>
                 </TextBlock>-->
-                <TextBlock Text="{Binding IdRemoteStdWinner, TargetNullValue='Игра запущена. Ждём ответов!'}">
+                <TextBlock Text="{Binding IdRemoteStdWinner, TargetNullValue='Игра запущена. Ждём ответов!'}" Name="TextBlockStatus">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="Foreground" Value="Black"/>
                             <Setter Property="FontSize" Value="40"/>
+                            <Setter Property="Visibility" Value="{Binding ActualWidth, ElementName=GuessYorselfMainWindow, Converter={StaticResource WidthToVisibility}}"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsAnimation}" Value="true">
                                     <DataTrigger.EnterActions>
