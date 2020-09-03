@@ -1,0 +1,119 @@
+﻿<Window x:Class="Guess.Yourself.WinnersView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Guess.Yourself"
+        mc:Ignorable="d"
+        Title="Таблица угадавших игроков" 
+        Topmost="True"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <Style TargetType="GridViewColumnHeader">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="IsEnabled" Value="False"/>
+            <Setter Property="Padding" Value="5, 0, 5, 0"/>
+        </Style>
+        <Style TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <ListView Grid.Row="0" 
+                  Background="Transparent" 
+                  Height="300" 
+                  ItemsSource="{Binding DataContext.Winners, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"
+                  BorderThickness="10"
+                  Padding="3">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <Border Name="border" 
+                                        Background="{TemplateBinding Background}"
+                                        BorderThickness="1, 0, 1, 1"
+                                        BorderBrush="Black">
+                                    <GridViewRowPresenter/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" TargetName="border" Value="LightSlateGray"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" TargetName="border" Value="LightSlateGray"/>
+                                    </Trigger>
+                                    <!--<MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="Selector.IsSelected" Value="False"/>
+                                            <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                                        </MultiTrigger.Conditions>
+                                        <MultiTrigger.Setters>
+                                            <Setter Property="Background" TargetName="border" Value="Black"/>
+                                        </MultiTrigger.Setters>
+                                    </MultiTrigger>-->
+                                    <!--<EventTrigger RoutedEvent="ListViewItem.LostFocus">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Duration="0:0:0"
+                                                                To="AntiqueWhite"
+                                                                Storyboard.TargetProperty="Background.(SolidColorBrush.Color)">
+                                                </ColorAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>-->
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+                    <GridView.ColumnHeaderContainerStyle>
+                        <Style TargetType="GridViewColumnHeader">
+                            <Setter Property="OverridesDefaultStyle" Value="True" />
+                            <Setter Property="Foreground" Value="Black" />
+                            <Setter Property="FontFamily" Value="Segoe UI" />
+                            <Setter Property="FontSize" Value="12" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                                        <Border 
+                                            BorderThickness="0, 0, 0, 1" 
+                                            BorderBrush="Black"
+                                            Background="Transparent">
+                                            <TextBlock Text="{TemplateBinding Content}"
+                                                       Width="{TemplateBinding Width}"
+                                                       TextAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GridView.ColumnHeaderContainerStyle>
+                    <GridViewColumn Header="Угадавшие участники игры" Width="Auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding StdWin, StringFormat='Угадал участник №{0}.'}" 
+                                           TextAlignment="Center"
+                                           Foreground='Black'/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Grid.Row="1" Content="Ok" Margin="3" 
+                Command="{Binding WinnerClose}"
+                CommandParameter="{Binding}">
+        </Button>
+    </Grid>
+</Window>

@@ -77,6 +77,7 @@ namespace Guess.Yourself
         public MainWindowViewModel() { }
         public MainWindowViewModel(IDialogServices dialogService, IFileService fileService)
         {
+            //this.win = win;
             DialogService = dialogService;
             FileService = fileService;
 
@@ -374,6 +375,16 @@ namespace Guess.Yourself
             {
                 new AboutGuessYourself().ShowDialog();
             }));
+        public RelayCommand<StudentWinner> winnersOpen = null;
+        public ICommand WinnersOpen => winnersOpen ?? (winnersOpen = new RelayCommand<StudentWinner>((param) =>
+        {
+            new WinnersView() { DataContext = this }.ShowDialog();
+        },
+            (param) =>
+            {
+                return Winners.Count != 0;
+            }
+            ));
         #endregion
     }
 }

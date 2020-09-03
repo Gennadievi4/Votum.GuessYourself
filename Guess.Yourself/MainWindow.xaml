@@ -527,7 +527,7 @@
                         FontSize="20"
                         FontWeight="DemiBold"
                         Visibility="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource HeightToVisibilityButtom}}"
-                        Command="">
+                        Command="{Binding WinnersOpen}">
                 </Button>
                 <ItemsControl ItemsSource="{Binding Winners}" Name="WinnerTable" Margin="0, 3, 0, 0" Width="250" DockPanel.Dock="Left">
                     <ItemsControl.Style>

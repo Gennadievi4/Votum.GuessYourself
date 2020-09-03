@@ -133,6 +133,10 @@
     <Compile Include="TextBlockFilled.cs" />
     <Compile Include="TextFileService.cs" />
     <Compile Include="Converters\ActualWidthTriggerToVisibility.cs" />
+    <Compile Include="WinnersView.xaml.cs">
+      <DependentUpon>WinnersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WinnersViewModel.cs" />
     <Compile Include="WordDocument.cs" />
     <Page Include="AboutGuessYourself.xaml">
       <SubType>Designer</SubType>
@@ -152,6 +156,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="QuestionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WinnersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
