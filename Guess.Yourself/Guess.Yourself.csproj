@@ -114,6 +114,7 @@
     <Compile Include="AsyncObservableCollection.cs" />
     <Compile Include="Converters\ActualHeightTriggerToVisibility.cs" />
     <Compile Include="Converters\ActualHeightTriggerToVisibilityForButton.cs" />
+    <Compile Include="Converters\ActualWidthWindowToVisibilityTextBlock.cs" />
     <Compile Include="DefaultDialogService.cs" />
     <Compile Include="FolderService.cs" />
     <Compile Include="IEnumerableExtensions.cs" />

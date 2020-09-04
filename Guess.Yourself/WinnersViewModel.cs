@@ -4,20 +4,20 @@ namespace Guess.Yourself
 {
     public class WinnersViewModel : NotifyPropertyChanged
     {
-        public WinnersView winners { get; set; }
+        public WinnersView Winners { get; set; }
         public MainWindowViewModel Main { get; set; }
         public WinnersViewModel(MainWindowViewModel main, WinnersView win)
         {
-            winners = win;
-            winners.DataContext = this;
+            Winners = win;
+            Winners.DataContext = this;
             this.Main = main;
-            winners.Owner = App.Current.MainWindow;
+            Winners.Owner = App.Current.MainWindow;
         }
 
         public RelayCommand<StudentWinner> winnerClose = null;
         public ICommand WinnerClose => winnerClose ?? (winnerClose = new RelayCommand<StudentWinner>((param) =>
         {
-            winners.Close();
+            Winners.Close();
         },
             (param) =>
             {

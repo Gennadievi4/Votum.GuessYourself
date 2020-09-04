@@ -380,7 +380,7 @@ namespace Guess.Yourself
         {
             //new WinnersView() { DataContext = this }.ShowDialog();
             WinnersViewModel wstd =  new WinnersViewModel(this, new WinnersView());
-            wstd.winners.ShowDialog();
+            wstd.Winners.ShowDialog();
         },
             (param) =>
             {
