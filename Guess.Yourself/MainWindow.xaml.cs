@@ -2,7 +2,6 @@
 {
     public partial class MainWindow
     {
-        MainWindowViewModel main;
         public MainWindow()
         {
             InitializeComponent();

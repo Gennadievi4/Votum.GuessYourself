@@ -378,7 +378,9 @@ namespace Guess.Yourself
         public RelayCommand<StudentWinner> winnersOpen = null;
         public ICommand WinnersOpen => winnersOpen ?? (winnersOpen = new RelayCommand<StudentWinner>((param) =>
         {
-            new WinnersView() { DataContext = this }.ShowDialog();
+            //new WinnersView() { DataContext = this }.ShowDialog();
+            WinnersViewModel wstd =  new WinnersViewModel(this, new WinnersView());
+            wstd.winners.ShowDialog();
         },
             (param) =>
             {

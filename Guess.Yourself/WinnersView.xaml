@@ -8,6 +8,7 @@
         Title="Таблица угадавших игроков" 
         Topmost="True"
         ResizeMode="NoResize"
+        SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <Style TargetType="GridViewColumnHeader">
@@ -29,7 +30,7 @@
         <ListView Grid.Row="0" 
                   Background="Transparent" 
                   Height="300" 
-                  ItemsSource="{Binding DataContext.Winners, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"
+                  ItemsSource="{Binding Main.Winners}"
                   BorderThickness="10"
                   Padding="3">
             <ListView.ItemContainerStyle>
@@ -82,7 +83,7 @@
                             <Setter Property="OverridesDefaultStyle" Value="True" />
                             <Setter Property="Foreground" Value="Black" />
                             <Setter Property="FontFamily" Value="Segoe UI" />
-                            <Setter Property="FontSize" Value="12" />
+                            <Setter Property="FontSize" Value="16" />
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
@@ -104,6 +105,7 @@
                             <DataTemplate>
                                 <TextBlock Text="{Binding StdWin, StringFormat='Угадал участник №{0}.'}" 
                                            TextAlignment="Center"
+                                           FontSize="14"
                                            Foreground='Black'/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -111,9 +113,10 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button Grid.Row="1" Content="Ok" Margin="3" 
-                Command="{Binding WinnerClose}"
-                CommandParameter="{Binding}">
+        <Button Grid.Row="1" 
+                Content="Ok" 
+                Margin="3" 
+                Command="{Binding WinnerClose}">
         </Button>
     </Grid>
 </Window>
