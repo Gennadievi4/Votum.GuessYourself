@@ -164,7 +164,7 @@ namespace Guess.Yourself
                 App.Current.Dispatcher.Invoke(new Action(() =>
                 {
                     //var std = Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)) || x.RemoteId == default);
-                    var std = Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)) || !string.IsNullOrEmpty(x.Character));
+                    var std = Students.FirstOrDefault(x => !string.IsNullOrEmpty(x.Character) && x.RemoteId == default);
                     if (std != null)
                     {
                         std.UserAnswer = AnswerType.NotGuessed;
