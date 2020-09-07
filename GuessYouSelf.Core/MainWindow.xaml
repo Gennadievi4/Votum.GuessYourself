@@ -9,8 +9,8 @@
         xmlns:c="clr-namespace:GuessYourself.Core.Converters"
         Title="Игра: Отгадай себя" 
         WindowStartupLocation="CenterScreen"
-        MinWidth="970"
-        MinHeight="840"
+        MinWidth="840"
+        MinHeight="970"
         WindowState="Maximized"
         ResizeMode="CanResizeWithGrip"
         Name="GuessYorselfMainWindow">
@@ -229,7 +229,7 @@
                 </MenuItem.ItemsPanel>
                 <MenuItem Header="О программе &quot;Угадай себя&quot;"
                           Name="About"
-                          Command="{Binding OpenAboutUd}"/>
+                          Command="{Binding OpenAboutUs}"/>
             </MenuItem>
         </Menu>
         <TextBlock Text="{Binding IdRemoteStdWinner}" 
@@ -461,7 +461,7 @@
                                      Background="Transparent"
                                      TextWrapping="Wrap">
                                 <TextBox.Style>
-                                    <Style TargetType="TextBox">
+                                    <Style TargetType="{x:Type TextBox}">
                                         <Setter Property="Template">
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="{x:Type TextBox}">
@@ -600,10 +600,10 @@
                                         <DataTrigger Binding="{Binding ElementName=TableName, Path=IsMouseOver}" Value="true">
                                             <Setter Property="Text" Value="Таблица участников игры"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding ElementName=help, Path=IsHighlighted}" Value="true">
+                                        <DataTrigger Binding="{Binding ElementName=Help, Path=IsHighlighted}" Value="true">
                                             <Setter Property="Text" Value="Меню игры: Справка"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding ElementName=About, Path=IsHighlighted}" Value="true">
+                                        <DataTrigger Binding="{Binding ElementName=About, Path=IsMouseOver}" Value="true">
                                             <Setter Property="Text" Value="Меню игры: Справка -> О программе"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding ElementName=File, Path=IsMouseOver}" Value="true">

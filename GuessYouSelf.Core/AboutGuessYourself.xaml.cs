@@ -8,7 +8,7 @@ namespace GuessYouSelf.Core
         public AboutGuessYourself() => InitializeComponent();
         private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
-            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true});
             e.Handled = true;
         }
         private void Button_Click(object sender, RoutedEventArgs e)
