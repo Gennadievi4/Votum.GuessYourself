@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace GuessYouSelf.Core.Interfaces
+﻿namespace GuessYouSelf.Core.Interfaces
 {
     public interface IFileService
     {
-        IEnumerable<string> Open(string fileName);
-        void Save(string fileName, IEnumerable<string> str);
+        void Save(string fileName, StudentModel std);
+
+        void SaveAs();
     }
 }

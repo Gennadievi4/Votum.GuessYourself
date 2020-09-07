@@ -1,35 +1,85 @@
 ﻿using GuessYouSelf.Core.Interfaces;
 using RLib;
+using RLib.Remotes;
 using System;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace GuessYouSelf.Core
 {
-    public class MainWindowViewModelCore
+    public class MainWindowViewModelCore : NotifyPropertyChanged
     {
         public ObservableCollection<StudentModel> Students { get; set; } = new ObservableCollection<StudentModel>();
+        public AsyncObservableCollection<StudentWinner> Winners { get; set; } = new AsyncObservableCollection<StudentWinner>();
+        public static IFileService FileService { get; private set; }
 
-        private IFileService _fileService;
-        private IDialogService _dialogService;
-        public StudentModel SelectedStudent { get; set; }
+        private string idRemouteStdWinner;
+        public string IdRemoteStdWinner
+        {
+            get => idRemouteStdWinner;
+            set
+            {
+                if (idRemouteStdWinner == value) return;
+                idRemouteStdWinner = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool isAnimation;
+        public bool IsAnimation
+        {
+            get => isAnimation;
+            set
+            {
+                if (isAnimation == value) return;
+                isAnimation = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool isAnimationEndGame;
+        public bool IsAnimationEndGame
+        {
+            get => isAnimationEndGame;
+            set
+            {
+                if (isAnimationEndGame == value) return;
+                isAnimationEndGame = value;
+                OnPropertyChanged();
+            }
+        }
+        public static IDialogService DialogService { get; private set; }
+
+        private StudentModel studentModel;
+        public StudentModel SelectedStudent
+        {
+            get => studentModel;
+            set
+            {
+                if (studentModel == value) return;
+                studentModel = value;
+            }
+        }
+
+
 
         private readonly DeviceManager deviceManager = new DeviceManager(new VotumDevicesManager());
 
         public DispatcherTimer timer = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 1) };
 
-        DataGrid str = (DataGrid)Application.Current.MainWindow.FindName("TableName");
+        DataGrid str = (DataGrid)App.Current.MainWindow.FindName("TableName");
 
         public event Action OnTick;
-
+        public MainWindowViewModelCore() { }
         public MainWindowViewModelCore(IDialogService dialogService, IFileService fileService)
         {
-            _dialogService = dialogService;
-            _fileService = fileService;
+            //this.win = win;
+            DialogService = dialogService;
+            FileService = fileService;
 
             for (int i = 0; i < 32; i++)
             {
@@ -53,8 +103,17 @@ namespace GuessYouSelf.Core
 
         private void VotumManager_ButtonClicked(object sender, ButtonClickEventArgs e)
         {
-            EnsureRemoteAdded(e.RemoteId, e.ReceiverId);
-            GettingAQuestionsRemotely(e.RemoteId, e);
+            if (Winners.Any(x => x.StdWinner.RemoteId == e.RemoteId))
+            {
+                return;
+            }
+            else
+            {
+                EnsureRemoteAdded(e.RemoteId, e.ReceiverId);
+                GettingAQuestionsRemotely(e.RemoteId, e);
+                IsAnimation = false;
+                FindWinner(e.RemoteId, e);
+            }
             //if (e.Button.Type == ButtonType.PauseT2)
             //{
             //    RemoteCommand remoteCMD = RemoteCommand.CMD_NO_ACTION;
@@ -67,9 +126,9 @@ namespace GuessYouSelf.Core
 
         private void ChangeTextColorToDefault()
         {
-            foreach (var a in Students.Where(x => x.UserAnswer == StudentModel.AnswerType.NotGuessed))
+            foreach (var a in Students.Where(x => x.UserAnswer == AnswerType.NotGuessed))
             {
-                a.UserAnswer = StudentModel.AnswerType.NotSet;
+                a.UserAnswer = AnswerType.NotSet;
             }
         }
 
@@ -81,9 +140,15 @@ namespace GuessYouSelf.Core
                 std.Rating = default;
                 std.RemoteId = default;
                 std.Time = default;
+                std.Character = default;
+                std.IsAccess = true;
+                std.IsWinner = false;
             }
+            IsAnimation = false;
+            IsAnimationEndGame = false;
+            IdRemoteStdWinner = default;
+            Winners.Clear();
         }
-
         private void StopTimer()
         {
             foreach (var std in Students.Where(x => x.RemoteId != default && x.ReceiverId != default))
@@ -92,18 +157,19 @@ namespace GuessYouSelf.Core
                     OnTick -= std.UpTime;
             }
         }
-
         private void EnsureRemoteAdded(int RemoteId, int ReceiverId)
         {
             if (!Students.Any(x => x.ReceiverId.Equals(ReceiverId) && x.RemoteId.Equals(Convert.ToUInt16(RemoteId))))
             {
-                Application.Current.Dispatcher.Invoke(new Action(() =>
+                App.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    var std = Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)) || x.RemoteId == default);
+                    //var std = Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)) || x.RemoteId == default);
+                    var std = Students.FirstOrDefault(x => !string.IsNullOrEmpty(x.Character) && x.RemoteId == default);
                     if (std != null)
                     {
-                        std.UserAnswer = StudentModel.AnswerType.NotGuessed;
+                        std.UserAnswer = AnswerType.NotGuessed;
                         std.RemoteId = (ushort)RemoteId;
+                        std.ReceiverId = ReceiverId;
                     }
                 }));
             }
@@ -121,13 +187,46 @@ namespace GuessYouSelf.Core
             //    student.Rating = order++;
         }
 
+        private void FindWinner(int RemouteId, ButtonClickEventArgs e)
+        {
+            if (e.IsT2TextPresent && e.Button.Type == ButtonType.PauseT2)
+            {
+                var studentWinnerListBox = Students
+                    .Where(x => x.RemoteId != null && x.Question != null && x.Character != null)
+                    .Select((std, index) => (index, std))
+                    .Where(x => x.std.RemoteId == RemouteId && x.std.Question.Contains(x.std?.Character));
+                //.Select(x => x.index);
+
+                var student = Students.Where(x => x.RemoteId.Equals(Convert.ToUInt16(RemouteId)) && x.Character != null && x.Question.Contains(x.Character));
+                student.ToList().ForEach(x => { x.IsWinner = true; x.IsAccess = false; });
+
+                int temp = 0;
+                foreach (var std in studentWinnerListBox)
+                {
+                    temp += std.index + 1;
+                    IsAnimation = true;
+                    Winners.Add(new StudentWinner { StdWin = temp, StdWinner = std.std });
+                    IdRemoteStdWinner = $"Внимание! Участник №{temp} угадал!";
+                }
+                //App.Current.Dispatcher.Invoke(new Action(() =>
+                //{
+                //    int temp = 0;
+                //    foreach (var std in studentWinnerListBox)
+                //    {
+                //        temp += std.index + 1;
+                //        Winners.Add(new StudentWinner { StdWin = temp, StdWinner = std.std });
+                //    }
+                //}));
+            }
+        }
+
         private void GettingAQuestionsRemotely(int RemoteId, ButtonClickEventArgs e)
         {
             if (e.IsT2TextPresent && e.Button.Type == ButtonType.PauseT2)
             {
-                Application.Current.Dispatcher.Invoke(new Action(() =>
+                App.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)))?.QuestionsAdd(e.T2Text);
+                    Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)))?.QuestionsAdd(e.T2Text, AnswerType.NotGuessed);
                     var std = Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)));
                     if (std != null)
                     {
@@ -145,9 +244,20 @@ namespace GuessYouSelf.Core
         #region Команды
         public RelayCommand<StudentModel> yesCmd = null;
 
-        public RelayCommand<StudentModel> YesCmd => yesCmd ?? (yesCmd = new RelayCommand<StudentModel>((param) =>
+        public ICommand YesCmd => yesCmd ?? (yesCmd = new RelayCommand<StudentModel>((param) =>
         {
-            //param.UserAnswer = StudentModel.AnswerType.Correct;
+            param.Questions.First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
+            .UserAnswer = AnswerType.Correct;
+
+
+            //param.remotePacket.RemoteID = (int)param.RemoteId;
+            //param.remotePacket.RemoteCommand = TRemoteCommandID.RF_ACK_DISPLAY_LOGO;
+            SendbackCommand send = new SendbackCommand(param.ReceiverId, (int)param.RemoteId, RemoteCommand.CMD_DISPLAY_LOGO);
+            param.remotePacket.ComplectID = param.ReceiverId;
+            param.remotePacket.RemoteID = (int)param.RemoteId;
+            param.remotePacket.PacketLength = 6;
+            param.remotePacket.RemoteCommand = TRemoteCommandID.RF_ACK_DISPLAY_LOGO;
+
             param.Question = null;
             if (OnTick != param.UpTime)
             {
@@ -160,9 +270,12 @@ namespace GuessYouSelf.Core
         }));
 
         public RelayCommand<StudentModel> noCmd = null;
-        public RelayCommand<StudentModel> NoCmd => noCmd ?? (noCmd = new RelayCommand<StudentModel>((param) =>
+        public ICommand NoCmd => noCmd ?? (noCmd = new RelayCommand<StudentModel>((param) =>
         {
-            //param.UserAnswer = StudentModel.AnswerType.NotCorrect;
+            param.Questions
+            .First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
+            .UserAnswer = AnswerType.NotCorrect;
+
             param.Question = null;
             if (OnTick != param.UpTime)
             {
@@ -175,9 +288,11 @@ namespace GuessYouSelf.Core
         }));
 
         public RelayCommand<StudentModel> dontKnowCmd = null;
-        public RelayCommand<StudentModel> DontKnowCmd => dontKnowCmd ?? (dontKnowCmd = new RelayCommand<StudentModel>((param) =>
+        public ICommand DontKnowCmd => dontKnowCmd ?? (dontKnowCmd = new RelayCommand<StudentModel>((param) =>
         {
-            //param.UserAnswer = StudentModel.AnswerType.DontKnow;
+            param.Questions.First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
+            .UserAnswer = AnswerType.DontKnow;
+
             param.Question = null;
             if (OnTick != param.UpTime)
             {
@@ -190,38 +305,60 @@ namespace GuessYouSelf.Core
         }));
 
         public RelayCommand<StudentModel> questionCmd = null;
-        public RelayCommand<StudentModel> QuestionCmd => questionCmd ?? (questionCmd = new RelayCommand<StudentModel>((param) =>
+        public ICommand QuestionCmd => questionCmd ?? (questionCmd = new RelayCommand<StudentModel>((param) =>
         {
-            new QuestionView(param.Questions).ShowDialog();
+            new QuestionView() { DataContext = param }.ShowDialog();
         },
             (param) =>
             {
-                return (param != null && param.Questions.Count == 0) ? false : true;
+                return (param != null && param.Questions.Count > 0);
             }
             ));
 
         public RelayCommand<StudentModel> closeApp = null;
-        public RelayCommand<StudentModel> CloseApp => closeApp ?? (closeApp = new RelayCommand<StudentModel>((param) =>
+        public ICommand CloseApp => closeApp ?? (closeApp = new RelayCommand<StudentModel>((param) =>
         {
             Environment.Exit(0);
         }));
 
         public RelayCommand<StudentModel> endGame = null;
-        public RelayCommand<StudentModel> EndGame => endGame ?? (endGame = new RelayCommand<StudentModel>((param) =>
+        public ICommand EndGame => endGame ?? (endGame = new RelayCommand<StudentModel>((param) =>
         {
             ChangeTextColorToDefault();
             StopTimer();
+
+            Students.Where(x => x.Question == null && x.RemoteId != null).ToList().ForEach(x => { x.Rating = null; x.Time = null; });
+
+            if (Students.Any(x => x.Question != null && x.RemoteId != null && x.Character != null && x.Rating != null && x.Question.Equals(x.Character)))
+            {
+                var winner = Students
+                .Where(x => x.Question != null && x.RemoteId != null && x.Rating != null)
+                .OrderBy(x => x.Rating)
+                .ToList()
+                .Single().RemoteId;
+                IdRemoteStdWinner = $"Победил участник игры с пультом №{winner}";
+            }
+            else
+            {
+                if (Winners.Any())
+                {
+                    IsAnimationEndGame = true;
+                    IdRemoteStdWinner = $"Победил участник игры с пультом №{Winners.Select((std, ind) => (ind, std)).OrderBy(x => x.ind).Single(x => x.ind == 0).std.StdWinner.RemoteId}";
+                }
+            }
+
             str.IsEnabled = false;
             deviceManager.votumManager.Stop();
         },
             (param) =>
             {
-                var x = str.Columns[7].GetCellContent(str.Items[0]) as TextBlock;
-                return str.IsEnabled && x != null ? x.Text != "" : false;
+                //var x = str.Columns[7].GetCellContent(str.Items[0]) as System.Windows.Controls.Button;
+                //return str.IsEnabled && x != null ? x.Content.ToString() != "" : false;
+                return Students.Any(x => x.Question != null || x.Time != null) && str.IsEnabled;
             }));
 
         public RelayCommand<StudentModel> resetGame = null;
-        public RelayCommand<StudentModel> ResetGame => resetGame ?? (resetGame = new RelayCommand<StudentModel>((param) =>
+        public ICommand ResetGame => resetGame ?? (resetGame = new RelayCommand<StudentModel>((param) =>
         {
             ResetCollection();
 
@@ -234,30 +371,23 @@ namespace GuessYouSelf.Core
             }
             ));
 
-        public RelayCommand<StudentModel> openText = null;
-        public RelayCommand<StudentModel> OpenText => openText ?? (openText = new RelayCommand<StudentModel>((param) =>
-        {
-            if (_dialogService.OpenDialog() == true)
+        public RelayCommand<StudentModel> openAboutUs = null;
+        public ICommand OpenAboutUs => openAboutUs ?? (openAboutUs = new RelayCommand<StudentModel>((std) =>
             {
-                var stringComboBox = _fileService.Open(_dialogService.FilePath);
-                param.textString.Clear();
-
-                if (stringComboBox.Any())
-                {
-                    param.NameOfTheStudentsTextFile = _dialogService.FileName;
-                    foreach (var str in stringComboBox)
-                    {
-                        param.textString.Add(str);
-                    }
-                    param.TextString = param.textString[0];
-                    _dialogService.ShowMessage("Список объектов заполнен!");
-                }
-                else
-                {
-                    _dialogService.ShowMessage("Файл пустой! Заполните файл объектами!");
-                }
+                new AboutGuessYourself().ShowDialog();
+            }));
+        public RelayCommand<StudentWinner> winnersOpen = null;
+        public ICommand WinnersOpen => winnersOpen ?? (winnersOpen = new RelayCommand<StudentWinner>((param) =>
+        {
+            //new WinnersView() { DataContext = this }.ShowDialog();
+            WinnersViewModel wstd =  new WinnersViewModel(this, new WinnersView());
+            wstd.Winners.ShowDialog();
+        },
+            (param) =>
+            {
+                return Winners.Count != 0;
             }
-        }));
+            ));
         #endregion
     }
 }

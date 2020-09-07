@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Guess.Yourself.Interfaces
+﻿namespace Guess.Yourself.Interfaces
 {
     public interface IFileService
     {

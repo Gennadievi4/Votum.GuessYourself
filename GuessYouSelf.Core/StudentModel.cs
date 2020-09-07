@@ -1,47 +1,14 @@
-﻿using RLib;
-using RLib.Remotes;
+﻿using RLib.Remotes;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace GuessYouSelf.Core
 {
-    public class StudentModel : INotifyPropertyChanged
+    public class StudentModel : NotifyPropertyChanged
     {
-        public bool IsAccess { get; private set; } = true;
-        public RemoteEventArgs send;
-        public TRemotePacket remotePacket = new TRemotePacket();
-
-        private DateTime? StopWatch;
-        //DateTime start = DateTime.Now;
-        //public DateTime? Time => StopWatch;
-
-        public List<string> textString { get; set; } = new List<string>();
-        private object txtString;
-        public object TextString
-        {
-            get => txtString;
-            set
-            {
-                if (txtString == value) return;
-                txtString = value;
-                RaisePropertyChanged(nameof(TextString));
-            }
-        }
-
-        private string nameOfTheStudentsTextFile;
-        public string NameOfTheStudentsTextFile
-        {
-            get => nameOfTheStudentsTextFile;
-            set
-            {
-                if (nameOfTheStudentsTextFile == value) return;
-                nameOfTheStudentsTextFile = value;
-                RaisePropertyChanged(nameof(NameOfTheStudentsTextFile));
-            }
-        }
-
         private string character;
         public string Character
         {
@@ -50,9 +17,53 @@ namespace GuessYouSelf.Core
             {
                 if (character == value) return;
                 character = value;
-                RaisePropertyChanged(nameof(Character));
+                OnPropertyChanged();
             }
         }
+
+        private bool isWinner;
+        public bool IsWinner
+        {
+            get => isWinner;
+            set
+            {
+                if (isWinner == value) return;
+                isWinner = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool isAccess = true;
+        public bool IsAccess
+        {
+            get => isAccess;
+            set
+            {
+                if (isAccess == value) return;
+                isAccess = value;
+                OnPropertyChanged();
+            }
+        }
+        public List<string> textString { get; set; } = new List<string>();
+
+        private object txtString;
+        public object TextString
+        {
+            get => txtString;
+            set
+            {
+                if (txtString == value) return;
+                txtString = value;
+                OnPropertyChanged();
+            }
+        }
+        public TRemotePacket remotePacket { get; set; } = new TRemotePacket();
+        //THIDMessageID
+
+        //SendbackCommand sendback = new SendbackCommand(int RemoteCommand.CMD_DISPLAY_LOGO);
+        private DateTime? StopWatch;
+        //DateTime start = DateTime.Now;
+        //public DateTime? Time => StopWatch;
         public DateTime? Time
         {
             get => StopWatch;
@@ -60,7 +71,7 @@ namespace GuessYouSelf.Core
             {
                 if (StopWatch == value) return;
                 StopWatch = value;
-                RaisePropertyChanged(nameof(Time));
+                OnPropertyChanged();
             }
         }
 
@@ -79,6 +90,7 @@ namespace GuessYouSelf.Core
         //            rating.ToString();
         //    }
         //}
+
         private int? rating;
         public int? Rating
         {
@@ -86,7 +98,7 @@ namespace GuessYouSelf.Core
             {
                 if (rating == value) return;
                 rating = value;
-                RaisePropertyChanged(nameof(Rating));
+                OnPropertyChanged();
             }
             get
             {
@@ -104,11 +116,20 @@ namespace GuessYouSelf.Core
             {
                 if (question == value) return;
                 question = value;
-                RaisePropertyChanged(nameof(Question));
+                OnPropertyChanged();
             }
         }
-        public int ReceiverId { get; set; }
 
+        private int receiverId;
+        public int ReceiverId
+        {
+            get => receiverId;
+            set
+            {
+                if (receiverId == value) return;
+                receiverId = value;
+            }
+        }
         private ushort? remoteId;
         public ushort? RemoteId
         {
@@ -117,10 +138,12 @@ namespace GuessYouSelf.Core
             {
                 if (remoteId == value) return;
                 remoteId = value;
-                RaisePropertyChanged(nameof(RemoteId));
+                OnPropertyChanged();
             }
         }
-        public List<string> Questions { get; set; } = new List<string>();
+
+        #region Цвета
+        public ObservableCollection<AnswerLog> Questions { get; set; } = new ObservableCollection<AnswerLog>();
 
         public static SolidColorBrush defaultColor = new SolidColorBrush(Colors.Black);
         public SolidColorBrush AnswerColor { get; set; } = defaultColor;
@@ -132,30 +155,22 @@ namespace GuessYouSelf.Core
             set
             {
                 userAnswer = value;
-                AnswerColor = ChangeColor(value);
+                //AnswerColor = ChangeColor(value);
 
-                RaisePropertyChanged(nameof(AnswerColor));
+                //OnPropertyChanged(nameof(AnswerColor));
+                OnPropertyChanged();
             }
         }
-        public event PropertyChangedEventHandler PropertyChanged;
-
+        #endregion
         public StudentModel(int remoteId, int receiverId)
         {
             RemoteId = (ushort)remoteId;
             ReceiverId = receiverId;
         }
-        public StudentModel()
-        {
 
-        }
-
-        protected virtual void RaisePropertyChanged(string propertyName)
+        public void QuestionsAdd(string text, AnswerType answerType)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        public void QuestionsAdd(string text)
-        {
-            Questions.Add($"{Questions.Count + 1}. " + $" {text}");
+            Questions.Add(new AnswerLog { Question = $"{Questions.Count + 1}. {text}", UserAnswer = answerType });
         }
         public void UpTime()
         {
@@ -165,35 +180,21 @@ namespace GuessYouSelf.Core
             //TimeSpan? elapsed = new TimeSpan(0, 0, 1);
             if (StopWatch is null) StopWatch = new DateTime();
             else StopWatch = ((DateTime)StopWatch).AddSeconds(1);
-            RaisePropertyChanged(nameof(Time));
+            OnPropertyChanged(nameof(Time));
         }
-        SolidColorBrush ChangeColor(AnswerType answer)
+        public StudentModel()
         {
-            switch (answer)
+            SaveTextCommand = new RelayCommand<StudentModel>(OnSaveTextCommandExecute, CanSaveTextCommandExecute);
+        }
+        public ICommand SaveTextCommand { get; }
+
+        private bool CanSaveTextCommandExecute(StudentModel student) => true;
+        private void OnSaveTextCommandExecute(StudentModel student)
+        {
+            if (MainWindowViewModelCore.DialogService.SaveDialog() == true)
             {
-                case AnswerType.NotGuessed:
-                    return new SolidColorBrush(Colors.Transparent);
-                case AnswerType.Correct:
-                    //if (UserAnswer == AnswerType.Correct)
-                    //    remotePacket.RemoteCommand = (TRemoteCommandID)RemoteCommand.CMD_DISPLAY_LOGO;
-                    return new SolidColorBrush(Colors.Green);
-                case AnswerType.NotCorrect:
-                    //if (UserAnswer == AnswerType.NotCorrect)
-                    //    SendbackCommand.DisplayStringClear("Нет!");
-                    return new SolidColorBrush(Colors.Red);
-                case AnswerType.DontKnow:
-                    //if (UserAnswer == AnswerType.DontKnow)
-                    //    SendbackCommand.DisplayStringClear("Неизвестно!");
-                    return new SolidColorBrush(Colors.Yellow);
-                case AnswerType.NotSet:
-                    return defaultColor;
-                default:
-                    throw new Exception("Не выбран цвет!");
+                MainWindowViewModelCore.FileService.Save(MainWindowViewModelCore.DialogService.FilePath, student);
             }
-        }
-        public enum AnswerType
-        {
-            Correct, NotCorrect, DontKnow, NotSet, NotGuessed
         }
     }
 }

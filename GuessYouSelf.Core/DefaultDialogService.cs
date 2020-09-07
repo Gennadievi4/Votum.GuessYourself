@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace GuessYouSelf.Core
 {
-    internal class DefaultDialogService : IDialogService
+    public class DefaultDialogService : IDialogService
     {
         public string FilePath { get; set; }
         public string FileName { get; set; }
@@ -34,7 +34,16 @@ namespace GuessYouSelf.Core
         public bool SaveDialog()
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            if (saveFileDialog.ShowDialog() == false)
+            FolderService folderService = new FolderService();
+
+            saveFileDialog.Filter = "Документ Word: (*.docx)|*.docx|Документ Word 97-2003: (*.doc)|*.doc";
+            saveFileDialog.DefaultExt = ".docx";
+            saveFileDialog.AddExtension = true;
+
+            folderService.CreateFolder();
+            saveFileDialog.InitialDirectory = folderService.PathToFolder;
+
+            if (saveFileDialog.ShowDialog() == true)
             {
                 FilePath = saveFileDialog.FileName;
                 return true;

@@ -19,6 +19,7 @@
   <ItemGroup>
     <None Remove="hidapi32.dll" />
     <None Remove="hidapi64.dll" />
+    <None Remove="Resources\GuessYourself.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,12 +37,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Open XML SDK\V2.0\lib\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
     <Reference Include="HidApiAdapter">
       <HintPath>..\..\..\..\Documents\Работа\Votum\RLib\HidApiAdapter.dll</HintPath>
     </Reference>
     <Reference Include="RLib">
       <HintPath>..\..\..\..\Documents\Работа\Votum\RLib.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\GuessYourself.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
