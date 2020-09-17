@@ -143,6 +143,7 @@ namespace Guess.Yourself
                 std.Character = default;
                 std.IsAccess = true;
                 std.IsWinner = false;
+                std.Questions.Clear();
             }
             IsAnimation = false;
             IsAnimationEndGame = false;
@@ -192,21 +193,24 @@ namespace Guess.Yourself
             if (e.IsT2TextPresent && e.Button.Type == ButtonType.PauseT2)
             {
                 var studentWinnerListBox = Students
-                    .Where(x => x.RemoteId != null && x.Question != null && x.Character != null)
+                    .Where(x => x.RemoteId != null && x.Question != null && !string.IsNullOrWhiteSpace(x.Character))
                     .Select((std, index) => (index, std))
                     .Where(x => x.std.RemoteId == RemouteId && x.std.Question.Contains(x.std?.Character));
                 //.Select(x => x.index);
 
-                var student = Students.Where(x => x.RemoteId.Equals(Convert.ToUInt16(RemouteId)) && x.Character != null && x.Question.Contains(x.Character));
+                var student = Students.Where(x => x.RemoteId.Equals(Convert.ToUInt16(RemouteId)) && !string.IsNullOrWhiteSpace(x.Character) && x.Question.Contains(x.Character));
                 student.ToList().ForEach(x => { x.IsWinner = true; x.IsAccess = false; });
 
                 int temp = 0;
                 foreach (var std in studentWinnerListBox)
                 {
-                    temp += std.index + 1;
-                    IsAnimation = true;
-                    Winners.Add(new StudentWinner { StdWin = temp, StdWinner = std.std });
-                    IdRemoteStdWinner = $"Внимание! Участник №{temp} угадал!";
+                    if (!string.IsNullOrWhiteSpace(std.std.Character))
+                    {
+                        temp += std.index + 1;
+                        IsAnimation = true;
+                        Winners.Add(new StudentWinner { StdWin = temp, StdWinner = std.std });
+                        IdRemoteStdWinner = $"Внимание! Участник №{temp} угадал!";
+                    }
                 }
                 //App.Current.Dispatcher.Invoke(new Action(() =>
                 //{
@@ -345,6 +349,11 @@ namespace Guess.Yourself
                     IsAnimationEndGame = true;
                     IdRemoteStdWinner = $"Победил участник игры с пультом №{Winners.Select((std, ind) => (ind, std)).OrderBy(x => x.ind).Single(x => x.ind == 0).std.StdWinner.RemoteId}";
                 }
+                else
+                {
+                    IsAnimationEndGame = true;
+                    IdRemoteStdWinner = $"В игре нет победителей!";
+                }
             }
 
             str.IsEnabled = false;
@@ -380,7 +389,7 @@ namespace Guess.Yourself
         public ICommand WinnersOpen => winnersOpen ?? (winnersOpen = new RelayCommand<StudentWinner>((param) =>
         {
             //new WinnersView() { DataContext = this }.ShowDialog();
-            WinnersViewModel wstd =  new WinnersViewModel(this, new WinnersView());
+            WinnersViewModel wstd = new WinnersViewModel(this, new WinnersView());
             wstd.Winners.ShowDialog();
         },
             (param) =>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Navigation;
@@ -11,14 +12,21 @@ namespace Guess.Yourself
     {
         public App()
         {
-            //AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
                 var text = e.ExceptionObject.ToString();
-                File.AppendAllText($"error[{DateTime.Now:yyyy-MM-ddThh-mm-ss}].log", text);
+                File.AppendAllText("Ошибки приложения!.log", $"Ошибка возникла в [{DateTime.Now:yyyy-MM-ddThh-mm-ss}] \r\n {text} {Environment.NewLine} \r\n");
                 MessageBox.Show(text, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             };
+
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+        }
+
+        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            if (new AssemblyName(args.Name).Name == "Угадай себя - Lite")
+                return Assembly.LoadFrom(Path.Combine(Assembly.GetExecutingAssembly().Location, "Угадай себя - Lite.exe"));
+            throw new Exception();
         }
 
         //private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)

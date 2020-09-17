@@ -7,11 +7,11 @@ using System.Windows;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набор атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("Угадай Себя")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Угадай Себя - Lite")]
+[assembly: AssemblyDescription("Интерактивная игра")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Votum")]
-[assembly: AssemblyProduct("Угадай Себя")]
+[assembly: AssemblyProduct("Угадай Себя - Lite")]
 [assembly: AssemblyCopyright("Votum ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -51,5 +51,5 @@ using System.Windows;
 // Можно задать все значения или принять номера сборки и редакции по умолчанию 
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.3")]
-[assembly: AssemblyFileVersion("1.0.0.3")]
+[assembly: AssemblyVersion("1.0.0.4")]
+[assembly: AssemblyFileVersion("1.0.0.4")]

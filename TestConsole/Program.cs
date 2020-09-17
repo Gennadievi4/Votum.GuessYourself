@@ -1,51 +1,33 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
+using System.Reflection;
 
 namespace TestConsole
 {
-    public class A
-    {
-        public virtual int Calc() => 10 * Gen();
-        protected int Gen() => 10;
-    }
-
-    public class B : A
-    {
-        public override int Calc() => 20 * Gen();
-        protected int Gen() => 20;
-    }
-
-    public class C: B
-    {
-        public override int Calc() => 30 * Gen();
-        protected int Gen() => base.Gen();
-    }
     class Program
     {
-        public static void GetString()
+        public static void FindExe()
         {
-            //using var line = new StreamReader(@"C:\Users\gonzy\Desktop\Новый текстовый документ.txt");
-            //var str2 = line.ReadToEnd();
-            //var str3 = Regex.Replace(str2, @"([\p{P}\d])|([А-ЯЁа-яё]{20,})|([№<>|=])", "", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
-
-            //Console.WriteLine(str3);
-
+            var files = Directory.GetFiles(Path.GetFullPath(@"C:\Users\gonzy\source\repos\Votum.Interactive.Games\Guess.Yourself\bin\Debug"));
+            foreach (var item in files)
+            {
+                if (item.EndsWith(".exe.config") || item.EndsWith(".InstallState"))
+                    File.Delete(item);
+            }
         }
+
         static void Main(string[] args)
         {
-
-            A a = new B();
-            A a1 = new C();
-            Console.WriteLine(a.Calc() + a1.Calc());
+            var path2 = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+            var path3 = Assembly.GetExecutingAssembly().GetName().CodeBase;
+            var path6 = Environment.GetEnvironmentVariable("TEMP");
+            var path4 = Process.GetCurrentProcess().MainModule.FileName;
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "Животные1.txt");
+            var path7 = Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Животные1.txt");
+            FindExe();
+            Console.WriteLine(path7);
             Console.ReadKey();
-            //Создание примера поиска текста при помощи регулярки
-            //GetString();
-
-            //Создание вордовского документа при помощи OpenXML
-            //GeneratedClass generatedClass = new GeneratedClass();
-            //generatedClass.CreatePackage(@"C:\Users\gonzy\Desktop\TestDoc1.docx");
         }
     }
 }

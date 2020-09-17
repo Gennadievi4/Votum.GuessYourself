@@ -348,7 +348,7 @@ namespace GuessYouSelf.Core
             }
 
             str.IsEnabled = false;
-            deviceManager.votumManager.Stop();
+            //deviceManager.votumManager.Stop();
         },
             (param) =>
             {
