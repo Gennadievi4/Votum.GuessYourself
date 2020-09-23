@@ -105,7 +105,7 @@ namespace Guess.Yourself
         {
             if (Winners.Any(x => x.StdWinner.RemoteId == e.RemoteId))
             {
-                return;
+                e.SendbackCommand = SendbackCommand.DisplayStringClear("Вы угадали! Ожидайте остальных!");
             }
             else
             {

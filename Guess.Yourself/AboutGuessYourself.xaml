@@ -9,7 +9,7 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
     <WindowChrome.WindowChrome>
-        <WindowChrome GlassFrameThickness="{x:Static WindowChrome.GlassFrameCompleteThickness}"/>
+        <WindowChrome GlassFrameThickness="{x:Static WindowChrome.GlassFrameCompleteThickness}" UseAeroCaptionButtons="False"/>
     </WindowChrome.WindowChrome>
     <Window.Template>
         <ControlTemplate TargetType="{x:Type Window}">

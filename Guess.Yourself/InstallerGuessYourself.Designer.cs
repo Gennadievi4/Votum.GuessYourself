@@ -1,6 +1,6 @@
 ﻿namespace Guess.Yourself
 {
-    partial class УстановитьУгадайСебяLite
+    partial class Lite
     {
         /// <summary>
         /// Обязательная переменная конструктора.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             // 
-            // УстановитьУгадайСебяLite
+            // Lite
             // 
             this.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.УстановитьУгадайСебяLite_AfterInstall);
             this.AfterUninstall += new System.Configuration.Install.InstallEventHandler(this.УстановитьУгадайСебяLite_AfterUninstall);

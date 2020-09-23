@@ -10,17 +10,18 @@ using v = System.IO;
 namespace Guess.Yourself
 {
     [RunInstaller(true)]
-    public partial class УстановитьУгадайСебяLite : Installer
+    public partial class Lite : Installer
     {
-        public УстановитьУгадайСебяLite()
+        public Lite()
         {
             InitializeComponent();
         }
-        
+
         private void InstallGuessYourself_BeforeInstall(object sender, InstallEventArgs e)
         {
             v.File.WriteAllBytes($"{Environment.GetEnvironmentVariable("TEMP")}\\vcredist_x86.exe", Resources.vcredist_x86);
-            v.File.WriteAllBytes($"{Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))}\\Votum\\Угадай себя - Lite\\vcredist_x86.exe", Resources.vcredist_x86);
+            //v.File.WriteAllBytes($"{Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))}\\Votum\\Угадай себя - Lite\\vcredist_x86.exe", Resources.vcredist_x86);
+            v.File.WriteAllBytes($"{Context.Parameters["path"]}\\Votum\\Угадай Себя - Lite\\vcredist_x86.exe", Resources.vcredist_x86);
             Process proc = new Process();
             proc.StartInfo = new ProcessStartInfo($"{Environment.GetEnvironmentVariable("TEMP")}\\vcredist_x86.exe");
             proc.Start();
@@ -41,14 +42,18 @@ namespace Guess.Yourself
         {
             string shortcutPathForDesktop = $"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\\Угадай Себя - Lite.lnk";
             string shortcutPathForCommon = $"{Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu)}\\Угадай Себя - Lite.lnk";
-            string targetPath = $"{Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))}\\Votum\\Угадай себя - Lite\\Угадай себя - Lite.exe";
-            string workingPath = $"{Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))}\\Votum\\Угадай себя - Lite";
-            string iconPath = $"{Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))}\\Votum\\Угадай себя - Lite\\512x512bb.ico";
+            //string targetPath = $"{Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))}\\Votum\\Угадай себя - Lite\\Угадай себя - Lite.exe";
+            //string workingPath = $"{Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))}\\Votum\\Угадай себя - Lite";
+            //string iconPath = $"{Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))}\\Votum\\Угадай себя - Lite\\512x512bb.ico";
+            string targetPath = $"{Context.Parameters["assemblypath"]}";
+            string workingPath = $"{Context.Parameters["path"]}\\Votum\\Угадай Себя - Lite\\";
+            string iconPath = $"{Context.Parameters["path"]}\\Votum\\Угадай Себя - Lite\\512x512bb.ico";
 
             CreateShortcut(shortcutPathForDesktop, targetPath, workingPath, iconPath);
             CreateShortcut(shortcutPathForCommon, targetPath, workingPath, iconPath);
 
-            var files = Directory.GetFiles($"{Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))}\\Votum\\Угадай себя - Lite\\");
+            //var files = Directory.GetFiles($"{Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))}\\Votum\\Угадай себя - Lite\\");
+            var files = Directory.GetFiles($"{Context.Parameters["path"]}\\Votum\\Угадай Себя - Lite\\");
             foreach (var item in files)
             {
                 if (item.EndsWith(".exe.config") || item.EndsWith(".InstallState"))
@@ -61,7 +66,8 @@ namespace Guess.Yourself
             v.File.Delete($"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\\Угадай Себя - Lite.lnk");
             v.File.Delete($"{Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu)}\\Угадай Себя - Lite.lnk");
             v.File.Delete($"{Environment.GetEnvironmentVariable("TEMP")}\\vcredist_x86.exe");
-            v.File.Delete($"{Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))}\\Votum\\Угадай себя - Lite\\vcredist_x86.exe");
+            //v.File.Delete($"{Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))}\\Votum\\Угадай себя - Lite\\vcredist_x86.exe");
+            v.File.Delete($"{Context.Parameters["pathUninstall"]}");
 
             //var files = Directory.GetFiles($"{Environment.GetEnvironmentVariable("TEMP")}");
             //foreach (var item in files)
