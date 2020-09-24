@@ -14,17 +14,17 @@
             }
         }
 
-        //private int? idRemouteStdWinner;
-        //public int? IdRemoteStdWinner
-        //{
-        //    get => idRemouteStdWinner;
-        //    set
-        //    {
-        //        if (idRemouteStdWinner == value) return;
-        //        idRemouteStdWinner = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
+        private string textWinnersTable;
+        public string TextWinnersTable
+        {
+            get => textWinnersTable;
+            set
+            {
+                if (textWinnersTable == value) return;
+                textWinnersTable = value;
+                OnPropertyChanged();
+            }
+        }
 
         private StudentModel stdWinner;
         public StudentModel StdWinner

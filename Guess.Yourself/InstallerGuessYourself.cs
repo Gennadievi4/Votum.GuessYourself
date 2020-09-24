@@ -69,12 +69,12 @@ namespace Guess.Yourself
             //v.File.Delete($"{Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))}\\Votum\\Угадай себя - Lite\\vcredist_x86.exe");
             v.File.Delete($"{Context.Parameters["pathUninstall"]}");
 
-            //var files = Directory.GetFiles($"{Environment.GetEnvironmentVariable("TEMP")}");
-            //foreach (var item in files)
-            //{
-            //    if (item.IndexOf("vcredist") != 0)
-            //        v.File.Delete(item);
-            //}
+            var files = Directory.GetFiles($"{Environment.GetEnvironmentVariable("TEMP")}");
+            foreach (var item in files)
+            {
+                if (item.Contains("dd_vcredist_"))
+                    v.File.Delete(item);
+            }
         }
     }
 }

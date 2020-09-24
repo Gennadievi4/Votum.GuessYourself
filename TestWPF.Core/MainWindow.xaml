@@ -15,7 +15,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <Button Margin="5" Padding="5,0" Content="Clicke me!" Command="{Binding MyCommand}" CommandParameter="{Binding MyItems}"/>
+            <Button Margin="5" Padding="5,0" Content="Clicke me!" Command="{Binding MyCommand}"/>
         </StackPanel>
         <DataGrid Grid.Row="1" Margin="5" ItemsSource="{Binding MyItems}" IsSynchronizedWithCurrentItem="True" AutoGenerateColumns="False" IsReadOnly="True" >
             <DataGrid.Columns>

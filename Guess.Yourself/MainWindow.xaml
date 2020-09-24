@@ -681,7 +681,8 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border BorderThickness="0, 0, 0, 1" BorderBrush="Black">
-                                <TextBlock Text="{Binding StdWin, StringFormat='Угадал участник №{0}.'}" TextAlignment="Center"/>
+                                <!--<TextBlock Text="{Binding StdWin, StringFormat='Угадал участник №{0}.'}" TextAlignment="Center"/>-->
+                                <TextBlock Text="{Binding TextWinnersTable}" TextAlignment="Center"/>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

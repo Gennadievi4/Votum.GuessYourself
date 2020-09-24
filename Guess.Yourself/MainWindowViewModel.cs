@@ -208,7 +208,7 @@ namespace Guess.Yourself
                     {
                         temp += std.index + 1;
                         IsAnimation = true;
-                        Winners.Add(new StudentWinner { StdWin = temp, StdWinner = std.std });
+                        Winners.Add(new StudentWinner { StdWin = temp, StdWinner = std.std, TextWinnersTable = $"Участник №{temp} угадал объект {std.std.Character}"});
                         IdRemoteStdWinner = $"Внимание! Участник №{temp} угадал!";
                     }
                 }

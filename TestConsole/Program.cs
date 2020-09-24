@@ -9,12 +9,18 @@ namespace TestConsole
     {
         public static void FindExe()
         {
-            var files = Directory.GetFiles(Path.GetFullPath(@"C:\Users\gonzy\source\repos\Votum.Interactive.Games\Guess.Yourself\bin\Debug"));
+            var files = Directory.GetFiles(Environment.GetEnvironmentVariable("TEMP"));
+            int i = 0;
             foreach (var item in files)
             {
-                if (item.EndsWith(".exe.config") || item.EndsWith(".InstallState"))
-                    File.Delete(item);
+                if(item.Contains("dd_vcredist_"))
+                    Console.WriteLine($"{item} {i++}");
             }
+            //foreach (var item in files)
+            //{
+            //    if (item.EndsWith(".exe.config") || item.EndsWith(".InstallState"))
+            //        File.Delete(item);
+            //}
         }
 
         static void Main(string[] args)
@@ -26,7 +32,6 @@ namespace TestConsole
             var path = Path.Combine(Directory.GetCurrentDirectory(), "Животные1.txt");
             var path7 = Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Животные1.txt");
             FindExe();
-            Console.WriteLine(path7);
             Console.ReadKey();
         }
     }
