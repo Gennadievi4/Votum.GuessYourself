@@ -9,7 +9,7 @@
         Title="Игра: Угадай себя"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
-        MinHeight="970"
+        MinHeight="570"
         MinWidth="840"
         ResizeMode="CanResizeWithGrip"
         Name="GuessYorselfMainWindow" d:DesignWidth="800" d:DesignHeight="700">
@@ -199,8 +199,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="35*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="150"/>
         </Grid.RowDefinitions>
         <Menu Background="White"
               Name="MenuTriggered">
@@ -359,7 +359,8 @@
                   BorderThickness="0, 1, 0, 0"    
                   VirtualizingPanel.ScrollUnit="Pixel"
                   SelectionMode="Single"
-                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  Background="White">
             <DataGrid.CellStyle>
                 <Style TargetType="DataGridCell">
                     <Style.Triggers>
@@ -486,7 +487,7 @@
                                                             </EventTrigger.Actions>
                                                         </EventTrigger>-->
                                                         <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter Property="Background" TargetName="border" Value="White"/>
+                                                            <Setter Property="Background" TargetName="border" Value="#DCDCDC"/>
                                                         </Trigger>
                                                         <Trigger Property="IsKeyboardFocused" Value="true">
                                                             <Setter Property="Background" Value="Transparent" TargetName="border"/>
