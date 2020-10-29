@@ -1,4 +1,4 @@
-﻿using RLib.Remotes;
+﻿using RLib;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,7 +9,20 @@ namespace Guess.Yourself
 {
     public class StudentModel : NotifyPropertyChanged
     {
+        #region Fields
         private string character;
+        private bool isWinner;
+        private bool isAccess = true;
+        private object txtString;
+        private DateTime? StopWatch;
+        private int? rating;
+        private string question;
+        private int receiverId;
+        private ushort? remoteId;
+        #endregion
+
+        #region Properties
+        public int NumberStudent { get; set; }
         public string Character
         {
             get => character;
@@ -21,7 +34,6 @@ namespace Guess.Yourself
             }
         }
 
-        private bool isWinner;
         public bool IsWinner
         {
             get => isWinner;
@@ -33,7 +45,6 @@ namespace Guess.Yourself
             }
         }
 
-        private bool isAccess = true;
         public bool IsAccess
         {
             get => isAccess;
@@ -46,7 +57,6 @@ namespace Guess.Yourself
         }
         public List<string> textString { get; set; } = new List<string>();
 
-        private object txtString;
         public object TextString
         {
             get => txtString;
@@ -57,11 +67,7 @@ namespace Guess.Yourself
                 OnPropertyChanged();
             }
         }
-        public TRemotePacket remotePacket { get; set; } = new TRemotePacket();
-        //THIDMessageID
 
-        //SendbackCommand sendback = new SendbackCommand(int RemoteCommand.CMD_DISPLAY_LOGO);
-        private DateTime? StopWatch;
         //DateTime start = DateTime.Now;
         //public DateTime? Time => StopWatch;
         public DateTime? Time
@@ -91,7 +97,6 @@ namespace Guess.Yourself
         //    }
         //}
 
-        private int? rating;
         public int? Rating
         {
             set
@@ -108,7 +113,6 @@ namespace Guess.Yourself
             }
         }
 
-        private string question;
         public string Question
         {
             get => question;
@@ -120,7 +124,6 @@ namespace Guess.Yourself
             }
         }
 
-        private int receiverId;
         public int ReceiverId
         {
             get => receiverId;
@@ -130,7 +133,7 @@ namespace Guess.Yourself
                 receiverId = value;
             }
         }
-        private ushort? remoteId;
+
         public ushort? RemoteId
         {
             get => remoteId;
@@ -141,6 +144,7 @@ namespace Guess.Yourself
                 OnPropertyChanged();
             }
         }
+        #endregion
 
         #region Цвета
         public ObservableCollection<AnswerLog> Questions { get; set; } = new ObservableCollection<AnswerLog>();
@@ -162,11 +166,6 @@ namespace Guess.Yourself
             }
         }
         #endregion
-        public StudentModel(int remoteId, int receiverId)
-        {
-            RemoteId = (ushort)remoteId;
-            ReceiverId = receiverId;
-        }
 
         public void QuestionsAdd(string text, AnswerType answerType)
         {
@@ -181,6 +180,11 @@ namespace Guess.Yourself
             if (StopWatch is null) StopWatch = new DateTime();
             else StopWatch = ((DateTime)StopWatch).AddSeconds(1);
             OnPropertyChanged(nameof(Time));
+        }
+        public StudentModel(int remoteId, int receiverId)
+        {
+            RemoteId = (ushort)remoteId;
+            ReceiverId = receiverId;
         }
         public StudentModel()
         {

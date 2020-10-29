@@ -9,10 +9,20 @@
         Title="Игра: Угадай себя"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
-        MinHeight="570"
+        MinHeight="970"
         MinWidth="840"
         ResizeMode="CanResizeWithGrip"
         Name="GuessYorselfMainWindow" d:DesignWidth="800" d:DesignHeight="700">
+    <!--<Window.CommandBindings>
+        <CommandBinding Command="ComponentCommands.MoveFocusDown" Executed="CommandBinding_Executed"/>
+    </Window.CommandBindings>-->
+    <!--<Window.InputBindings>
+        <KeyBinding Key="Enter" Command="ComponentCommands.MoveFocusDown"/>
+    </Window.InputBindings>-->
+    <!--<Window.InputBindings>
+        <KeyBinding Key="Enter" CommandParameter="{Binding ElementName=tabssss}"
+                    Command="{Binding DataContext.MoveFocusDownWithEnter, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"/>
+    </Window.InputBindings>-->
     <Window.Resources>
         <c:ActualWidthTriggerToVisibility x:Key="WidthToVisibility"/>
         <c:ActualHeightTriggerToVisibility x:Key="HeihtToVisibility"/>
@@ -199,8 +209,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="150"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="35*"/>
         </Grid.RowDefinitions>
         <Menu Background="White"
               Name="MenuTriggered">
@@ -360,7 +370,8 @@
                   VirtualizingPanel.ScrollUnit="Pixel"
                   SelectionMode="Single"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                  Background="White">
+                  Background="White"
+                  KeyboardNavigation.DirectionalNavigation="Cycle">
             <DataGrid.CellStyle>
                 <Style TargetType="DataGridCell">
                     <Style.Triggers>
@@ -378,6 +389,7 @@
                     <Setter Property="IsEnabled" Value="{Binding IsAccess}"/>
                     <Setter Property="BorderBrush" Value="Transparent"/>
                     <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Focusable" Value="True"/>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsAccess}" Value="false">
                             <DataTrigger.EnterActions>
@@ -448,16 +460,30 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Список объектов"
-                                    Width="*"
-                                    HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
+                                        x:Name="tabssss"
+                                        Width="*"
+                                        HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox Text="{Binding Character, UpdateSourceTrigger=PropertyChanged}" 
+                            <TextBox Text="{Binding Character, UpdateSourceTrigger=PropertyChanged}"
+                                     x:Name="txtFocus"
                                      BorderThickness="0"
                                      TextAlignment="Center"
                                      VerticalContentAlignment="Center"
                                      Background="Transparent"
-                                     TextWrapping="Wrap">
+                                     TextWrapping="Wrap"
+                                     SpellCheck.IsEnabled="True"
+                                     SpellCheck.SpellingReform="Prereform">
+                                <!--<TextBox.CommandBindings>
+                                    <CommandBinding Command="ComponentCommands.MoveFocusDown" Executed="CommandBinding_Executed"/>
+                                </TextBox.CommandBindings>-->
+                                <!--<TextBox.InputBindings>
+                                    <KeyBinding Command="ComponentCommands.MoveFocusDown" Key="Enter"/>
+                                </TextBox.InputBindings>-->
+                                <!--<TextBox.InputBindings>
+                                    <KeyBinding Key="Enter" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}" 
+                                                Command="{Binding DataContext.MoveFocusDownWithEnter, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+                                </TextBox.InputBindings>-->
                                 <TextBox.Style>
                                     <Style TargetType="{x:Type TextBox}">
                                         <Setter Property="Template">
@@ -468,8 +494,7 @@
                                                             BorderThickness="{TemplateBinding BorderThickness}" 
                                                             Background="{TemplateBinding Background}" 
                                                             SnapsToDevicePixels="True">
-                                                        <ScrollViewer x:Name="PART_ContentHost" 
-                                                                      Focusable="false" 
+                                                        <ScrollViewer x:Name="PART_ContentHost"
                                                                       HorizontalScrollBarVisibility="Hidden" 
                                                                       VerticalScrollBarVisibility="Hidden"/>
                                                     </Border>
@@ -492,6 +517,9 @@
                                                         <Trigger Property="IsKeyboardFocused" Value="true">
                                                             <Setter Property="Background" Value="Transparent" TargetName="border"/>
                                                         </Trigger>
+                                                        <!--<DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsFocused}" Value="true">
+                                                            <Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
+                                                        </DataTrigger>-->
                                                     </ControlTemplate.Triggers>
                                                 </ControlTemplate>
                                             </Setter.Value>

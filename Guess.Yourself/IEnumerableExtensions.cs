@@ -1,5 +1,8 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Media;
 
 namespace Guess.Yourself
 {
@@ -12,6 +15,18 @@ namespace Guess.Yourself
                 act(element);
                 yield return element;
             };
+        }
+
+        [CanBeNull]
+        public static DependencyObject FindVisualRoot([CanBeNull] this DependencyObject obj)
+        {
+            if (obj is null) return null;
+            do
+            {
+                var parent = VisualTreeHelper.GetParent(obj);
+                if (parent is null) return obj;
+                obj = parent;
+            } while (true);
         }
     }
 }

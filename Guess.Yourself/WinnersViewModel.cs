@@ -21,7 +21,7 @@ namespace Guess.Yourself
         },
             (param) =>
             {
-                return true;
+                return Main.Winners.Count != 0;
             }
             ));
     }

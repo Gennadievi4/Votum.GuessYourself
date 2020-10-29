@@ -1,10 +1,10 @@
 ﻿using Guess.Yourself.Interfaces;
 using RLib;
-using RLib.Remotes;
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -13,11 +13,20 @@ namespace Guess.Yourself
 {
     public class MainWindowViewModel : NotifyPropertyChanged
     {
+        #region Private Fields
+        private int index;
+        private string idRemouteStdWinner;
+        private bool isAnimation;
+        private bool isAnimationEndGame;
+        private event Action OnTick;
+        private StudentModel studentModel;
+        #endregion
+
+        #region Public Properties
         public ObservableCollection<StudentModel> Students { get; set; } = new ObservableCollection<StudentModel>();
         public AsyncObservableCollection<StudentWinner> Winners { get; set; } = new AsyncObservableCollection<StudentWinner>();
         public static IFileService FileService { get; private set; }
-
-        private string idRemouteStdWinner;
+        public static IDialogServices DialogService { get; private set; }
         public string IdRemoteStdWinner
         {
             get => idRemouteStdWinner;
@@ -28,8 +37,6 @@ namespace Guess.Yourself
                 OnPropertyChanged();
             }
         }
-
-        private bool isAnimation;
         public bool IsAnimation
         {
             get => isAnimation;
@@ -40,8 +47,6 @@ namespace Guess.Yourself
                 OnPropertyChanged();
             }
         }
-
-        private bool isAnimationEndGame;
         public bool IsAnimationEndGame
         {
             get => isAnimationEndGame;
@@ -52,9 +57,6 @@ namespace Guess.Yourself
                 OnPropertyChanged();
             }
         }
-        public static IDialogServices DialogService { get; private set; }
-
-        private StudentModel studentModel;
         public StudentModel SelectedStudent
         {
             get => studentModel;
@@ -64,16 +66,13 @@ namespace Guess.Yourself
                 studentModel = value;
             }
         }
-
-
+        #endregion
 
         private readonly DeviceManager deviceManager = new DeviceManager(new VotumDevicesManager());
 
         public DispatcherTimer timer = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 1) };
 
         DataGrid str = (DataGrid)App.Current.MainWindow.FindName("TableName");
-
-        public event Action OnTick;
         public MainWindowViewModel() { }
         public MainWindowViewModel(IDialogServices dialogService, IFileService fileService)
         {
@@ -103,9 +102,20 @@ namespace Guess.Yourself
 
         private void VotumManager_ButtonClicked(object sender, ButtonClickEventArgs e)
         {
+            //if (e.T2Text != null && !Students.Any(x => string.Equals(x.Character, e.T2Text, StringComparison.OrdinalIgnoreCase)))
+            //{
+            //    e.SendbackCommand = SendbackCommand.DisplayStringClear("Введена английская буква! Повторите ввод!");
+            //    return;
+            //}
+            //bool es = e.IsSendbackCommandPresent;
+
+            //if (e.IsSendbackCommandAvailable && e.SendbackCommand?.Packet.RemoteCommand != TRemoteCommandID.RF_ACK_WAIT)
+            //    e.SendbackCommand = new SendbackCommand(e.ReceiverId, e.RemoteId, RemoteCommand.CMD_WAIT);
+
             if (Winners.Any(x => x.StdWinner.RemoteId == e.RemoteId))
             {
                 e.SendbackCommand = SendbackCommand.DisplayStringClear("Вы угадали! Ожидайте остальных!");
+                return;
             }
             else
             {
@@ -114,6 +124,7 @@ namespace Guess.Yourself
                 IsAnimation = false;
                 FindWinner(e.RemoteId, e);
             }
+
             //if (e.Button.Type == ButtonType.PauseT2)
             //{
             //    RemoteCommand remoteCMD = RemoteCommand.CMD_NO_ACTION;
@@ -143,8 +154,10 @@ namespace Guess.Yourself
                 std.Character = default;
                 std.IsAccess = true;
                 std.IsWinner = false;
+                std.NumberStudent = default;
                 std.Questions.Clear();
             }
+            index = default;
             IsAnimation = false;
             IsAnimationEndGame = false;
             IdRemoteStdWinner = default;
@@ -169,6 +182,7 @@ namespace Guess.Yourself
                     if (std != null)
                     {
                         std.UserAnswer = AnswerType.NotGuessed;
+                        std.NumberStudent = ++index;
                         std.RemoteId = (ushort)RemoteId;
                         std.ReceiverId = ReceiverId;
                     }
@@ -194,22 +208,27 @@ namespace Guess.Yourself
             {
                 var studentWinnerListBox = Students
                     .Where(x => x.RemoteId != null && x.Question != null && !string.IsNullOrWhiteSpace(x.Character))
-                    .Select((std, index) => (index, std))
-                    .Where(x => x.std.RemoteId == RemouteId && x.std.Question.Contains(x.std?.Character));
-                //.Select(x => x.index);
+                    //.Select((std, index) => (index, std))
+                    //.Select((std, index) => new { index, std })
+                    //.Where(x => x.std.RemoteId == RemouteId && x.std.Question.Contains(x.std?.Character));
+                    //.Select(x => x.index);
+                    //.Where(x => x.RemoteId == RemouteId && x.Question.Contains(x.Character));
+                    .Where(x => x.RemoteId == RemouteId && string.Equals(x.Character, x.Question, StringComparison.OrdinalIgnoreCase));
 
-                var student = Students.Where(x => x.RemoteId.Equals(Convert.ToUInt16(RemouteId)) && !string.IsNullOrWhiteSpace(x.Character) && x.Question.Contains(x.Character));
+                //var student = Students.Where(x => x.RemoteId.Equals(Convert.ToUInt16(RemouteId)) && !string.IsNullOrWhiteSpace(x.Character) && x.Question.Contains(x.Character));
+                var student = Students.Where(x => x.RemoteId.Equals(Convert.ToUInt16(RemouteId)) && !string.IsNullOrWhiteSpace(x.Character) && string.Equals(x.Character, x.Question, StringComparison.OrdinalIgnoreCase));
                 student.ToList().ForEach(x => { x.IsWinner = true; x.IsAccess = false; });
 
-                int temp = 0;
+                //int temp = 0;
+
                 foreach (var std in studentWinnerListBox)
                 {
-                    if (!string.IsNullOrWhiteSpace(std.std.Character))
+                    if (!string.IsNullOrWhiteSpace(std.Character))
                     {
-                        temp += std.index + 1;
+                        //temp += std.index + 1;
                         IsAnimation = true;
-                        Winners.Add(new StudentWinner { StdWin = temp, StdWinner = std.std, TextWinnersTable = $"Участник №{temp} угадал объект {std.std.Character}"});
-                        IdRemoteStdWinner = $"Внимание! Участник №{temp} угадал!";
+                        Winners.Add(new StudentWinner { StdWin = std.NumberStudent, StdWinner = std, TextWinnersTable = $"Участник №{std.NumberStudent} угадал объект {std.Character}" });
+                        IdRemoteStdWinner = $"Внимание! Участник №{std.NumberStudent} угадал!";
                     }
                 }
                 //App.Current.Dispatcher.Invoke(new Action(() =>
@@ -231,7 +250,7 @@ namespace Guess.Yourself
                 App.Current.Dispatcher.Invoke(new Action(() =>
                 {
                     Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)))?.QuestionsAdd(e.T2Text, AnswerType.NotGuessed);
-                    var std = Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)));
+                    var std = Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)) && !string.IsNullOrEmpty(x.Character));
                     if (std != null)
                     {
                         //std.UserAnswer = StudentModel.AnswerType.NotSet;
@@ -245,7 +264,7 @@ namespace Guess.Yourself
         }
         #endregion
 
-        #region Команды
+        #region Commands
         public RelayCommand<StudentModel> yesCmd = null;
 
         public ICommand YesCmd => yesCmd ?? (yesCmd = new RelayCommand<StudentModel>((param) =>
@@ -256,11 +275,6 @@ namespace Guess.Yourself
 
             //param.remotePacket.RemoteID = (int)param.RemoteId;
             //param.remotePacket.RemoteCommand = TRemoteCommandID.RF_ACK_DISPLAY_LOGO;
-            SendbackCommand send = new SendbackCommand(param.ReceiverId, (int)param.RemoteId, RemoteCommand.CMD_DISPLAY_LOGO);
-            param.remotePacket.ComplectID = param.ReceiverId;
-            param.remotePacket.RemoteID = (int)param.RemoteId;
-            param.remotePacket.PacketLength = 6;
-            param.remotePacket.RemoteCommand = TRemoteCommandID.RF_ACK_DISPLAY_LOGO;
 
             param.Question = null;
             if (OnTick != param.UpTime)
@@ -270,7 +284,8 @@ namespace Guess.Yourself
         },
         (stdParam) =>
         {
-            return (stdParam != null) ? !string.IsNullOrEmpty(stdParam.Question) : false;
+            //return (stdParam != null) ? !string.IsNullOrEmpty(stdParam.Question) : false;
+            return stdParam != null && !string.IsNullOrEmpty(stdParam.Question);
         }));
 
         public RelayCommand<StudentModel> noCmd = null;
@@ -331,30 +346,31 @@ namespace Guess.Yourself
             ChangeTextColorToDefault();
             StopTimer();
 
-            Students.Where(x => x.Question == null && x.RemoteId != null).ToList().ForEach(x => { x.Rating = null; x.Time = null; });
+            Students.Where(x => x.Rating != null && x.Time != null && x.RemoteId != null && !string.Equals(x.Character, x.Question, StringComparison.OrdinalIgnoreCase))
+            .ToList()
+            .ForEach(x => { x.Rating = null; x.Time = null; });
 
-            if (Students.Any(x => x.Question != null && x.RemoteId != null && x.Character != null && x.Rating != null && x.Question.Equals(x.Character)))
+            //if (Students.Any(x => x.Question != null && x.RemoteId != null && x.Character != null && x.Rating != null && x.Question.Equals(x.Character)))
+            //{
+            //    var winner = Students
+            //    .Where(x => x.Question != null && x.RemoteId != null && x.Rating != null)
+            //    .OrderBy(x => x.Rating)
+            //    .First().RemoteId;
+            //    IdRemoteStdWinner = $"Победил участник игры №{Winners.Select((std, ind) => (ind, std)).OrderBy(x => x.ind).Single(x => x.ind == 0).std.StdWinner.NumberStudent} с пультом №{winner}";
+            //}
+            //else
+            //{
+            if (Winners.Any())
             {
-                var winner = Students
-                .Where(x => x.Question != null && x.RemoteId != null && x.Rating != null)
-                .OrderBy(x => x.Rating)
-                .ToList()
-                .Single().RemoteId;
-                IdRemoteStdWinner = $"Победил участник игры с пультом №{winner}";
+                IsAnimationEndGame = true;
+                IdRemoteStdWinner = $"Победил участник игры №{Winners.Select((std, ind) => (ind, std)).OrderBy(x => x.ind).Single(x => x.ind == 0).std.StdWinner.NumberStudent} с пультом №{Winners.Select((std, ind) => (ind, std)).OrderBy(x => x.ind).Single(x => x.ind == 0).std.StdWinner.RemoteId}";
             }
             else
             {
-                if (Winners.Any())
-                {
-                    IsAnimationEndGame = true;
-                    IdRemoteStdWinner = $"Победил участник игры с пультом №{Winners.Select((std, ind) => (ind, std)).OrderBy(x => x.ind).Single(x => x.ind == 0).std.StdWinner.RemoteId}";
-                }
-                else
-                {
-                    IsAnimationEndGame = true;
-                    IdRemoteStdWinner = $"В игре нет победителей!";
-                }
+                IsAnimationEndGame = true;
+                IdRemoteStdWinner = $"В игре нет победителей!";
             }
+            //}
 
             str.IsEnabled = false;
             deviceManager.votumManager.Stop();
@@ -397,6 +413,18 @@ namespace Guess.Yourself
                 return Winners.Count != 0;
             }
             ));
+
+        public RelayCommand<object> moveFocusDownWithEnter = null;
+        public ICommand MoveFocusDownWithEnter => moveFocusDownWithEnter ?? (moveFocusDownWithEnter = new RelayCommand<object>((param) =>
+        {
+            if (!(param is FrameworkElement element)) return;
+            var root = element.FindVisualRoot();
+            FocusManager.SetFocusedElement(root, element);
+        },
+            (param) => 
+            {
+               return param is FrameworkElement;
+            }));
         #endregion
     }
 }
