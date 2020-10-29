@@ -9,7 +9,12 @@
         Height="320" Width="450"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
-        Style="{StaticResource WindowStyle}">
+        Style="{StaticResource WindowStyle}"
+        Title="О программе &quot;Угадай себя&quot;"
+        BorderBrush="Black"
+        BorderThickness="2"
+        Margin="2"
+        WindowStyle="None">
     <!--<WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="{x:Static WindowChrome.GlassFrameCompleteThickness}" UseAeroCaptionButtons="True"/>
         <WindowChrome GlassFrameThickness="-1" UseAeroCaptionButtons="False"/>
