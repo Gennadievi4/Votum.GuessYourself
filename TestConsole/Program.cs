@@ -5,6 +5,23 @@ using System.Text.RegularExpressions;
 
 namespace TestConsole
 {
+    public class A
+    {
+        public virtual int Calc() => 10 * Gen();
+        protected int Gen() => 10;
+    }
+
+    public class B : A
+    {
+        public override int Calc() => 20 * Gen();
+        protected int Gen() => 20;
+    }
+
+    public class C: B
+    {
+        public override int Calc() => 30 * Gen();
+        protected int Gen() => base.Gen();
+    }
     class Program
     {
         public static void GetString()
@@ -18,6 +35,11 @@ namespace TestConsole
         }
         static void Main(string[] args)
         {
+
+            A a = new B();
+            A a1 = new C();
+            Console.WriteLine(a.Calc() + a1.Calc());
+            Console.ReadKey();
             //Создание примера поиска текста при помощи регулярки
             //GetString();
 

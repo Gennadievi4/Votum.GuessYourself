@@ -1,5 +1,4 @@
-﻿using RLib;
-using RLib.Remotes;
+﻿using RLib.Remotes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -33,7 +32,30 @@ namespace Guess.Yourself
                 OnPropertyChanged();
             }
         }
-        public bool IsAccess { get; private set; } = true;
+
+        private bool isWinner;
+        public bool IsWinner
+        {
+            get => isWinner;
+            set
+            {
+                if (isWinner == value) return;
+                isWinner = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool isAccess = true;
+        public bool IsAccess
+        {
+            get => isAccess;
+            set
+            {
+                if (isAccess == value) return;
+                isAccess = value;
+                OnPropertyChanged();
+            }
+        }
         public List<string> textString { get; set; } = new List<string>();
 
         private object txtString;
@@ -80,6 +102,7 @@ namespace Guess.Yourself
         //            rating.ToString();
         //    }
         //}
+
         private int? rating;
         public int? Rating
         {
@@ -156,7 +179,7 @@ namespace Guess.Yourself
             RemoteId = (ushort)remoteId;
             ReceiverId = receiverId;
         }
-        
+
         public void QuestionsAdd(string text, AnswerType answerType)
         {
             Questions.Add(new AnswerLog { Question = $"{Questions.Count + 1}. {text}", UserAnswer = answerType });
@@ -173,7 +196,7 @@ namespace Guess.Yourself
         }
         public StudentModel()
         {
-            SaveTextCommand  = new RelayCommand<StudentModel>(OnSaveTextCommandExecute, CanSaveTextCommandExecute);
+            SaveTextCommand = new RelayCommand<StudentModel>(OnSaveTextCommandExecute, CanSaveTextCommandExecute);
         }
         public ICommand SaveTextCommand { get; }
 
@@ -182,7 +205,7 @@ namespace Guess.Yourself
         {
             if (MainWindowViewModel.DialogService.SaveDialog() == true)
             {
-                MainWindowViewModel.FileService.Save(MainWindowViewModel.DialogService.FilePath, Questions);
+                MainWindowViewModel.FileService.Save(MainWindowViewModel.DialogService.FilePath, student);
             }
         }
 
@@ -209,6 +232,25 @@ namespace Guess.Yourself
         //            return new SolidColorBrush(Colors.Yellow);
         //        case AnswerType.NotSet:
         //            return defaultColor;
+        //        default:
+        //            throw new Exception("Не выбран цвет!");
+        //    }
+        //}
+
+        //public string ChangeColor(AnswerType answer)
+        //{
+        //    switch (answer)
+        //    {
+        //        case AnswerType.NotGuessed:
+        //            return "FFFFFF";
+        //        case AnswerType.Correct:
+        //            return "00B050";
+        //        case AnswerType.NotCorrect:
+        //            return "FF0000";
+        //        case AnswerType.DontKnow:
+        //            return "FFFF00";
+        //        case AnswerType.NotSet:
+        //            return "FFFFFF";
         //        default:
         //            throw new Exception("Не выбран цвет!");
         //    }
