@@ -14,9 +14,14 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
+        <DockPanel HorizontalAlignment="Stretch">
             <Button Margin="5" Padding="5,0" Content="Clicke me!" Command="{Binding MyCommand}"/>
-        </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Background="Transparent">
+                <TextBlock Text="123123" VerticalAlignment="Center"/>
+                <TextBlock Text="qwe" VerticalAlignment="Bottom"/>
+                <TextBlock Text="qweqew" Height="30" HorizontalAlignment="Stretch"/>
+            </StackPanel>
+        </DockPanel>
         <DataGrid Grid.Row="1" Margin="5" ItemsSource="{Binding MyItems}" IsSynchronizedWithCurrentItem="True" AutoGenerateColumns="False" IsReadOnly="True" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Строка" Binding="{Binding MyValue}"/>

@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace TestConsole
 {
@@ -36,23 +35,14 @@ namespace TestConsole
         //    public void Do(object sender, MyEventArgs e) => Console.WriteLine($"Второй \"Наблюдатель\" - {this.GetType().Name} видит, что другой объект сообщил: {e.StartSource}");
 
         //}
-        #endregion 
+        #endregion
+        static ManualResetEvent manualReset = new ManualResetEvent(false);
+        static EventWaitHandle eventWait = manualReset;
         public static void FindExe()
         {
-            //var files = Directory.GetFiles(Environment.GetEnvironmentVariable("TEMP"));
-            //int i = 0;
-            //foreach (var item in files)
-            //{
-            //    if(item.Contains("dd_vcredist_"))
-            //        Console.WriteLine($"{item} {i++}");
-            //}
-            //foreach (var item in files)
-            //{
-            //    if (item.EndsWith(".exe.config") || item.EndsWith(".InstallState"))
-            //        File.Delete(item);
-            //}
             var rep = Enumerable.Repeat(true, 10).Distinct();
-            Enumerable.Range(20, 50).Select((item, index) => new { Item = item, Index = index }).ToList().ForEach(x => Console.WriteLine($"{x.Item} и {x.Index}"));
+            Enumerable.Range(20, 50).Select((item, index) => new { Item = item, Index = index }).ToList().ForEach(x => Console.WriteLine($"{x.Item} и {x.Index} {Task.CurrentId} Поток{Thread.CurrentThread.ManagedThreadId}"));
+            eventWait.Set();
         }
 
         static public void SetStringToCenterConsole()
@@ -62,33 +52,24 @@ namespace TestConsole
             var paddingWidth = fio.Select(x => Console.WindowWidth / 2 - x.Length / 2).ToArray();
             var paddingHeight = Console.WindowHeight / 2 - fio.Length / 2;
 
+            eventWait.WaitOne();
+
             for (int i = 0; i < fio.Length; i++)
             {
                 Console.SetCursorPosition(paddingWidth[i], ++paddingHeight);
-                Console.WriteLine(fio[i]);
+                Console.WriteLine(fio[i] + $" Поток №{Thread.CurrentThread.ManagedThreadId} Задача №{Task.CurrentId}");
             }
+        }
+
+        static public async Task SetStringToCenterConsoleAsync()
+        {
+            await Task.Run(SetStringToCenterConsole);
         }
 
         static void Main(string[] args)
         {
-            //var path2 = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
-            //var path3 = Assembly.GetExecutingAssembly().GetName().CodeBase;
-            //var path6 = Environment.GetEnvironmentVariable("TEMP");
-            //var path4 = Process.GetCurrentProcess().MainModule.FileName;
-            //var path = Path.Combine(Directory.GetCurrentDirectory(), "Животные1.txt");
-            //var path7 = Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Животные1.txt");
-            //SetStringToCenterConsole();
+            SetStringToCenterConsoleAsync();
             FindExe();
-
-            //Source s = new Source();
-            //Observer1 o1 = new Observer1();
-            //Observer2 o2 = new Observer2();
-            //s.Run += o1.Do;
-            //s.Run += o2.Do;
-            //s.Start();
-            //s.Run -= o1.Do;
-            //s.Start();
-
             Console.ReadKey();
         }
     }

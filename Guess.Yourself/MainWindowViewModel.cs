@@ -15,8 +15,9 @@ namespace Guess.Yourself
     {
         #region Private Fields
         private int index;
+        private string _TotalNumberOfStudents;
         private string idRemouteStdWinner;
-        private bool isAnimation;
+        private bool isAnimation = false;
         private bool isAnimationEndGame;
         private event Action OnTick;
         private StudentModel studentModel;
@@ -27,6 +28,18 @@ namespace Guess.Yourself
         public AsyncObservableCollection<StudentWinner> Winners { get; set; } = new AsyncObservableCollection<StudentWinner>();
         public static IFileService FileService { get; private set; }
         public static IDialogServices DialogService { get; private set; }
+
+        public string TotalNumberOfStudents
+        {
+            get => _TotalNumberOfStudents;
+            set
+            {
+                if (_TotalNumberOfStudents == value) return;
+                _TotalNumberOfStudents = value;
+                OnPropertyChanged(nameof(TotalNumberOfStudents));
+            }
+        }
+
         public string IdRemoteStdWinner
         {
             get => idRemouteStdWinner;
@@ -86,7 +99,7 @@ namespace Guess.Yourself
             }
             timer.Tick += DispatcherTimer_Tick;
             timer.Start();
-            deviceManager.votumManager.ButtonClicked += VotumManager_ButtonClicked;
+            deviceManager.VotumManager.ButtonClicked += VotumManager_ButtonClicked;
         }
 
         #region Private Methods
@@ -121,9 +134,11 @@ namespace Guess.Yourself
             {
                 EnsureRemoteAdded(e.RemoteId, e.ReceiverId);
                 GettingAQuestionsRemotely(e.RemoteId, e);
-                IsAnimation = false;
+                //IsAnimation = false;
                 FindWinner(e.RemoteId, e);
             }
+
+            GetTotalSumStudents();
 
             //if (e.Button.Type == ButtonType.PauseT2)
             //{
@@ -133,6 +148,11 @@ namespace Guess.Yourself
             //    e.SendbackCommand = new SendbackCommand(e.ReceiverId, e.RemoteId, RemoteCommand.CMD_NO_ACTION);
             //}
             //var t2 = e.Button;
+        }
+
+        private void GetTotalSumStudents()
+        {
+            TotalNumberOfStudents = $"{Students.Count(std => std.RemoteId != null)} общее число участников";
         }
 
         private void ChangeTextColorToDefault()
@@ -158,9 +178,10 @@ namespace Guess.Yourself
                 std.Questions.Clear();
             }
             index = default;
-            IsAnimation = false;
+            IsAnimation = true;
             IsAnimationEndGame = false;
             IdRemoteStdWinner = default;
+            TotalNumberOfStudents = "Участников игры нет!";
             Winners.Clear();
         }
         private void StopTimer()
@@ -303,7 +324,7 @@ namespace Guess.Yourself
         },
         (stdParam) =>
         {
-            return (stdParam != null) ? !string.IsNullOrEmpty(stdParam.Question) : false;
+            return (stdParam != null) && !string.IsNullOrEmpty(stdParam.Question);
         }));
 
         public RelayCommand<StudentModel> dontKnowCmd = null;
@@ -373,7 +394,7 @@ namespace Guess.Yourself
             //}
 
             str.IsEnabled = false;
-            deviceManager.votumManager.Stop();
+            deviceManager.VotumManager.Stop();
         },
             (param) =>
             {
@@ -388,7 +409,7 @@ namespace Guess.Yourself
             ResetCollection();
 
             str.IsEnabled = true;
-            deviceManager.votumManager.Start();
+            deviceManager.VotumManager.Start();
         },
             (param) =>
             {
