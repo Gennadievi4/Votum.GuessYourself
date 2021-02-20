@@ -391,7 +391,7 @@
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="Focusable" Value="True"/>
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsAccess}" Value="false">
+                        <DataTrigger Binding="{Binding IsWinner}" Value="true">
                             <DataTrigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
@@ -519,6 +519,9 @@
                                                         <Trigger Property="IsKeyboardFocused" Value="true">
                                                             <Setter Property="Background" Value="Transparent" TargetName="border"/>
                                                         </Trigger>
+                                                        <DataTrigger Binding="{Binding IsWinner}" Value="true">
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </DataTrigger>
                                                         <!--<DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsFocused}" Value="true">
                                                             <Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
                                                         </DataTrigger>-->
@@ -649,7 +652,7 @@
                             </Grid>
                         </ItemsPanelTemplate>
                     </StatusBar.ItemsPanel>
-                    <StatusBarItem Content="{Binding TotalNumberOfStudents}"
+                    <StatusBarItem Content="{Binding TotalNumberOfStudents, TargetNullValue=Участников игры нет!}"
                                    Grid.Row="0"
                                    VerticalAlignment="Top"
                                    HorizontalAlignment="Center"/>

@@ -138,8 +138,6 @@ namespace Guess.Yourself
                 FindWinner(e.RemoteId, e);
             }
 
-            GetTotalSumStudents();
-
             //if (e.Button.Type == ButtonType.PauseT2)
             //{
             //    RemoteCommand remoteCMD = RemoteCommand.CMD_NO_ACTION;
@@ -150,7 +148,7 @@ namespace Guess.Yourself
             //var t2 = e.Button;
         }
 
-        private void GetTotalSumStudents()
+        private void GetTotalSumStudents(int RemoteId)
         {
             TotalNumberOfStudents = $"{Students.Count(std => std.RemoteId != null)} общее число участников";
         }
@@ -206,6 +204,7 @@ namespace Guess.Yourself
                         std.NumberStudent = ++index;
                         std.RemoteId = (ushort)RemoteId;
                         std.ReceiverId = ReceiverId;
+                        GetTotalSumStudents(RemoteId);
                     }
                 }));
             }
@@ -223,6 +222,22 @@ namespace Guess.Yourself
             //    student.Rating = order++;
         }
 
+        public void BlockWinnerCell(StudentModel student)
+        {
+            var block_winner = Students.FirstOrDefault(std => std.IsWinner == true && std.RemoteId.Equals(student.RemoteId));
+            if(block_winner != null)
+            {
+                block_winner.IsAccess = false;
+            }
+        }
+
+        public void BlinWinnerkCell(int RemoteId)
+        {
+                //var student = Students.Where(x => x.RemoteId.Equals(Convert.ToUInt16(RemouteId)) && !string.IsNullOrWhiteSpace(x.Character) && x.Question.Contains(x.Character));
+                var student = Students.Where(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)) && !string.IsNullOrWhiteSpace(x.Character) && string.Equals(x.Character, x.Question, StringComparison.OrdinalIgnoreCase));
+                student.ToList().ForEach(x => { x.IsWinner = true; });
+        }
+
         private void FindWinner(int RemouteId, ButtonClickEventArgs e)
         {
             if (e.IsT2TextPresent && e.Button.Type == ButtonType.PauseT2)
@@ -236,9 +251,7 @@ namespace Guess.Yourself
                     //.Where(x => x.RemoteId == RemouteId && x.Question.Contains(x.Character));
                     .Where(x => x.RemoteId == RemouteId && string.Equals(x.Character, x.Question, StringComparison.OrdinalIgnoreCase));
 
-                //var student = Students.Where(x => x.RemoteId.Equals(Convert.ToUInt16(RemouteId)) && !string.IsNullOrWhiteSpace(x.Character) && x.Question.Contains(x.Character));
-                var student = Students.Where(x => x.RemoteId.Equals(Convert.ToUInt16(RemouteId)) && !string.IsNullOrWhiteSpace(x.Character) && string.Equals(x.Character, x.Question, StringComparison.OrdinalIgnoreCase));
-                student.ToList().ForEach(x => { x.IsWinner = true; x.IsAccess = false; });
+                BlinWinnerkCell(RemouteId);
 
                 //int temp = 0;
 
@@ -270,12 +283,13 @@ namespace Guess.Yourself
             {
                 App.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)))?.QuestionsAdd(e.T2Text, AnswerType.NotGuessed);
-                    var std = Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)) && !string.IsNullOrEmpty(x.Character));
+                    //Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)))?.QuestionsAdd(e.T2Text, AnswerType.NotGuessed);
+                    var std = Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)) && !string.IsNullOrWhiteSpace(x.Character) && string.IsNullOrWhiteSpace(x.Question));
                     if (std != null)
                     {
                         //std.UserAnswer = StudentModel.AnswerType.NotSet;
                         std.Question = e.T2Text;
+                        std.UserAnswer = AnswerType.NotGuessed;
                         OnTick -= std.UpTime;
                         //std.send = e;
                         // std.UserAnswer = StudentModel.AnswerType.NotGuessed;
@@ -290,18 +304,22 @@ namespace Guess.Yourself
 
         public ICommand YesCmd => yesCmd ?? (yesCmd = new RelayCommand<StudentModel>((param) =>
         {
+            Students.FirstOrDefault(std => std.RemoteId.Equals(param.RemoteId)).QuestionsAdd(param.Question, AnswerType.NotGuessed);
+
             param.Questions.First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
             .UserAnswer = AnswerType.Correct;
 
+            if (OnTick != param.UpTime && !param.IsWinner)
+            {
+                param.Question = null;
+                OnTick += param.UpTime;
+            }
+
+            BlockWinnerCell(param);
 
             //param.remotePacket.RemoteID = (int)param.RemoteId;
             //param.remotePacket.RemoteCommand = TRemoteCommandID.RF_ACK_DISPLAY_LOGO;
 
-            param.Question = null;
-            if (OnTick != param.UpTime)
-            {
-                OnTick += param.UpTime;
-            }
         },
         (stdParam) =>
         {
@@ -312,6 +330,10 @@ namespace Guess.Yourself
         public RelayCommand<StudentModel> noCmd = null;
         public ICommand NoCmd => noCmd ?? (noCmd = new RelayCommand<StudentModel>((param) =>
         {
+            Students
+            .FirstOrDefault(std => std.RemoteId.Equals(param.RemoteId))
+            .QuestionsAdd(param.Question, AnswerType.NotGuessed);
+
             param.Questions
             .First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
             .UserAnswer = AnswerType.NotCorrect;
@@ -330,6 +352,8 @@ namespace Guess.Yourself
         public RelayCommand<StudentModel> dontKnowCmd = null;
         public ICommand DontKnowCmd => dontKnowCmd ?? (dontKnowCmd = new RelayCommand<StudentModel>((param) =>
         {
+            Students.FirstOrDefault(std => std.RemoteId.Equals(param.RemoteId)).QuestionsAdd(param.Question, AnswerType.NotGuessed);
+
             param.Questions.First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
             .UserAnswer = AnswerType.DontKnow;
 
@@ -351,7 +375,7 @@ namespace Guess.Yourself
         },
             (param) =>
             {
-                return (param != null && param.Questions.Count > 0);
+                return param != null && param.Questions.Count > 0;
             }
             ));
 
@@ -442,9 +466,9 @@ namespace Guess.Yourself
             var root = element.FindVisualRoot();
             FocusManager.SetFocusedElement(root, element);
         },
-            (param) => 
+            (param) =>
             {
-               return param is FrameworkElement;
+                return param is FrameworkElement;
             }));
         #endregion
     }
