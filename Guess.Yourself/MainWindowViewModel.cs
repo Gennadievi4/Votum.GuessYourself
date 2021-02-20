@@ -225,7 +225,7 @@ namespace Guess.Yourself
         public void BlockWinnerCell(StudentModel student)
         {
             var block_winner = Students.FirstOrDefault(std => std.IsWinner == true && std.RemoteId.Equals(student.RemoteId));
-            if(block_winner != null)
+            if (block_winner != null)
             {
                 block_winner.IsAccess = false;
             }
@@ -233,9 +233,9 @@ namespace Guess.Yourself
 
         public void BlinWinnerkCell(int RemoteId)
         {
-                //var student = Students.Where(x => x.RemoteId.Equals(Convert.ToUInt16(RemouteId)) && !string.IsNullOrWhiteSpace(x.Character) && x.Question.Contains(x.Character));
-                var student = Students.Where(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)) && !string.IsNullOrWhiteSpace(x.Character) && string.Equals(x.Character, x.Question, StringComparison.OrdinalIgnoreCase));
-                student.ToList().ForEach(x => { x.IsWinner = true; });
+            //var student = Students.Where(x => x.RemoteId.Equals(Convert.ToUInt16(RemouteId)) && !string.IsNullOrWhiteSpace(x.Character) && x.Question.Contains(x.Character));
+            var student = Students.Where(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)) && !string.IsNullOrWhiteSpace(x.Character) && string.Equals(x.Character, x.Question, StringComparison.OrdinalIgnoreCase));
+            student.ToList().ForEach(x => { x.IsWinner = true; });
         }
 
         private void FindWinner(int RemouteId, ButtonClickEventArgs e)
@@ -304,9 +304,14 @@ namespace Guess.Yourself
 
         public ICommand YesCmd => yesCmd ?? (yesCmd = new RelayCommand<StudentModel>((param) =>
         {
-            Students.FirstOrDefault(std => std.RemoteId.Equals(param.RemoteId)).QuestionsAdd(param.Question, AnswerType.NotGuessed);
+            Students
+            .FirstOrDefault(std => std.RemoteId.Equals(param.RemoteId))
+            .QuestionsAdd(param.Question, AnswerType.NotGuessed);
 
-            param.Questions.First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
+            param.TotalNumberQuestions = Students.FirstOrDefault(std => std.RemoteId.Equals(param.RemoteId)).Questions.Count();
+
+            param.Questions
+            .First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
             .UserAnswer = AnswerType.Correct;
 
             if (OnTick != param.UpTime && !param.IsWinner)
@@ -334,6 +339,11 @@ namespace Guess.Yourself
             .FirstOrDefault(std => std.RemoteId.Equals(param.RemoteId))
             .QuestionsAdd(param.Question, AnswerType.NotGuessed);
 
+            param.TotalNumberQuestions = Students
+            .FirstOrDefault(std => std.RemoteId.Equals(param.RemoteId))
+                .Questions
+                .Count();
+
             param.Questions
             .First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
             .UserAnswer = AnswerType.NotCorrect;
@@ -352,7 +362,14 @@ namespace Guess.Yourself
         public RelayCommand<StudentModel> dontKnowCmd = null;
         public ICommand DontKnowCmd => dontKnowCmd ?? (dontKnowCmd = new RelayCommand<StudentModel>((param) =>
         {
-            Students.FirstOrDefault(std => std.RemoteId.Equals(param.RemoteId)).QuestionsAdd(param.Question, AnswerType.NotGuessed);
+            Students
+            .FirstOrDefault(std => std.RemoteId.Equals(param.RemoteId))
+            .QuestionsAdd(param.Question, AnswerType.NotGuessed);
+
+            param.TotalNumberQuestions = Students
+            .FirstOrDefault(std => std.RemoteId.Equals(param.RemoteId))
+                .Questions
+                .Count();
 
             param.Questions.First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
             .UserAnswer = AnswerType.DontKnow;
@@ -437,7 +454,7 @@ namespace Guess.Yourself
         },
             (param) =>
             {
-                return (param != null || !str.IsEnabled) ? true : false;
+                return param != null || !str.IsEnabled;
             }
             ));
 

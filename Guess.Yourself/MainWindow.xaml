@@ -612,6 +612,18 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
+                <DataGridTextColumn Header="Количество вопросов"
+                                    IsReadOnly="True"
+                                    CanUserResize="False"
+                                    HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
+                                    Binding="{Binding TotalNumberQuestions, Mode=OneWay}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="Рейтинг участника"
                                     Width="140"
                                     IsReadOnly="False"
@@ -627,6 +639,7 @@
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
+        
         <DockPanel Grid.Row="2" LastChildFill="True" Name="DoclPanelStatus">
             <DockPanel.Resources>
                 <SolidColorBrush x:Key="Item.MouseOver.Background" Color="AliceBlue"/>
