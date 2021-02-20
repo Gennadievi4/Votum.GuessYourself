@@ -8,8 +8,10 @@
         Title="Архив вопросов" 
         SizeToContent="WidthAndHeight"
         Topmost="True"
-        ResizeMode="NoResize"
-        WindowStartupLocation="CenterScreen" d:DesignWidth="418" d:DesignHeight="431">
+        ResizeMode="CanResize"
+        WindowStartupLocation="CenterScreen" d:DesignWidth="418" d:DesignHeight="431"
+        MinHeight="450"
+        MinWidth="450">
     <Window.Resources>
         <Style TargetType="GridViewColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -24,12 +26,11 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <ListView Grid.Row="0" 
                   Background="Transparent" 
-                  Height="300" 
                   ItemsSource="{Binding Questions}"
                   BorderThickness="10"
                   Padding="3">
