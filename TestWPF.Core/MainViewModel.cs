@@ -10,7 +10,7 @@ namespace TestWPF.Core
     {
         private ObservableCollection<MyItem> _myItems;
         private ICommand _myCommand;
-        public ICommand MyCommand => _myCommand ?? (_myCommand = new RelayCommand(parameter =>
+        public ICommand MyCommand => _myCommand ??= new RelayCommand(parameter =>
         {
             if (parameter is MyItem item)
             {
@@ -23,7 +23,7 @@ namespace TestWPF.Core
                     Application.Current.Dispatcher.Invoke(() => CommandManager.InvalidateRequerySuggested());
                 });
             }
-        }, parameter => parameter is MyItem item && item.Enabled && item.MyValue?.Length > 0));
+        }, parameter => parameter is MyItem item && item.Enabled && item.MyValue?.Length > 0);
 
         public ObservableCollection<MyItem> MyItems
         {

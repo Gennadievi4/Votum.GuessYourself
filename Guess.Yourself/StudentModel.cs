@@ -19,9 +19,22 @@ namespace Guess.Yourself
         private string question;
         private int receiverId;
         private ushort? remoteId;
+        private int? _TotalNumberQuestion;
         #endregion
 
         #region Properties
+
+        public int? TotalNumberQuestions
+        {
+            get => _TotalNumberQuestion;
+            set
+            {
+                if (_TotalNumberQuestion == value) return;
+                _TotalNumberQuestion = value;
+                OnPropertyChanged(nameof(TotalNumberQuestions));
+            }
+        }
+
         public int NumberStudent { get; set; }
         public string Character
         {

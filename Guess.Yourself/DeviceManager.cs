@@ -6,29 +6,29 @@ namespace Guess.Yourself
     public class DeviceManager
     {
         private readonly UsbWatcher usbWatcher = new UsbWatcher();
-        public VotumDevicesManager votumManager { get; private set; }
+        public VotumDevicesManager VotumManager { get; private set; }
         public DeviceManager(VotumDevicesManager manager)
         {
-            votumManager = manager;
+            VotumManager = manager;
             InitVotumDevice();
         }
 
         public void InitVotumDevice()
         {
-            votumManager.Settings.InteractiveRemotesSettings.InteractiveMode = true;
-            votumManager.Settings.InteractiveRemotesSettings.AutoT2 = true;
+            VotumManager.Settings.InteractiveRemotesSettings.InteractiveMode = true;
+            VotumManager.Settings.InteractiveRemotesSettings.AutoT2 = true;
             usbWatcher.DeviceInserted += Watcher_DeviceInserted;
             usbWatcher.DeviceRemoved += Watcher_DeviceInserted;
-            votumManager.Start();
+            VotumManager.Start();
         }
 
         private void Restart()
         {
-            if (votumManager != null)
+            if (VotumManager != null)
             {
-                votumManager.Stop();
+                VotumManager.Stop();
             }
-            votumManager.Start();
+            VotumManager.Start();
         }
 
         private void Watcher_DeviceInserted(object sender, EventArgs e)

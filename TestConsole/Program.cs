@@ -59,18 +59,6 @@ namespace TestConsole
 
         public static void FindExe()
         {
-            //var files = Directory.GetFiles(Environment.GetEnvironmentVariable("TEMP"));
-            //int i = 0;
-            //foreach (var item in files)
-            //{
-            //    if(item.Contains("dd_vcredist_"))
-            //        Console.WriteLine($"{item} {i++}");
-            //}
-            //foreach (var item in files)
-            //{
-            //    if (item.EndsWith(".exe.config") || item.EndsWith(".InstallState"))
-            //        File.Delete(item);
-            //}
             var rep = Enumerable.Repeat(true, 10).Distinct();
             Enumerable.Range(20, 50).Select((item, index) => new { Item = item, Index = index }).ToList().ForEach(x => Console.WriteLine($"{x.Item} и {x.Index}"));
             eventWait.Set();

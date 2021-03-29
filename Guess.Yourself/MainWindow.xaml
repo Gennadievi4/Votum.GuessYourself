@@ -391,7 +391,7 @@
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="Focusable" Value="True"/>
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsAccess}" Value="false">
+                        <DataTrigger Binding="{Binding IsWinner}" Value="true">
                             <DataTrigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
@@ -443,11 +443,13 @@
                                     CanUserResize="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock TextAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center">
                                 <TextBlock.Style>
                                     <Style TargetType="{x:Type TextBlock}">
                                         <Setter Property="Text" Value="{Binding RemoteId}"/>
-                                        <Setter Property="Foreground" Value="Transparent"/>
+                                        <Setter Property="Foreground" Value="Black"/>
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding UserAnswer}" Value="NotSet">
                                                 <Setter Property="Foreground" Value="Black"/>
@@ -517,6 +519,9 @@
                                                         <Trigger Property="IsKeyboardFocused" Value="true">
                                                             <Setter Property="Background" Value="Transparent" TargetName="border"/>
                                                         </Trigger>
+                                                        <DataTrigger Binding="{Binding IsWinner}" Value="true">
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </DataTrigger>
                                                         <!--<DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsFocused}" Value="true">
                                                             <Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
                                                         </DataTrigger>-->
@@ -607,6 +612,18 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
+                <DataGridTextColumn Header="Количество вопросов"
+                                    IsReadOnly="True"
+                                    CanUserResize="False"
+                                    HeaderStyle="{StaticResource CenterDataGridColumnsHeaders}"
+                                    Binding="{Binding TotalNumberQuestions, Mode=OneWay}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="Рейтинг участника"
                                     Width="140"
                                     IsReadOnly="False"
@@ -622,6 +639,7 @@
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
+        
         <DockPanel Grid.Row="2" LastChildFill="True" Name="DoclPanelStatus">
             <DockPanel.Resources>
                 <SolidColorBrush x:Key="Item.MouseOver.Background" Color="AliceBlue"/>
@@ -633,8 +651,26 @@
                 <SolidColorBrush x:Key="MyColor" Color="DarkRed"/>
             </DockPanel.Resources>
             <StackPanel Orientation="Horizontal">
-                <StatusBar VerticalAlignment="Bottom" Background="White" BorderThickness="0, 1, 0, 0">
-                    <StatusBarItem>
+                <StatusBar VerticalAlignment="Stretch" BorderThickness="0, 1, 0, 0">
+                    <StatusBar.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Grid Background="White" 
+                                  SnapsToDevicePixels="True"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                            </Grid>
+                        </ItemsPanelTemplate>
+                    </StatusBar.ItemsPanel>
+                    <StatusBarItem Content="{Binding TotalNumberOfStudents, TargetNullValue=Участников игры нет!}"
+                                   Grid.Row="0"
+                                   VerticalAlignment="Top"
+                                   HorizontalAlignment="Center"/>
+                    <StatusBarItem Grid.Row="1"
+                                   VerticalAlignment="Bottom">
                         <TextBlock>
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
@@ -678,7 +714,11 @@
                         Visibility="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource HeightToVisibilityButtom}}"
                         Command="{Binding WinnersOpen}">
                 </Button>
-                <ItemsControl ItemsSource="{Binding Winners}" Name="WinnerTable" Margin="0, 3, 0, 0" Width="250" DockPanel.Dock="Left">
+                <ItemsControl ItemsSource="{Binding Winners}" 
+                              Name="WinnerTable" 
+                              Margin="0, 3, 0, 0" 
+                              Width="250" 
+                              DockPanel.Dock="Left">
                     <ItemsControl.Style>
                         <Style TargetType="ItemsControl">
                             <Setter Property="Visibility" Value="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={StaticResource HeihtToVisibility}}"/>
