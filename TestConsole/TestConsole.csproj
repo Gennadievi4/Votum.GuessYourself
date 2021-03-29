@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>.net5</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,6 +30,29 @@
 
   <ItemGroup>
     <Folder Include="Resources\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Management" Version="6.0.0-preview.2.21154.6" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0-preview.2.21154.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="HidApiAdapter">
+      <HintPath>..\..\..\..\Работа\Votum\RLib\24_03_2021\HidApiAdapter.dll</HintPath>
+    </Reference>
+    <Reference Include="RLib">
+      <HintPath>..\..\..\..\Работа\Votum\RLib\24_03_2021\RLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="hidapi32.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="hidapi64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

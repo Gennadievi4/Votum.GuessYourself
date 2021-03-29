@@ -112,6 +112,10 @@ namespace Guess.Yourself
             //if (e.IsSendbackCommandAvailable && e.SendbackCommand?.Packet.RemoteCommand != TRemoteCommandID.RF_ACK_WAIT)
             //    e.SendbackCommand = new SendbackCommand(e.ReceiverId, e.RemoteId, RemoteCommand.CMD_WAIT);
 
+            var r = e.HardwareId;
+            var d = e.HardwareType;
+            var g = e.Id;
+
             if (Winners.Any(x => x.StdWinner.RemoteId == e.RemoteId))
             {
                 e.SendbackCommand = SendbackCommand.DisplayStringClear("Вы угадали! Ожидайте остальных!");

@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.12.3" />
     <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
     <PackageReference Include="System.Management" Version="4.7.0" />
   </ItemGroup>
@@ -30,10 +31,10 @@
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Open XML SDK\V2.0\lib\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
     <Reference Include="HidApiAdapter">
-      <HintPath>..\..\..\..\Documents\Работа\Votum\RLib\HidApiAdapter.dll</HintPath>
+      <HintPath>..\..\..\..\Работа\Votum\RLib\HidApiAdapter.dll</HintPath>
     </Reference>
     <Reference Include="RLib">
-      <HintPath>..\..\..\..\Documents\Работа\Votum\RLib.dll</HintPath>
+      <HintPath>..\..\..\..\Работа\Votum\RLib.dll</HintPath>
     </Reference>
   </ItemGroup>
 
