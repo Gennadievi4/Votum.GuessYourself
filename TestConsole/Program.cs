@@ -12,33 +12,34 @@ namespace TestConsole
     {
         private static bool SyncFlag = true;
 
-        private static readonly BaseVotumDevice baseVotumDevice = new BaseVotumDevice();
+        private static VotumDevicesManager _VotumDevicesManager = new VotumDevicesManager();
 
         private static Thread thread = new Thread(LongTimeRemote) { IsBackground = true };
 
-        private static Remote remoteInRun;
-
-        private static List<Remote> RemotesList = new List<Remote>();
-
         private static void Main(string[] args)
         {
-            baseVotumDevice.ClickButtonsRemotes += BaseVotumDevice_ClickButtonsRemotes;
+            Init();
+
+            _VotumDevicesManager.ButtonClicked += BaseVotumDevice_ClickButtonsRemotes;
 
             RunWork();
-
-            Console.ReadKey();
         }
 
-        private static void LongTimeRemote(object remote)
+        private static void Init()
         {
-            var rem = (Remote)remote;
+            _VotumDevicesManager.Settings.InteractiveRemotesSettings.InteractiveMode = true;
+            _VotumDevicesManager.Settings.InteractiveRemotesSettings.AutoT2 = true;
+            _VotumDevicesManager.Start();
+        }
 
-            SendbackCommand wait = new SendbackCommand(rem.ReceiverId, rem.RemoteId, RemoteCommand.CMD_WAIT);
+        private static void LongTimeRemote()
+        {
+            SendbackCommand wait = new SendbackCommand(8681, 1, RemoteCommand.CMD_WAIT);
 
             while (SyncFlag)
             {
-                baseVotumDevice.SendCmdToRemote(wait);
-                Thread.Sleep(100);
+                _VotumDevicesManager.SendCommandToRemote(wait);
+                Thread.Sleep(16);
             }
         }
 
@@ -48,18 +49,7 @@ namespace TestConsole
 
             e.SendbackCommand = new SendbackCommand(e.ReceiverId, e.RemoteId, RemoteCommand.CMD_WAIT);
 
-            if (RemotesList.Any(x => x.RemoteId.Equals(e.RemoteId) && x.ReceiverId.Equals(e.ReceiverId)))
-                return;
-            else
-            {
-                Remote remote = new Remote() { RemoteId = e.RemoteId, ReceiverId = e.ReceiverId };
-
-                remoteInRun = remote;
-
-                thread.Start(remote);
-
-                RemotesList.Add(remote);
-            }
+            thread.Start();
         }
 
         private static void RunWork()
@@ -68,8 +58,8 @@ namespace TestConsole
             {
                 if (Console.ReadKey(true).Key == ConsoleKey.Enter)
                 {
-                    SendbackCommand logo = new SendbackCommand(remoteInRun.ReceiverId, remoteInRun.RemoteId, RemoteCommand.CMD_DISPLAY_LOGO);
-                    baseVotumDevice.SendCmdToRemote(logo);
+                    SendbackCommand logo = new SendbackCommand(8681, 1, RemoteCommand.CMD_DISPLAY_LOGO);
+                    _VotumDevicesManager.SendCommandToRemote(logo);
                     SyncFlag = false;
                 }
             }
