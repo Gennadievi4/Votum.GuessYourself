@@ -1,51 +1,79 @@
-﻿using System;
-using System.IO;
+﻿using RLib;
+using RLib.Remotes;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Threading;
+using TestConsole.BaseVotum;
 
 namespace TestConsole
 {
-    public class A
+    public class Program
     {
-        public virtual int Calc() => 10 * Gen();
-        protected int Gen() => 10;
-    }
+        private static bool SyncFlag = true;
 
-    public class B : A
-    {
-        public override int Calc() => 20 * Gen();
-        protected int Gen() => 20;
-    }
+        private static readonly BaseVotumDevice baseVotumDevice = new BaseVotumDevice();
 
-    public class C: B
-    {
-        public override int Calc() => 30 * Gen();
-        protected int Gen() => base.Gen();
-    }
-    class Program
-    {
-        public static void GetString()
+        private static Thread thread = new Thread(LongTimeRemote) { IsBackground = true };
+
+        private static Remote remoteInRun;
+
+        private static List<Remote> RemotesList = new List<Remote>();
+
+        private static void Main(string[] args)
         {
-            //using var line = new StreamReader(@"C:\Users\gonzy\Desktop\Новый текстовый документ.txt");
-            //var str2 = line.ReadToEnd();
-            //var str3 = Regex.Replace(str2, @"([\p{P}\d])|([А-ЯЁа-яё]{20,})|([№<>|=])", "", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+            baseVotumDevice.ClickButtonsRemotes += BaseVotumDevice_ClickButtonsRemotes;
 
-            //Console.WriteLine(str3);
+            RunWork();
 
-        }
-        static void Main(string[] args)
-        {
-
-            A a = new B();
-            A a1 = new C();
-            Console.WriteLine(a.Calc() + a1.Calc());
             Console.ReadKey();
-            //Создание примера поиска текста при помощи регулярки
-            //GetString();
+        }
 
-            //Создание вордовского документа при помощи OpenXML
-            //GeneratedClass generatedClass = new GeneratedClass();
-            //generatedClass.CreatePackage(@"C:\Users\gonzy\Desktop\TestDoc1.docx");
+        private static void LongTimeRemote(object remote)
+        {
+            var rem = (Remote)remote;
+
+            SendbackCommand wait = new SendbackCommand(rem.ReceiverId, rem.RemoteId, RemoteCommand.CMD_WAIT);
+
+            while (SyncFlag)
+            {
+                baseVotumDevice.SendCmdToRemote(wait);
+                Thread.Sleep(100);
+            }
+        }
+
+        private static void BaseVotumDevice_ClickButtonsRemotes(object sender, ButtonClickEventArgs e)
+        {
+            Console.WriteLine(e.Battary);
+
+            e.SendbackCommand = new SendbackCommand(e.ReceiverId, e.RemoteId, RemoteCommand.CMD_WAIT);
+
+            if (RemotesList.Any(x => x.RemoteId.Equals(e.RemoteId) && x.ReceiverId.Equals(e.ReceiverId)))
+                return;
+            else
+            {
+                Remote remote = new Remote() { RemoteId = e.RemoteId, ReceiverId = e.ReceiverId };
+
+                remoteInRun = remote;
+
+                thread.Start(remote);
+
+                RemotesList.Add(remote);
+            }
+        }
+
+        private static void RunWork()
+        {
+            do
+            {
+                if (Console.ReadKey(true).Key == ConsoleKey.Enter)
+                {
+                    SendbackCommand logo = new SendbackCommand(remoteInRun.ReceiverId, remoteInRun.RemoteId, RemoteCommand.CMD_DISPLAY_LOGO);
+                    baseVotumDevice.SendCmdToRemote(logo);
+                    SyncFlag = false;
+                }
+            }
+            while (Console.ReadKey(true).Key != ConsoleKey.Escape);
         }
     }
 }
