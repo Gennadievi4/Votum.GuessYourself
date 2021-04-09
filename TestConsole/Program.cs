@@ -16,6 +16,14 @@ namespace TestConsole
 
         private static Thread thread = new Thread(LongTimeRemote) { IsBackground = true };
 
+        private static QueueHandler<int> QueueHandler = new QueueHandler<int>((number, hand) =>
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Console.WriteLine(++number);
+            }
+        });
+
         private static void Main(string[] args)
         {
             Init();
@@ -32,6 +40,11 @@ namespace TestConsole
             _VotumDevicesManager.Start();
         }
 
+        private static void Sum()
+        {
+
+        }
+
         private static void LongTimeRemote()
         {
             SendbackCommand wait = new SendbackCommand(8681, 1, RemoteCommand.CMD_WAIT);
@@ -39,7 +52,7 @@ namespace TestConsole
             while (SyncFlag)
             {
                 _VotumDevicesManager.SendCommandToRemote(wait);
-                Thread.Sleep(16);
+                Thread.Sleep(20);
             }
         }
 
@@ -48,6 +61,8 @@ namespace TestConsole
             Console.WriteLine(e.Battary);
 
             e.SendbackCommand = new SendbackCommand(e.ReceiverId, e.RemoteId, RemoteCommand.CMD_WAIT);
+
+            QueueHandler.AddItem(1);
 
             thread.Start();
         }
