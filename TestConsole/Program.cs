@@ -20,33 +20,33 @@ namespace TestConsole
     class Program
     {
         #region events
-        //class MyEventArgs : EventArgs
-        //{
-        //    public string StartSource { get; }
-        //    public MyEventArgs(string s)
-        //    {
-        //        StartSource = s;
-        //    }
-        //}
-        //class Source
-        //{
-        //    public event EventHandler<MyEventArgs> Run;
-        //    public void Start()
-        //    {
-        //        //Console.WriteLine("RUN");
-        //        Run?.Invoke(this, new MyEventArgs($"Я {this.GetType().Name} уже бегу!"));
-        //    }
-        //}
-        //class Observer1
-        //{
-        //    public void Do(object sender, MyEventArgs e) => Console.WriteLine($"Первый \"Наблюдатель\" - {this.GetType().Name} видит, что другой объект сообщил: {e.StartSource}");
+        class MyEventArgs : EventArgs
+        {
+            public string StartSource { get; }
+            public MyEventArgs(string s)
+            {
+                StartSource = s;
+            }
+        }
+        class Source
+        {
+            public event EventHandler<MyEventArgs> Run;
+            public void Start()
+            {
+                //Console.WriteLine("RUN");
+                Run?.Invoke(this, new MyEventArgs($"Я {this.GetType().Name} уже бегу!"));
+            }
+        }
+        class Observer1
+        {
+            public void Do(object sender, MyEventArgs e) => Console.WriteLine($"Первый \"Наблюдатель\" - {this.GetType().Name} видит, что другой объект сообщил: {e.StartSource}");
 
-        //}
-        //class Observer2
-        //{
-        //    public void Do(object sender, MyEventArgs e) => Console.WriteLine($"Второй \"Наблюдатель\" - {this.GetType().Name} видит, что другой объект сообщил: {e.StartSource}");
+        }
+        class Observer2
+        {
+            public void Do(object sender, MyEventArgs e) => Console.WriteLine($"Второй \"Наблюдатель\" - {this.GetType().Name} видит, что другой объект сообщил: {e.StartSource}");
 
-        //}
+        }
         #endregion
         static ManualResetEvent manualReset = new ManualResetEvent(false);
         static EventWaitHandle eventWait = manualReset;
@@ -107,77 +107,77 @@ namespace TestConsole
             //s.Run -= o1.Do;
             //s.Start();
 
-            try
+            #region reflecsion
+            //try
+            //{
+            //deviceManager = new DeviceManager();
+            //deviceManager.VotumDevicesManager.ButtonClicked += VotumDevicesManager_ButtonClicked;
+
+            //DeviceRepresentation votumDevice = deviceManager.VotumDevicesManager.Devices.First();
+
+            //IDevice votumHidDevice = votumDevice.Device;
+
+            //var strategy = votumDevice
+            //    .GetType()
+            //    .GetField("m_Strategy", BindingFlags.NonPublic | BindingFlags.Instance)
+            //    .GetValue(votumDevice);
+
+            //MethodInfo sendbackCommandMethod = strategy
+            //    .GetType()
+            //    .GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+            //    .Single(x => x.Name == "SendCommandToRemote" && x.GetParameters().Length == 2);
+
+            //var IsRunning = strategy
+            //    .GetType()
+            //    .GetProperty("IsRunning", BindingFlags.Public | BindingFlags.Instance)
+            //    .GetValue(strategy);
+
+            //var connectedVotumDevice = votumHidDevice
+            //    .GetType()
+            //    .GetField("m_Device", BindingFlags.NonPublic | BindingFlags.Instance)
+            //    .GetValue(votumHidDevice);
+
+            //var IsConnectedVotumDevice = connectedVotumDevice
+            //    .GetType()
+            //    .GetProperty("IsConnected", BindingFlags.Public | BindingFlags.Instance)
+            //    .GetValue(connectedVotumDevice);
+
+            //if ((bool)IsRunning == true)
+            //    sendbackCommandMethod.Invoke(strategy, new object[] { votumHidDevice, remotePacket });
+
+            //if ((bool)IsConnectedVotumDevice == true)
+            //{
+            //    Thread.Sleep(100);
+            //    sendbackCommandMethod.Invoke(strategy, new object[] { votumHidDevice, remotePacket });
+            //}
+
+            //sendbackCommandMethod.Invoke(strategy, new object[] { votumHidDevice, receiver, remote, RemoteCommand.CMD_DISPLAY_LOGO });
+            #endregion
+
+            SendbackCommand sendbackCommand = new SendbackCommand(receiver, remote, RemoteCommand.CMD_DISPLAY_LOGO);
+
+            deviceManager.VotumDevicesManager.SendCommandToRemote(sendbackCommand);
+
+            ConcurrentQueue<string> queue = new ConcurrentQueue<string>();
+            using (CancellationTokenSource cts = new CancellationTokenSource())
             {
-                #region reflecsion
-                //deviceManager = new DeviceManager();
-                //deviceManager.VotumDevicesManager.ButtonClicked += VotumDevicesManager_ButtonClicked;
-
-                //DeviceRepresentation votumDevice = deviceManager.VotumDevicesManager.Devices.First();
-
-                //IDevice votumHidDevice = votumDevice.Device;
-
-                //var strategy = votumDevice
-                //    .GetType()
-                //    .GetField("m_Strategy", BindingFlags.NonPublic | BindingFlags.Instance)
-                //    .GetValue(votumDevice);
-
-                //MethodInfo sendbackCommandMethod = strategy
-                //    .GetType()
-                //    .GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
-                //    .Single(x => x.Name == "SendCommandToRemote" && x.GetParameters().Length == 2);
-
-                //var IsRunning = strategy
-                //    .GetType()
-                //    .GetProperty("IsRunning", BindingFlags.Public | BindingFlags.Instance)
-                //    .GetValue(strategy);
-
-                //var connectedVotumDevice = votumHidDevice
-                //    .GetType()
-                //    .GetField("m_Device", BindingFlags.NonPublic | BindingFlags.Instance)
-                //    .GetValue(votumHidDevice);
-
-                //var IsConnectedVotumDevice = connectedVotumDevice
-                //    .GetType()
-                //    .GetProperty("IsConnected", BindingFlags.Public | BindingFlags.Instance)
-                //    .GetValue(connectedVotumDevice);
-
-                //if ((bool)IsRunning == true)
-                //    sendbackCommandMethod.Invoke(strategy, new object[] { votumHidDevice, remotePacket });
-
-                //if ((bool)IsConnectedVotumDevice == true)
-                //{
-                //    Thread.Sleep(100);
-                //    sendbackCommandMethod.Invoke(strategy, new object[] { votumHidDevice, remotePacket });
-                //}
-
-                //sendbackCommandMethod.Invoke(strategy, new object[] { votumHidDevice, receiver, remote, RemoteCommand.CMD_DISPLAY_LOGO });
-                #endregion
-
-                SendbackCommand sendbackCommand = new SendbackCommand(receiver, remote, RemoteCommand.CMD_DISPLAY_LOGO);
-
-                deviceManager.VotumDevicesManager.SendCommandToRemote(sendbackCommand);
-
-                ConcurrentQueue<string> queue = new ConcurrentQueue<string>();
-                using (CancellationTokenSource cts = new CancellationTokenSource())
+                Task task = LoopAsync(cts.Token, queue);
+                string text;
+                while ((text = Console.ReadLine()).Length > 0)
                 {
-                    Task task = LoopAsync(cts.Token, queue);
-                    string text;
-                    while ((text = Console.ReadLine()).Length > 0)
-                    {
-                        queue.Enqueue(text + Thread.CurrentThread.ManagedThreadId);
-                    }
-                    cts.Cancel();
-                    await task;
-                    Console.WriteLine("Done.");
+                    queue.Enqueue(text + Thread.CurrentThread.ManagedThreadId);
                 }
+                cts.Cancel();
+                await task;
+                Console.WriteLine("Done.");
+            }
 
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.StackTrace);
-                Console.ReadKey();
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.StackTrace);
+            //    Console.ReadKey();
+            //}
 
             Console.ReadKey();
         }
