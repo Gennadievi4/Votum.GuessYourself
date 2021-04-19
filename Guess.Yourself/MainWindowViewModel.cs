@@ -1,5 +1,6 @@
 ﻿using Guess.Yourself.Interfaces;
 using RLib;
+using RLib.Remotes;
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -115,20 +116,6 @@ namespace Guess.Yourself
 
         private void VotumManager_ButtonClicked(object sender, ButtonClickEventArgs e)
         {
-            //if (e.T2Text != null && !Students.Any(x => string.Equals(x.Character, e.T2Text, StringComparison.OrdinalIgnoreCase)))
-            //{
-            //    e.SendbackCommand = SendbackCommand.DisplayStringClear("Введена английская буква! Повторите ввод!");
-            //    return;
-            //}
-            //bool es = e.IsSendbackCommandPresent;
-
-            //if (e.IsSendbackCommandAvailable && e.SendbackCommand?.Packet.RemoteCommand != TRemoteCommandID.RF_ACK_WAIT)
-            //    e.SendbackCommand = new SendbackCommand(e.ReceiverId, e.RemoteId, RemoteCommand.CMD_WAIT);
-
-            var r = e.HardwareId;
-            var d = e.HardwareType;
-            var g = e.Id;
-
             if (Winners.Any(x => x.StdWinner.RemoteId == e.RemoteId))
             {
                 e.SendbackCommand = SendbackCommand.DisplayStringClear("Вы угадали! Ожидайте остальных!");
@@ -141,15 +128,6 @@ namespace Guess.Yourself
                 //IsAnimation = false;
                 FindWinner(e.RemoteId, e);
             }
-
-            //if (e.Button.Type == ButtonType.PauseT2)
-            //{
-            //    RemoteCommand remoteCMD = RemoteCommand.CMD_NO_ACTION;
-            //    SendbackCommand cmd = new SendbackCommand(e.ReceiverId, e.RemoteId, RemoteCommand.CMD_NO_ACTION);
-            //    e.SendbackCommand = SendbackCommand.Led(true);
-            //    e.SendbackCommand = new SendbackCommand(e.ReceiverId, e.RemoteId, RemoteCommand.CMD_NO_ACTION);
-            //}
-            //var t2 = e.Button;
         }
 
         private void GetTotalSumStudents(int RemoteId)
@@ -295,6 +273,7 @@ namespace Guess.Yourself
                         std.Question = e.T2Text;
                         std.UserAnswer = AnswerType.NotGuessed;
                         OnTick -= std.UpTime;
+                        deviceManager.VotumManager.SendCommandToRemote(new SendbackCommand(e.ReceiverId, e.RemoteId, RemoteCommand.CMD_WAIT));
                         //std.send = e;
                         // std.UserAnswer = StudentModel.AnswerType.NotGuessed;
                     }
