@@ -1,9 +1,12 @@
 ﻿using RLib;
 using RLib.Remotes;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using TestConsole.BaseVotum;
 
 namespace TestConsole
@@ -14,15 +17,25 @@ namespace TestConsole
 
         private static VotumDevicesManager _VotumDevicesManager = new VotumDevicesManager();
 
-        private static Thread thread = new Thread(LongTimeRemote) { IsBackground = true };
+        private static Stopwatch stopwatch = new Stopwatch();
 
-        private static QueueHandler<int> QueueHandler = new QueueHandler<int>((number, hand) =>
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                Console.WriteLine(++number);
-            }
-        });
+        private static CancellationTokenSource src = new CancellationTokenSource();
+
+        private static ConcurrentQueue<SendbackCommand> sendbackCommands = new ConcurrentQueue<SendbackCommand>();
+
+        //private static QueueHandler<SendbackCommand> QueueHandler = new QueueHandler<SendbackCommand>((number, hand) =>
+        //{
+        //    while (!hand.IsCancellationRequested)
+        //    {
+        //        _VotumDevicesManager.SendCommandToRemote(number);
+        //        Thread.Sleep(10);
+        //    }
+        //});
+        private static Thread thread = new Thread(LongTimeRemote) { IsBackground = true, };
+
+        private static SendbackCommand wait = new SendbackCommand(8681, 1, RemoteCommand.CMD_WAIT);
+
+        private static SendbackCommand logo = new SendbackCommand(8681, 1, RemoteCommand.CMD_DISPLAY_LOGO);
 
         private static void Main(string[] args)
         {
@@ -40,45 +53,85 @@ namespace TestConsole
             _VotumDevicesManager.Start();
         }
 
-        private static void Sum()
-        {
-
-        }
-
         private static void LongTimeRemote()
         {
-            SendbackCommand wait = new SendbackCommand(8681, 1, RemoteCommand.CMD_WAIT);
+            stopwatch.Start();
+
+            Console.WriteLine($"Запущен поток {Thread.CurrentThread.ManagedThreadId} с отправкой команды \"Ждать\"");
 
             while (SyncFlag)
             {
                 _VotumDevicesManager.SendCommandToRemote(wait);
                 Thread.Sleep(20);
+                Console.Title = string.Format("Вторичный поток работает {0:D}", (int)stopwatch.Elapsed.TotalSeconds);
             }
+
+            Console.WriteLine($"Закончен поток {Thread.CurrentThread.ManagedThreadId} с отправкой команды \"Ждать\"");
+
+            stopwatch.Stop();
         }
 
         private static void BaseVotumDevice_ClickButtonsRemotes(object sender, ButtonClickEventArgs e)
         {
-            Console.WriteLine(e.Battary);
+            Console.WriteLine($"Нажата кнопка {e.Button} на пульте {e.RemoteId} в потоке {Thread.CurrentThread.ManagedThreadId}");
 
-            e.SendbackCommand = new SendbackCommand(e.ReceiverId, e.RemoteId, RemoteCommand.CMD_WAIT);
+            e.SendbackCommand = new SendbackCommand(8681, 1, RemoteCommand.CMD_WAIT);
 
-            QueueHandler.AddItem(1);
+            //await LoopSendBackCommands2(src.Token);
+
+            //QueueHandler.AddItem(e.SendbackCommand);
 
             thread.Start();
         }
 
         private static void RunWork()
         {
-            do
+            while (Console.ReadKey().Key != ConsoleKey.Escape)
             {
-                if (Console.ReadKey(true).Key == ConsoleKey.Enter)
+                Console.WriteLine($"Метод RunWork запущен в потоке {Thread.CurrentThread.ManagedThreadId}");
+
+                if (Console.ReadKey().Key == ConsoleKey.Enter)
                 {
-                    SendbackCommand logo = new SendbackCommand(8681, 1, RemoteCommand.CMD_DISPLAY_LOGO);
+                    Console.WriteLine($"Метод RunWork блок Enter запущен в потоке {Thread.CurrentThread.ManagedThreadId}");
+
                     _VotumDevicesManager.SendCommandToRemote(logo);
+
                     SyncFlag = false;
+                    _VotumDevicesManager.Stop();
+
+                    //src.Cancel();
+                    //QueueHandler.Dispose();
                 }
             }
-            while (Console.ReadKey(true).Key != ConsoleKey.Escape);
+        }
+
+        private static void LoopSendBackCommands(CancellationToken token)
+        {
+            Task.Run(async () =>
+            {
+                Console.WriteLine($"Запущена работа асинхронной отправки команды \"ждать\" в потоке {Thread.CurrentThread.ManagedThreadId} задача: {Task.CurrentId}");
+
+                while (!token.IsCancellationRequested)
+                {
+                    _VotumDevicesManager.SendCommandToRemote(wait);
+                    await Task.Delay(20);
+                }
+
+                Console.WriteLine($"Конец асинхронной операции отправки команды \"ждать\" в потоке {Thread.CurrentThread.ManagedThreadId} задача: {Task.CurrentId}");
+            });
+        }
+
+        private async static Task LoopSendBackCommands2(CancellationToken token)
+        {
+            Console.WriteLine($"Запущена работа асинхронной отправки команды \"ждать\" в потоке {Thread.CurrentThread.ManagedThreadId} задача: {Task.CurrentId}");
+
+            while (!token.IsCancellationRequested)
+            {
+                _VotumDevicesManager.SendCommandToRemote(wait);
+                await Task.Delay(20);
+            }
+
+            Console.WriteLine($"Конец асинхронной операции отправки команды \"ждать\" в потоке {Thread.CurrentThread.ManagedThreadId} задача: {Task.CurrentId}");
         }
     }
 }
