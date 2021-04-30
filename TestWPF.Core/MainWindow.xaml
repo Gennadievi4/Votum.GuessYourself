@@ -14,8 +14,10 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <DockPanel HorizontalAlignment="Stretch">
+        <DockPanel HorizontalAlignment="Stretch" LastChildFill="False">
             <Button Margin="5" Padding="5,0" Content="Clicke me!" Command="{Binding MyCommand}" CommandParameter="{Binding MyItems/}"/>
+            <Button Click="Button_Click" Name="TestBtn" Content="ClickMe"/>
+            <Label Name="TestLbl" Foreground="Black" Width="100" Background="Red"/>
         </DockPanel>
         <DataGrid Grid.Row="1" Margin="5" ItemsSource="{Binding MyItems}" IsSynchronizedWithCurrentItem="True" AutoGenerateColumns="False" IsReadOnly="True" >
             <DataGrid.Columns>

@@ -5,6 +5,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -22,6 +24,24 @@ namespace Guess.Yourself
         private bool isAnimationEndGame;
         private event Action OnTick;
         private StudentModel studentModel;
+
+        private static readonly DeviceManager deviceManager = new DeviceManager(new VotumDevicesManager());
+
+        private readonly SendbackCommand CmdYes = SendbackCommand.DisplayStringClear("Да");
+        private readonly SendbackCommand CmdNo = SendbackCommand.DisplayStringClear("Нет");
+        private readonly SendbackCommand CmdDontKnow = SendbackCommand.DisplayStringClear("Не знаю");
+
+        private readonly Thread thread = new Thread((e) =>
+        {
+            var remote = (ButtonClickEventArgs)e;
+            //SendbackCommand sendWaitCmd = new SendbackCommand(remote.ReceiverId, remote.RemoteId, RemoteCommand.CMD_WAIT);
+            while (true)
+            {
+                deviceManager.VotumManager.SendCommandToRemote(remote.SendbackCommand);
+                Thread.Sleep(50);
+            }
+        })
+        { IsBackground = true, };
         #endregion
 
         #region Public Properties
@@ -82,8 +102,6 @@ namespace Guess.Yourself
         }
         #endregion
 
-        private readonly DeviceManager deviceManager = new DeviceManager(new VotumDevicesManager());
-
         public DispatcherTimer timer = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 1) };
 
         DataGrid str = (DataGrid)App.Current.MainWindow.FindName("TableName");
@@ -116,6 +134,12 @@ namespace Guess.Yourself
 
         private void VotumManager_ButtonClicked(object sender, ButtonClickEventArgs e)
         {
+            if (e.Button.Type != ButtonType.PauseT2)
+            {
+                e.SendbackCommand = new SendbackCommand(e.ReceiverId, e.RemoteId, RemoteCommand.CMD_WAIT);
+                thread.Start(e);
+            }
+
             if (Winners.Any(x => x.StdWinner.RemoteId == e.RemoteId))
             {
                 e.SendbackCommand = SendbackCommand.DisplayStringClear("Вы угадали! Ожидайте остальных!");
@@ -265,17 +289,12 @@ namespace Guess.Yourself
             {
                 App.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    //Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)))?.QuestionsAdd(e.T2Text, AnswerType.NotGuessed);
                     var std = Students.FirstOrDefault(x => x.RemoteId.Equals(Convert.ToUInt16(RemoteId)) && !string.IsNullOrWhiteSpace(x.Character) && string.IsNullOrWhiteSpace(x.Question));
                     if (std != null)
                     {
-                        //std.UserAnswer = StudentModel.AnswerType.NotSet;
                         std.Question = e.T2Text;
                         std.UserAnswer = AnswerType.NotGuessed;
                         OnTick -= std.UpTime;
-                        deviceManager.VotumManager.SendCommandToRemote(new SendbackCommand(e.ReceiverId, e.RemoteId, RemoteCommand.CMD_WAIT));
-                        //std.send = e;
-                        // std.UserAnswer = StudentModel.AnswerType.NotGuessed;
                     }
                 }));
             }
@@ -293,9 +312,9 @@ namespace Guess.Yourself
 
             param.TotalNumberQuestions = Students.FirstOrDefault(std => std.RemoteId.Equals(param.RemoteId)).Questions.Count();
 
-            param.Questions
-            .First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
-            .UserAnswer = AnswerType.Correct;
+            //param.Questions
+            //.First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
+            //.UserAnswer = AnswerType.Correct;
 
             if (OnTick != param.UpTime && !param.IsWinner)
             {
@@ -305,15 +324,17 @@ namespace Guess.Yourself
 
             BlockWinnerCell(param);
 
+            //deviceManager.VotumManager.SendCommandToRemote(new SendbackCommand(param.ReceiverId, (int)param.RemoteId, RemoteCommand.CMD_DISPLAY_LOGO));
+            deviceManager.VotumManager.SendCommandToRemote(CmdYes);
+
             //param.remotePacket.RemoteID = (int)param.RemoteId;
             //param.remotePacket.RemoteCommand = TRemoteCommandID.RF_ACK_DISPLAY_LOGO;
 
-        },
-        (stdParam) =>
-        {
-            //return (stdParam != null) ? !string.IsNullOrEmpty(stdParam.Question) : false;
-            return stdParam != null && !string.IsNullOrEmpty(stdParam.Question);
         }));
+        //(stdParam) =>
+        //{
+        //    return stdParam != null && !string.IsNullOrEmpty(stdParam.Question);
+        //}));
 
         public RelayCommand<StudentModel> noCmd = null;
         public ICommand NoCmd => noCmd ?? (noCmd = new RelayCommand<StudentModel>((param) =>
@@ -327,20 +348,22 @@ namespace Guess.Yourself
                 .Questions
                 .Count();
 
-            param.Questions
-            .First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
-            .UserAnswer = AnswerType.NotCorrect;
+            //param.Questions
+            //.First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
+            //.UserAnswer = AnswerType.NotCorrect;
 
             param.Question = null;
             if (OnTick != param.UpTime)
             {
                 OnTick += param.UpTime;
             }
-        },
-        (stdParam) =>
-        {
-            return (stdParam != null) && !string.IsNullOrEmpty(stdParam.Question);
+
+            deviceManager.VotumManager.SendCommandToRemote(new SendbackCommand(param.ReceiverId, (int)param.RemoteId, RemoteCommand.CMD_DISPLAY_LOGO));
         }));
+        //(stdParam) =>
+        //{
+        //    return (stdParam != null) && !string.IsNullOrEmpty(stdParam.Question);
+        //}));
 
         public RelayCommand<StudentModel> dontKnowCmd = null;
         public ICommand DontKnowCmd => dontKnowCmd ?? (dontKnowCmd = new RelayCommand<StudentModel>((param) =>
@@ -354,19 +377,21 @@ namespace Guess.Yourself
                 .Questions
                 .Count();
 
-            param.Questions.First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
-            .UserAnswer = AnswerType.DontKnow;
+            //param.Questions.First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
+            //.UserAnswer = AnswerType.DontKnow;
+
+            deviceManager.VotumManager.SendCommandToRemote(new SendbackCommand(param.ReceiverId, (int)param.RemoteId, RemoteCommand.CMD_DISPLAY_LOGO));
 
             param.Question = null;
             if (OnTick != param.UpTime)
             {
                 OnTick += param.UpTime;
             }
-        },
-        (param) =>
-        {
-            return (param != null) ? !string.IsNullOrEmpty(param.Question) : false;
         }));
+        //(param) =>
+        //{
+        //    return (param != null) ? !string.IsNullOrEmpty(param.Question) : false;
+        //}));
 
         public RelayCommand<StudentModel> questionCmd = null;
         public ICommand QuestionCmd => questionCmd ?? (questionCmd = new RelayCommand<StudentModel>((param) =>
