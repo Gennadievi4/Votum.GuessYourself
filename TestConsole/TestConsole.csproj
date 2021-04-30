@@ -39,10 +39,10 @@
 
   <ItemGroup>
     <Reference Include="HidApiAdapter">
-      <HintPath>..\..\..\..\Работа\Votum\RLib\24_03_2021\HidApiAdapter.dll</HintPath>
+      <HintPath>..\..\..\..\Работа\Votum\RLib\30_04_2021\HidApiAdapter.dll</HintPath>
     </Reference>
     <Reference Include="RLib">
-      <HintPath>..\..\..\..\Работа\Votum\RLib\24_03_2021\RLib.dll</HintPath>
+      <HintPath>..\..\..\..\Работа\Votum\RLib\30_04_2021\RLib.dll</HintPath>
     </Reference>
   </ItemGroup>
 

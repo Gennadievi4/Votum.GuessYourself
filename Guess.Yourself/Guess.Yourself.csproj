@@ -106,7 +106,7 @@
     </Reference>
     <Reference Include="HidApiAdapter, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Работа\Votum\RLib\30_03_2021\HidApiAdapter.dll</HintPath>
+      <HintPath>..\..\..\..\Работа\Votum\RLib\30_04_2021\HidApiAdapter.dll</HintPath>
     </Reference>
     <Reference Include="JetBrains.Annotations, Version=2020.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.2020.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
@@ -118,9 +118,9 @@
       <HintPath>..\packages\Microsoft.Windows.Shell.3.0.1.0\lib\net40\Microsoft.Windows.Shell.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework.Aero2" />
-    <Reference Include="RLib, Version=1.1.11.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="RLib, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Работа\Votum\RLib\30_03_2021\RLib.dll</HintPath>
+      <HintPath>..\..\..\..\Работа\Votum\RLib\30_04_2021\RLib.dll</HintPath>
     </Reference>
     <Reference Include="SmartNavigation, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.SmartNavigation.1.0.2-alpha\lib\net471\SmartNavigation.dll</HintPath>

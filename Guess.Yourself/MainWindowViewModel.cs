@@ -324,8 +324,8 @@ namespace Guess.Yourself
 
             BlockWinnerCell(param);
 
-            //deviceManager.VotumManager.SendCommandToRemote(new SendbackCommand(param.ReceiverId, (int)param.RemoteId, RemoteCommand.CMD_DISPLAY_LOGO));
-            deviceManager.VotumManager.SendCommandToRemote(CmdYes);
+            deviceManager.VotumManager.SendCommandToRemote(SendbackCommand.DisplayStringClear(param.ReceiverId, (int)param.RemoteId, "Да"));
+            //deviceManager.VotumManager.SendCommandToRemote(SendbackCommand.DisplayStringClear("Отправь на пуль!!!"));
 
             //param.remotePacket.RemoteID = (int)param.RemoteId;
             //param.remotePacket.RemoteCommand = TRemoteCommandID.RF_ACK_DISPLAY_LOGO;
