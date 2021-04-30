@@ -17,6 +17,8 @@ namespace TestConsole
 
         private static VotumDevicesManager _VotumDevicesManager = new VotumDevicesManager();
 
+        private static Task t = new Task(async () => await LoopSendBackCommands2(src.Token).ConfigureAwait(true));
+
         private static Stopwatch stopwatch = new Stopwatch();
 
         private static CancellationTokenSource src = new CancellationTokenSource();
@@ -44,6 +46,8 @@ namespace TestConsole
             _VotumDevicesManager.ButtonClicked += BaseVotumDevice_ClickButtonsRemotes;
 
             RunWork();
+
+            Console.ReadKey();
         }
 
         private static void Init()
@@ -75,20 +79,22 @@ namespace TestConsole
         {
             Console.WriteLine($"Нажата кнопка {e.Button} на пульте {e.RemoteId} в потоке {Thread.CurrentThread.ManagedThreadId}");
 
-            e.SendbackCommand = new SendbackCommand(8681, 1, RemoteCommand.CMD_WAIT);
+            e.SendbackCommand = new SendbackCommand(e.ReceiverId, e.RemoteId, RemoteCommand.CMD_WAIT);
 
-            //await LoopSendBackCommands2(src.Token);
+            t.Start();
 
             //QueueHandler.AddItem(e.SendbackCommand);
 
-            thread.Start();
+            //thread.Start();
         }
 
-        private static void RunWork()
+        private async static void RunWork()
         {
             while (Console.ReadKey().Key != ConsoleKey.Escape)
             {
                 Console.WriteLine($"Метод RunWork запущен в потоке {Thread.CurrentThread.ManagedThreadId}");
+
+                Console.WriteLine($"Состояние задачи {(t.IsCompleted == true ? "завершено" : "не завершено")}");
 
                 if (Console.ReadKey().Key == ConsoleKey.Enter)
                 {
@@ -96,7 +102,15 @@ namespace TestConsole
 
                     _VotumDevicesManager.SendCommandToRemote(logo);
 
+
+                    src.Cancel();
+
+                    await t;
+
+                    Console.WriteLine($"Состояние задачи {(t.IsCompleted == true ? "завершено" : "не завершено")}");
+
                     SyncFlag = false;
+
                     _VotumDevicesManager.Stop();
 
                     //src.Cancel();
@@ -107,14 +121,14 @@ namespace TestConsole
 
         private static void LoopSendBackCommands(CancellationToken token)
         {
-            Task.Run(async () =>
+            Task.Run(() =>
             {
                 Console.WriteLine($"Запущена работа асинхронной отправки команды \"ждать\" в потоке {Thread.CurrentThread.ManagedThreadId} задача: {Task.CurrentId}");
 
                 while (!token.IsCancellationRequested)
                 {
                     _VotumDevicesManager.SendCommandToRemote(wait);
-                    await Task.Delay(20);
+                    Thread.Sleep(30);
                 }
 
                 Console.WriteLine($"Конец асинхронной операции отправки команды \"ждать\" в потоке {Thread.CurrentThread.ManagedThreadId} задача: {Task.CurrentId}");
@@ -123,7 +137,7 @@ namespace TestConsole
 
         private async static Task LoopSendBackCommands2(CancellationToken token)
         {
-            Console.WriteLine($"Запущена работа асинхронной отправки команды \"ждать\" в потоке {Thread.CurrentThread.ManagedThreadId} задача: {Task.CurrentId}");
+            Console.WriteLine($"Запущена работа асинхронной отправки команды \"ждать\" в потоке {Thread.CurrentThread.ManagedThreadId} задача: {t.Id}");
 
             while (!token.IsCancellationRequested)
             {
@@ -131,7 +145,7 @@ namespace TestConsole
                 await Task.Delay(20);
             }
 
-            Console.WriteLine($"Конец асинхронной операции отправки команды \"ждать\" в потоке {Thread.CurrentThread.ManagedThreadId} задача: {Task.CurrentId}");
+            Console.WriteLine($"Конец асинхронной операции отправки команды \"ждать\" в потоке {Thread.CurrentThread.ManagedThreadId} задача: {t.Id}");
         }
     }
 }
