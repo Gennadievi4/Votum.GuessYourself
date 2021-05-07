@@ -312,9 +312,9 @@ namespace Guess.Yourself
 
             param.TotalNumberQuestions = Students.FirstOrDefault(std => std.RemoteId.Equals(param.RemoteId)).Questions.Count();
 
-            //param.Questions
-            //.First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
-            //.UserAnswer = AnswerType.Correct;
+            param.Questions
+            .First(x => x.Question.Contains(param.Question) && x.UserAnswer == AnswerType.NotGuessed)
+            .UserAnswer = AnswerType.Correct;
 
             if (OnTick != param.UpTime && !param.IsWinner)
             {
@@ -325,16 +325,11 @@ namespace Guess.Yourself
             BlockWinnerCell(param);
 
             deviceManager.VotumManager.SendCommandToRemote(SendbackCommand.DisplayStringClear(param.ReceiverId, (int)param.RemoteId, "Да"));
-            //deviceManager.VotumManager.SendCommandToRemote(SendbackCommand.DisplayStringClear("Отправь на пуль!!!"));
-
-            //param.remotePacket.RemoteID = (int)param.RemoteId;
-            //param.remotePacket.RemoteCommand = TRemoteCommandID.RF_ACK_DISPLAY_LOGO;
-
-        }));
-        //(stdParam) =>
-        //{
-        //    return stdParam != null && !string.IsNullOrEmpty(stdParam.Question);
-        //}));
+        },
+            (stdParam) =>
+            {
+                return stdParam != null && !string.IsNullOrEmpty(stdParam.Question);
+            }));
 
         public RelayCommand<StudentModel> noCmd = null;
         public ICommand NoCmd => noCmd ?? (noCmd = new RelayCommand<StudentModel>((param) =>
