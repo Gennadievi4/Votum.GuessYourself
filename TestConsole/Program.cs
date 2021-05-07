@@ -1,13 +1,9 @@
 ﻿using RLib;
 using RLib.Remotes;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using TestConsole.BaseVotum;
 
 namespace TestConsole
 {
@@ -28,8 +24,6 @@ namespace TestConsole
         private static Thread thread = new Thread(LongTimeRemote) { IsBackground = true, };
 
         private static SendbackCommand wait = new SendbackCommand(8681, 1, RemoteCommand.CMD_WAIT);
-
-        private static SendbackCommand logo = new SendbackCommand(8681, 1, RemoteCommand.CMD_DISPLAY_LOGO);
 
         private static async Task Main(string[] args)
         {
