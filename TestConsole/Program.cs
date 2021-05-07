@@ -17,35 +17,27 @@ namespace TestConsole
 
         private static VotumDevicesManager _VotumDevicesManager = new VotumDevicesManager();
 
-        private static Task t = new Task(async () => await LoopSendBackCommands2(src.Token).ConfigureAwait(true));
+        private static Func<Task> f = () => LoopSendBackCommands2(src.Token);
+
+        static Task t;
 
         private static Stopwatch stopwatch = new Stopwatch();
 
         private static CancellationTokenSource src = new CancellationTokenSource();
 
-        private static ConcurrentQueue<SendbackCommand> sendbackCommands = new ConcurrentQueue<SendbackCommand>();
-
-        //private static QueueHandler<SendbackCommand> QueueHandler = new QueueHandler<SendbackCommand>((number, hand) =>
-        //{
-        //    while (!hand.IsCancellationRequested)
-        //    {
-        //        _VotumDevicesManager.SendCommandToRemote(number);
-        //        Thread.Sleep(10);
-        //    }
-        //});
         private static Thread thread = new Thread(LongTimeRemote) { IsBackground = true, };
 
         private static SendbackCommand wait = new SendbackCommand(8681, 1, RemoteCommand.CMD_WAIT);
 
         private static SendbackCommand logo = new SendbackCommand(8681, 1, RemoteCommand.CMD_DISPLAY_LOGO);
 
-        private static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
             Init();
 
             _VotumDevicesManager.ButtonClicked += BaseVotumDevice_ClickButtonsRemotes;
 
-            RunWork();
+            await RunWork();
 
             Console.ReadKey();
         }
@@ -81,14 +73,12 @@ namespace TestConsole
 
             e.SendbackCommand = new SendbackCommand(e.ReceiverId, e.RemoteId, RemoteCommand.CMD_WAIT);
 
-            t.Start();
-
-            //QueueHandler.AddItem(e.SendbackCommand);
+            t = f();
 
             //thread.Start();
         }
 
-        private async static void RunWork()
+        private async static Task RunWork()
         {
             while (Console.ReadKey().Key != ConsoleKey.Escape)
             {
@@ -100,8 +90,7 @@ namespace TestConsole
                 {
                     Console.WriteLine($"Метод RunWork блок Enter запущен в потоке {Thread.CurrentThread.ManagedThreadId}");
 
-                    _VotumDevicesManager.SendCommandToRemote(logo);
-
+                    _VotumDevicesManager.SendCommandToRemote(SendbackCommand.DisplayStringClear(8681, 1, "Да"));
 
                     src.Cancel();
 
@@ -111,12 +100,23 @@ namespace TestConsole
 
                     SyncFlag = false;
 
-                    _VotumDevicesManager.Stop();
+                    //_VotumDevicesManager.Stop();
 
-                    //src.Cancel();
                     //QueueHandler.Dispose();
                 }
             }
+        }
+        private async static Task LoopSendBackCommands2(CancellationToken token)
+        {
+            Console.WriteLine($"Запущена работа асинхронной отправки команды \"ждать\" в потоке {Thread.CurrentThread.ManagedThreadId} задача: {Task.CurrentId}");
+
+            while (!token.IsCancellationRequested)
+            {
+                _VotumDevicesManager.SendCommandToRemote(wait);
+                await Task.Delay(20);
+            }
+
+            Console.WriteLine($"Конец асинхронной операции отправки команды \"ждать\" в потоке {Thread.CurrentThread.ManagedThreadId} задача: {Task.CurrentId}");
         }
 
         private static void LoopSendBackCommands(CancellationToken token)
@@ -135,17 +135,5 @@ namespace TestConsole
             });
         }
 
-        private async static Task LoopSendBackCommands2(CancellationToken token)
-        {
-            Console.WriteLine($"Запущена работа асинхронной отправки команды \"ждать\" в потоке {Thread.CurrentThread.ManagedThreadId} задача: {t.Id}");
-
-            while (!token.IsCancellationRequested)
-            {
-                _VotumDevicesManager.SendCommandToRemote(wait);
-                await Task.Delay(20);
-            }
-
-            Console.WriteLine($"Конец асинхронной операции отправки команды \"ждать\" в потоке {Thread.CurrentThread.ManagedThreadId} задача: {t.Id}");
-        }
     }
 }
