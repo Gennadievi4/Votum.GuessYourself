@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -20,6 +21,8 @@ namespace Guess.Yourself
         private int receiverId;
         private ushort? remoteId;
         private int? _TotalNumberQuestion;
+        private Thread thread;
+        private CancellationToken cancelWait;
         #endregion
 
         #region Properties
@@ -184,6 +187,22 @@ namespace Guess.Yourself
         {
             Questions.Add(new AnswerLog { Question = $"{Questions.Count + 1}. {text}", UserAnswer = answerType });
         }
+
+        public void StartStop(ButtonClickEventArgs e, CancellationToken token)
+        {
+            thread = new Thread((e) =>
+            {
+                var remote = (ButtonClickEventArgs)e;
+                //SendbackCommand sendWaitCmd = new SendbackCommand(remote.ReceiverId, remote.RemoteId, RemoteCommand.CMD_WAIT);
+                while (true)
+                {
+                    deviceManager.VotumManager.SendCommandToRemote(remote.SendbackCommand);
+                    Thread.Sleep(40);
+                }
+            })
+            { IsBackground = true, };
+    }
+
         public void UpTime()
         {
             //TimeSpan time = (DateTime.Now - start).Duration();
