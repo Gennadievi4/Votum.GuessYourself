@@ -94,6 +94,14 @@ namespace TestConsole
 
                     SyncFlag = false;
 
+                    TestThreads.Start();
+
+                    if (Console.ReadKey().Key == ConsoleKey.Backspace)
+                        TestThreads.Stop();
+
+                    if (Console.ReadKey().Key == ConsoleKey.Delete)
+                        TestThreads.Run();
+
                     //_VotumDevicesManager.Stop();
 
                     //QueueHandler.Dispose();
